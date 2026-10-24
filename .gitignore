@@ -34,3 +34,9 @@ desktop.ini
 *.log
 tmp/
 .probe/
+
+# ===== 图标渲染管线的中间产物 =====
+# （gitignore 不支持行尾注释，注释必须单独成行）
+design/icon/.build/
+design/icon/.chrome-profile/
+design/icon/_probe*
