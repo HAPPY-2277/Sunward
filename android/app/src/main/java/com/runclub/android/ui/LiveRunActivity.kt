@@ -29,6 +29,7 @@ import com.runclub.android.tracking.LocationTracker
 import com.runclub.android.tracking.RunState
 import com.runclub.android.tracking.RunUiState
 import com.runclub.android.tracking.TrackPoint
+import com.runclub.android.ui.widget.TrackCanvasView
 import com.runclub.android.util.Format
 import kotlinx.coroutines.launch
 import java.util.Locale
@@ -74,9 +75,15 @@ class LiveRunActivity : AppCompatActivity() {
 
     private var dotAnimator: ObjectAnimator? = null
 
+    private lateinit var endModal: View
+    private lateinit var modalDistance: TextView
+    private lateinit var modalTime: TextView
+    private lateinit var modalPace: TextView
+
     /** 地图层：amap 变体是真高德底图，local 变体是空实现（保留手绘地图） */
     private lateinit var mapLayer: MapLayer
     private lateinit var amapHost: FrameLayout
+    private lateinit var trackOverlay: TrackCanvasView
 
     private val isDebuggable: Boolean
         get() = (applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) != 0
@@ -102,6 +109,7 @@ class LiveRunActivity : AppCompatActivity() {
         bindViews()
         bindActions()
         mapLayer.attach(amapHost, savedInstanceState)
+        mapLayer.attachOverlay(trackOverlay)
         observeState()
         restoreIfRequested(intent)
         ensureRunning()
@@ -125,13 +133,19 @@ class LiveRunActivity : AppCompatActivity() {
     private fun ensureRunning() {
         val state = RunSession.trackerState()
         if (state == RunState.RUNNING || state == RunState.PAUSED) return  // 已在记录，继续观察
-        if (!tracker.hasPermission() && !RunSession.current().simulated) {
+
+        // 调试用：允许用 Intent 直接指定「模拟轨迹」启动，方便自动化验收
+        //   adb shell am start -n com.runclub.android/.ui.LiveRunActivity --ez sim true
+        val wantSimulated = intent?.getBooleanExtra(EXTRA_SIMULATED, RunSession.current().simulated)
+            ?: RunSession.current().simulated
+
+        if (!tracker.hasPermission() && !wantSimulated) {
             permOverlay.visibility = View.VISIBLE
             requestPermissions()
             return
         }
         permOverlay.visibility = View.GONE
-        startNewRun(RunSession.current().simulated)
+        startNewRun(wantSimulated)
     }
 
     private fun startNewRun(simulated: Boolean) {
@@ -167,6 +181,12 @@ class LiveRunActivity : AppCompatActivity() {
         tvDebugBreakdown = findViewById(R.id.tvDebugBreakdown)
         tvSimToggle = findViewById(R.id.tvSimToggle)
         amapHost = findViewById(R.id.amapHost)
+        trackOverlay = findViewById(R.id.trackOverlay)
+
+        endModal = findViewById(R.id.endModal)
+        modalDistance = findViewById(R.id.modalDistance)
+        modalTime = findViewById(R.id.modalTime)
+        modalPace = findViewById(R.id.modalPace)
         if (!isDebuggable) debugPanel.visibility = View.GONE
     }
 
@@ -175,7 +195,12 @@ class LiveRunActivity : AppCompatActivity() {
         findViewById<View>(R.id.btnGrant).setOnClickListener { requestPermissions() }
         findViewById<View>(R.id.btnSettings).setOnClickListener { openAppSettings() }
         findViewById<View>(R.id.btnPause).setOnClickListener { togglePause() }
-        findViewById<View>(R.id.btnEnd).setOnClickListener {
+        findViewById<View>(R.id.btnEnd).setOnClickListener { showEndModal() }
+        findViewById<View>(R.id.btnModalCancel).setOnClickListener {
+            endModal.visibility = View.GONE
+        }
+        findViewById<View>(R.id.btnModalConfirm).setOnClickListener {
+            endModal.visibility = View.GONE
             sendAction(RunForegroundService.ACTION_FINISH)
         }
         findViewById<View>(R.id.gpsChip).setOnClickListener {
@@ -249,6 +274,12 @@ class LiveRunActivity : AppCompatActivity() {
 
         renderSimMode(state.simulated)
         renderDebug(state)
+
+        // 轨迹：把已采纳的点交给地图层（amap 画在地图上，local 画在叠加层上）
+        mapLayer.setTrack(RunSession.track())
+        // 记录中让当前位置脉冲（对应原型 animate-pulse），暂停/结束时停掉
+        if (state.state == RunState.RUNNING) trackOverlay.startPulse() else trackOverlay.stopPulse()
+        // 首个点到达后把镜头移过去一次；amap 实现内部会自行判定只做一次
         state.lastPoint?.let { mapLayer.centerOnWgs84(it.lat, it.lon) }
 
         if (state.state == RunState.FINISHED && !navigatedToResult &&
@@ -295,6 +326,15 @@ class LiveRunActivity : AppCompatActivity() {
             state.rejectedAccuracy, state.rejectedTimestamp,
             state.rejectedSpeed, state.rejectedInconsistent
         )
+    }
+
+    /** 结束确认弹窗：与原型 endModal 一致，三宫格显示当前实时数据 */
+    private fun showEndModal() {
+        val state = RunSession.current()
+        modalDistance.text = Format.km(state.distanceM)
+        modalTime.text = Format.duration(state.elapsedMs)
+        modalPace.text = Format.pace(state.avgPaceSecPerKm)
+        endModal.visibility = View.VISIBLE
     }
 
     private fun togglePause() {
@@ -366,6 +406,7 @@ class LiveRunActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         stopDotPulse()
+        trackOverlay.stopPulse()
         mapLayer.onDestroy()
         super.onDestroy()
     }
@@ -374,5 +415,8 @@ class LiveRunActivity : AppCompatActivity() {
         const val EXTRA_RESTORE_ELAPSED = "restore_elapsed_ms"
         const val EXTRA_RESTORE_DISTANCE = "restore_distance_m"
         const val EXTRA_RESTORE_SIMULATED = "restore_simulated"
+
+        /** 调试用：true 表示直接用内置模拟轨迹开跑（自动化验收用） */
+        const val EXTRA_SIMULATED = "sim"
     }
 }

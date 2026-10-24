@@ -81,6 +81,48 @@
     <string name="privacy_agree">同意并继续</string>
     <string name="privacy_decline">暂不使用地图</string>
 
+    <!-- 结束确认弹窗（复刻原型 endModal） -->
+    <string name="end_modal_title">结束本次跑步？</string>
+    <string name="end_modal_body">结束后会保存本次轨迹，并生成完整的分段配速与路线图。</string>
+    <string name="end_modal_distance">距离</string>
+    <string name="end_modal_time">用时</string>
+    <string name="end_modal_pace">配速</string>
+    <string name="end_modal_continue">继续跑</string>
+    <string name="end_modal_confirm">结束并保存</string>
+
+    <!-- 成绩页（复刻原型 run-result.html） -->
+    <string name="result_header_title">训练已完成</string>
+    <string name="result_header_subtitle">Run Saved</string>
+    <string name="result_share">分享跑步成绩</string>
+    <string name="result_greeting">干得漂亮，K。</string>
+    <string name="result_greeting_sub">本次用时 %1$s，平均配速 %2$s。</string>
+    <string name="result_total_distance">Total distance</string>
+    <string name="result_eyebrow_route">Route recap</string>
+    <string name="result_title_route">本次跑步路线</string>
+    <string name="result_route_saved">路线已保存</string>
+    <string name="result_route_place">滨江绿道环线</string>
+    <string name="result_legend_start">起点</string>
+    <string name="result_legend_end">终点</string>
+    <string name="result_no_track">本次没有采集到轨迹</string>
+    <string name="result_calories_title">消耗</string>
+    <string name="result_calories_sub">按 60 kg 体重估算</string>
+    <string name="result_no_splits">距离不足 1 公里，暂无分段</string>
+    <string name="result_tip_short">这次距离比较短，先积累几次完整跑步，就能看出配速趋势。</string>
+    <string name="result_tip_stable">每公里配速波动只有 %1$d 秒，节奏非常稳。</string>
+    <string name="result_tip_wave">每公里配速波动约 %1$d 秒，前段偏快、后段略慢。</string>
+    <string name="result_tip_negative_split">最后一段还提了速，收尾很有力。</string>
+    <string name="result_tip_default">本次平均配速 %1$s，继续保持这个节奏。</string>
+    <string name="result_eyebrow_pace">Pace analysis</string>
+    <string name="result_title_pace">分段配速</string>
+    <string name="result_avg_pace">平均配速</string>
+    <string name="result_pace_label">配速</string>
+    <string name="result_split_km">第 %1$d 公里</string>
+    <string name="result_split_last">最后 %1$s 公里</string>
+    <string name="result_back_home">回到运动</string>
+    <string name="result_view_records">查看跑步记录</string>
+    <string name="result_share_toast_title">成绩卡已生成，可以分享啦</string>
+    <string name="result_share_toast_body">分享给跑友，一起保持运动节奏</string>
+
     <!-- 通知（M3 前台服务） -->
     <string name="notif_channel_name">跑步记录</string>
     <string name="notif_channel_desc">跑步时在通知栏显示实时数据，锁屏后也能查看</string>

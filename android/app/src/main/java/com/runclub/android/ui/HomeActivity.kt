@@ -39,6 +39,16 @@ class HomeActivity : AppCompatActivity() {
         }
 
         maybeAskPrivacy()
+
+        // 调试用：--ez sim true 时直接以「内置模拟轨迹」进入实时页，
+        // 供自动化验收使用（LiveRunActivity 未导出，只能由首页拉起）：
+        //   adb shell am start -n com.runclub.android/.ui.HomeActivity --ez sim true
+        if (intent?.getBooleanExtra(LiveRunActivity.EXTRA_SIMULATED, false) == true) {
+            startActivity(
+                Intent(this, LiveRunActivity::class.java)
+                    .putExtra(LiveRunActivity.EXTRA_SIMULATED, true)
+            )
+        }
     }
 
     /**

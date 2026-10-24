@@ -50,4 +50,16 @@
 
     <color name="scrim_dark">#E60B0F0B</color>
     <color name="debug_panel_bg">#0F1410</color>
+    <color name="modal_bg">#151B15</color>
+
+    <!-- 荧光绿主卡上的深色文字透明度（对应 #080B08 加 alpha） -->
+    <color name="ink_45">#73080B08</color>
+    <color name="ink_50">#80080B08</color>
+    <color name="ink_55">#8C080B08</color>
+    <color name="ink_30">#4D080B08</color>
+
+    <!-- 成绩页底部栏 -->
+    <color name="footer_bg">#0A0E0A</color>
+    <color name="text_dce4dc">#DCE4DC</color>
+    <color name="text_717c71">#717C71</color>
 </resources>
