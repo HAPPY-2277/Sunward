@@ -1,4 +1,4 @@
-# 逐日
+# 逐日 · SUNWARD
 
 ![Kotlin](https://img.shields.io/badge/Kotlin-2.2-7F52FF)
 ![Android](https://img.shields.io/badge/Android-minSdk%2026-3DDC84)
@@ -10,6 +10,19 @@
 主指标是「本周动了几天」，不是「离 30 km 还差多少」。
 
 ![首页](docs/screenshots/60-zhuri-home.png)
+
+## 名称
+
+中文名 **逐日**，英文名 **SUNWARD**。
+
+「逐日」一天一天地读，也是追逐每一个日头。SUNWARD 意为「向着太阳」——
+`sun` 对应日，`ward` 对应趋向，与中文的逐日近乎逐字对译。
+
+App 启动器上显示「逐日」，面向家里人的日常使用；SUNWARD 用在代码仓库、文档和对外场合。
+品牌色 `#D9FF43` 就是太阳的颜色，和这个名字是一套的。
+
+包名 `com.runclub.android` 是早期名。改动会让已申请的高德地图 Key 失效
+（Key 绑定包名 + 签名 SHA-1），因此保持原样。
 
 ## 想法
 
@@ -117,22 +130,6 @@ design/prototype/  HTML 原型，视觉基线，不参与构建
 docs/              计划、验收报告、调研、产品理念
 tools/             本机工具链（SDK、Gradle、模拟器脚本），不入库
 ```
-
-## 实现里踩过的坑
-
-写在代码注释和 [docs/验收报告.md](docs/验收报告.md) 里，这几条影响后续开发：
-
-- **测速用 `SystemClock.elapsedRealtime()`**，不用 `currentTimeMillis`。
-- **距离不能直接累加 GPS 点的直线距离**。要先对位移向量做 EMA 平滑再累加，
-  否则系统性少算约 60%。单段小于 0.6 m 的不记。
-- **数据源切换必须重建 tracker**。会话已在 RUNNING 时切到模拟轨迹，
-  过滤器里残留的旧 GPS 点会让每个新点都变成「几百公里瞬移」而被全部丢弃。
-- **平均配速按总时长 ÷ 总距离**加权，不是各次配速的算术平均。
-- **前台服务用 `location` 类型**，不是 `dataSync`（Android 15 限制 6 小时）。
-- **`fitsSystemWindows="true"` 会覆盖节点自身的 `android:padding`**，
-  根节点要吃 inset 时用「外层无 padding + 内层带 padding」的双层结构。
-- **高德 SDK 8.1.0+ 必须先调 `MapsInitializer.updatePrivacyShow/Agree`**，
-  否则地图白屏且不报错。
 
 ## 文档
 
