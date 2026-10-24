@@ -3,6 +3,8 @@ package com.runclub.android.map
 import android.content.Context
 import android.os.Bundle
 import android.view.ViewGroup
+import com.runclub.android.tracking.TrackPoint
+import com.runclub.android.ui.widget.TrackCanvasView
 
 /**
  * 地图层抽象。
@@ -24,6 +26,15 @@ interface MapLayer {
     val statusText: String
 
     fun attach(host: ViewGroup, savedInstanceState: Bundle?)
+
+    /**
+     * 挂上「归一化轨迹叠加层」。
+     * 只有 local 变体（无真实底图）需要它；amap 变体用地理坐标直接画在地图上。
+     */
+    fun attachOverlay(overlay: TrackCanvasView)
+
+    /** 更新轨迹；坐标为 WGS-84，实现者负责按需转换 */
+    fun setTrack(points: List<TrackPoint>)
 
     /** 传入 **WGS-84** 坐标，实现者负责转 GCJ-02 */
     fun centerOnWgs84(lat: Double, lon: Double)

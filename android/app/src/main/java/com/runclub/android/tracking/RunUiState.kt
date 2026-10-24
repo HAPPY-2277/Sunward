@@ -8,6 +8,7 @@ data class RunUiState(
     val elapsedMs: Long = 0L,
     val distanceM: Double = 0.0,
     val paceSecPerKm: Double? = null,
+    val avgPaceSecPerKm: Double? = null,
     val calories: Int = 0,
     val pointsAccepted: Int = 0,
     val pointsRejected: Int = 0,

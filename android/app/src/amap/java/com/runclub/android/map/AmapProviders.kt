@@ -2,13 +2,22 @@ package com.runclub.android.map
 
 import android.app.Activity
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.view.ViewGroup
 import com.amap.api.maps.AMap
 import com.amap.api.maps.CameraUpdateFactory
 import com.amap.api.maps.MapView
 import com.amap.api.maps.MapsInitializer
+import com.amap.api.maps.model.BitmapDescriptorFactory
 import com.amap.api.maps.model.LatLng
+import com.amap.api.maps.model.LatLngBounds
+import com.amap.api.maps.model.Marker
+import com.amap.api.maps.model.MarkerOptions
+import com.amap.api.maps.model.Polyline
+import com.amap.api.maps.model.PolylineOptions
+import com.runclub.android.tracking.TrackPoint
+import com.runclub.android.ui.widget.TrackCanvasView
 
 // ===== amap 变体：真实高德底图 =====
 
@@ -27,6 +36,11 @@ class AmapLayer(private val activity: Activity) : MapLayer {
     private var mapView: MapView? = null
     private var aMap: AMap? = null
     private var centeredOnce = false
+
+    private var polyline: Polyline? = null
+    private var startMarker: Marker? = null
+    private var currentMarker: Marker? = null
+    private var boundsFitted = false
 
     override val isActive: Boolean get() = aMap != null
 
@@ -75,6 +89,53 @@ class AmapLayer(private val activity: Activity) : MapLayer {
         val (gcjLat, gcjLon) = GeoConvert.wgs84ToGcj02(lat, lon)
         runCatching {
             map.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(gcjLat, gcjLon), 17f))
+        }
+    }
+
+    /** 高德底图按地理坐标画线，不需要归一化叠加层（local 变体才用） */
+    override fun attachOverlay(overlay: TrackCanvasView) = Unit
+
+    override fun setTrack(points: List<TrackPoint>) {
+        val map = aMap ?: return
+        if (points.size < 2) return
+        val density = activity.resources.displayMetrics.density
+
+        runCatching {
+            val latLngs = points.map {
+                val (lat, lon) = GeoConvert.wgs84ToGcj02(it.lat, it.lon)
+                LatLng(lat, lon)
+            }
+
+            polyline?.remove()
+            polyline = map.addPolyline(
+                PolylineOptions()
+                    .addAll(latLngs)
+                    .width(9f * density)
+                    .color(Color.parseColor("#FF5C35"))
+                    .setDottedLine(false)
+            )
+
+            startMarker?.remove()
+            startMarker = map.addMarker(
+                MarkerOptions()
+                    .position(latLngs.first())
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+            )
+            currentMarker?.remove()
+            currentMarker = map.addMarker(
+                MarkerOptions()
+                    .position(latLngs.last())
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
+            )
+
+            if (!boundsFitted && latLngs.size > 3) {
+                boundsFitted = true
+                val builder = LatLngBounds.Builder()
+                latLngs.forEach { builder.include(it) }
+                map.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 120))
+            } else {
+                map.animateCamera(CameraUpdateFactory.newLatLng(latLngs.last()))
+            }
         }
     }
 

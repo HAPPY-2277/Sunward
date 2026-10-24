@@ -39,9 +39,18 @@ object RunSession {
 
     fun current(): RunUiState = _state.value
 
-    /** 开始一次新的跑步；若上一次已结束会换一个干净的 tracker */
+    /** 本次跑步已采纳的轨迹点（按时间顺序），用于绘制轨迹 */
+    fun track(): List<TrackPoint> = tracker.track
+
+    /** 每公里分段成绩 */
+    fun splits(): List<RunTracker.Split> = tracker.splits
+
+    /** 开始一次新的跑步；数据源变化或上一次已结束时都换一个干净的 tracker */
     fun start(simulated: Boolean): Boolean {
-        if (tracker.state == RunState.FINISHED || tracker.state == RunState.IDLE) {
+        // 切换数据源必须重建 tracker：否则过滤器里留着上一个数据源的点，
+        // 新点会被「速度超限」判定成瞬移而全部丢弃（真实踩过）。
+        val sourceChanged = simulated != this.simulated && tracker.state == RunState.RUNNING
+        if (sourceChanged || tracker.state == RunState.FINISHED || tracker.state == RunState.IDLE) {
             tracker = RunTracker()
         }
         val ok = tracker.start(nowMs())
@@ -95,11 +104,13 @@ object RunSession {
 
     private fun publish() {
         val t = tracker
+        val now = nowMs()
         _state.value = RunUiState(
             state = t.state,
-            elapsedMs = t.elapsedMs(nowMs()),
+            elapsedMs = t.elapsedMs(now),
             distanceM = t.distanceM,
             paceSecPerKm = t.paceSecPerKm,
+            avgPaceSecPerKm = t.averagePaceSecPerKm(now),
             calories = t.calories,
             pointsAccepted = t.filter.stats.accepted,
             pointsRejected = t.filter.stats.rejected,
