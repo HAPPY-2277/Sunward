@@ -107,7 +107,7 @@
                     android:letterSpacing="0.06"
                     android:text="@string/records_streak_label"
                     android:textColor="@color/text_olive"
-                    android:textSize="8sp"
+                    android:textSize="11sp"
                     android:textStyle="bold" />
             </LinearLayout>
         </LinearLayout>
@@ -231,21 +231,6 @@
                             android:layout_marginBottom="-48dp"
                             android:background="@drawable/bg_decor_ring_lime30" />
 
-                        <TextView
-                            android:id="@+id/tvMonthMark"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="end|bottom"
-                            android:layout_marginEnd="10dp"
-                            android:layout_marginBottom="6dp"
-                            android:letterSpacing="0.32"
-                            android:rotation="90"
-                            android:text="@string/records_month_mark"
-                            android:textAllCaps="true"
-                            android:textColor="@color/ink_month_30"
-                            android:textSize="8sp"
-                            android:textStyle="bold" />
-
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -276,7 +261,7 @@
                                         android:text="@string/records_month_badge"
                                         android:textAllCaps="true"
                                         android:textColor="@color/orange_light"
-                                        android:textSize="8sp"
+                                        android:textSize="11sp"
                                         android:textStyle="bold" />
                                 </LinearLayout>
 
@@ -297,7 +282,7 @@
                                     android:paddingBottom="4dp"
                                     android:text="@string/records_toreport"
                                     android:textColor="@color/ink_month_65"
-                                    android:textSize="10sp"
+                                    android:textSize="11sp"
                                     android:textStyle="bold" />
                             </LinearLayout>
 
@@ -318,10 +303,10 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:letterSpacing="0.18"
-                                        android:text="@string/records_month_total"
+                                        android:text="@string/records_month_active_days_label"
                                         android:textAllCaps="true"
                                         android:textColor="@color/ink_month_45"
-                                        android:textSize="9sp"
+                                        android:textSize="11sp"
                                         android:textStyle="bold" />
 
                                     <LinearLayout
@@ -332,11 +317,11 @@
                                         android:orientation="horizontal">
 
                                         <TextView
-                                            android:id="@+id/tvMonthDistance"
+                                            android:id="@+id/tvMonthActiveDays"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:letterSpacing="-0.07"
-                                            android:text="0.0"
+                                            android:text="0"
                                             android:textColor="@color/ink_month"
                                             android:textSize="45sp"
                                             android:textStyle="bold" />
@@ -346,9 +331,9 @@
                                             android:layout_height="wrap_content"
                                             android:layout_marginStart="6dp"
                                             android:layout_marginBottom="6dp"
-                                            android:text="@string/home_unit_km"
+                                            android:text="@string/unit_days"
                                             android:textColor="@color/ink_month"
-                                            android:textSize="10sp"
+                                            android:textSize="13sp"
                                             android:textStyle="bold" />
                                     </LinearLayout>
                                 </LinearLayout>
@@ -364,9 +349,9 @@
                                         android:id="@+id/tvMonthGoal"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="@string/records_month_goal"
+                                        android:text="@string/records_month_km_placeholder"
                                         android:textColor="@color/ink_month_50"
-                                        android:textSize="9sp"
+                                        android:textSize="11sp"
                                         android:textStyle="bold" />
 
                                     <TextView
@@ -406,7 +391,7 @@
                                         android:letterSpacing="0.1"
                                         android:text="@string/records_month_runs"
                                         android:textColor="@color/ink_month_45"
-                                        android:textSize="8sp"
+                                        android:textSize="11sp"
                                         android:textStyle="bold" />
 
                                     <TextView
@@ -432,7 +417,7 @@
                                         android:letterSpacing="0.1"
                                         android:text="@string/home_week_duration"
                                         android:textColor="@color/ink_month_45"
-                                        android:textSize="8sp"
+                                        android:textSize="11sp"
                                         android:textStyle="bold" />
 
                                     <TextView
@@ -458,7 +443,7 @@
                                         android:letterSpacing="0.1"
                                         android:text="@string/result_avg_pace"
                                         android:textColor="@color/ink_month_45"
-                                        android:textSize="8sp"
+                                        android:textSize="11sp"
                                         android:textStyle="bold" />
 
                                     <TextView
@@ -635,7 +620,7 @@
                                 android:paddingBottom="6dp"
                                 android:text="@string/records_period_week"
                                 android:textColor="@color/bg_base"
-                                android:textSize="9sp"
+                                android:textSize="11sp"
                                 android:textStyle="bold" />
 
                             <TextView
@@ -652,7 +637,7 @@
                                 android:paddingBottom="6dp"
                                 android:text="@string/records_period_month"
                                 android:textColor="@color/text_period_inactive"
-                                android:textSize="9sp"
+                                android:textSize="11sp"
                                 android:textStyle="bold" />
 
                             <TextView
@@ -669,7 +654,7 @@
                                 android:paddingBottom="6dp"
                                 android:text="@string/records_period_year"
                                 android:textColor="@color/text_period_inactive"
-                                android:textSize="9sp"
+                                android:textSize="11sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
                     </LinearLayout>
@@ -716,7 +701,7 @@
                                     android:paddingBottom="6dp"
                                     android:text="@string/records_week_badge"
                                     android:textColor="@color/bg_base"
-                                    android:textSize="8sp"
+                                    android:textSize="11sp"
                                     android:textStyle="bold" />
 
                                 <View
@@ -730,7 +715,7 @@
                                     android:layout_height="wrap_content"
                                     android:text="@string/placeholder_range"
                                     android:textColor="@color/text_range"
-                                    android:textSize="9sp" />
+                                    android:textSize="11sp" />
                             </LinearLayout>
 
                             <LinearLayout
@@ -751,10 +736,10 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:letterSpacing="0.18"
-                                        android:text="@string/records_total_distance"
+                                        android:text="@string/records_active_days"
                                         android:textAllCaps="true"
                                         android:textColor="@color/text_report_dim"
-                                        android:textSize="9sp"
+                                        android:textSize="11sp"
                                         android:textStyle="bold" />
 
                                     <LinearLayout
@@ -775,13 +760,14 @@
                                             android:textStyle="bold" />
 
                                         <TextView
+                                            android:id="@+id/tvReportDistanceUnit"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:layout_marginStart="6dp"
                                             android:layout_marginBottom="6dp"
-                                            android:text="@string/home_unit_km"
+                                            android:text="@string/unit_days"
                                             android:textColor="@color/text_km_olive"
-                                            android:textSize="10sp"
+                                            android:textSize="12sp"
                                             android:textStyle="bold" />
                                     </LinearLayout>
                                 </LinearLayout>
@@ -798,7 +784,7 @@
                                     android:paddingBottom="4dp"
                                     android:text="@string/placeholder_delta"
                                     android:textColor="@color/orange_light"
-                                    android:textSize="9sp"
+                                    android:textSize="11sp"
                                     android:textStyle="bold"
                                     android:visibility="gone" />
                             </LinearLayout>
@@ -822,10 +808,10 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:letterSpacing="0.1"
-                                        android:text="@string/records_run_count"
+                                        android:text="@string/records_run_count_plain"
                                         android:textAllCaps="true"
                                         android:textColor="@color/text_range"
-                                        android:textSize="8sp"
+                                        android:textSize="11sp"
                                         android:textStyle="bold" />
 
                                     <TextView
@@ -855,10 +841,10 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:letterSpacing="0.1"
-                                        android:text="@string/records_total_duration"
+                                        android:text="@string/records_total_duration_plain"
                                         android:textAllCaps="true"
                                         android:textColor="@color/text_range"
-                                        android:textSize="8sp"
+                                        android:textSize="11sp"
                                         android:textStyle="bold" />
 
                                     <TextView
@@ -891,7 +877,7 @@
                                         android:text="@string/result_avg_pace"
                                         android:textAllCaps="true"
                                         android:textColor="@color/text_range"
-                                        android:textSize="8sp"
+                                        android:textSize="11sp"
                                         android:textStyle="bold" />
 
                                     <TextView
@@ -930,7 +916,7 @@
                                         android:layout_weight="1"
                                         android:text="@string/placeholder_progress"
                                         android:textColor="@color/text_progress_dim"
-                                        android:textSize="8sp" />
+                                        android:textSize="11sp" />
 
                                     <TextView
                                         android:id="@+id/tvReportProgressValue"
@@ -938,7 +924,7 @@
                                         android:layout_height="wrap_content"
                                         android:text="0%"
                                         android:textColor="@color/accent_lime"
-                                        android:textSize="8sp"
+                                        android:textSize="11sp"
                                         android:textStyle="bold" />
                                 </LinearLayout>
 
@@ -988,7 +974,7 @@
                                     android:text="@string/records_trend"
                                     android:textAllCaps="true"
                                     android:textColor="@color/text_dim"
-                                    android:textSize="9sp"
+                                    android:textSize="11sp"
                                     android:textStyle="bold" />
 
                                 <TextView
@@ -1008,7 +994,7 @@
                                     android:layout_marginTop="4dp"
                                     android:text="@string/placeholder_chart_sub"
                                     android:textColor="@color/text_dim"
-                                    android:textSize="9sp" />
+                                    android:textSize="11sp" />
                             </LinearLayout>
 
                             <LinearLayout
@@ -1034,7 +1020,7 @@
                                         android:layout_marginStart="4dp"
                                         android:text="@string/records_legend_km"
                                         android:textColor="@color/text_muted"
-                                        android:textSize="8sp" />
+                                        android:textSize="11sp" />
                                 </LinearLayout>
 
                                 <LinearLayout
@@ -1055,7 +1041,7 @@
                                         android:layout_marginStart="4dp"
                                         android:text="@string/records_legend_pace"
                                         android:textColor="@color/text_muted"
-                                        android:textSize="8sp" />
+                                        android:textSize="11sp" />
                                 </LinearLayout>
                             </LinearLayout>
                         </LinearLayout>
@@ -1098,7 +1084,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="@string/records_composition_hint"
                                 android:textColor="@color/text_range"
-                                android:textSize="9sp" />
+                                android:textSize="11sp" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -1139,7 +1125,7 @@
                                         android:layout_marginStart="6dp"
                                         android:text="@string/records_easy"
                                         android:textColor="@color/text_composition"
-                                        android:textSize="9sp"
+                                        android:textSize="11sp"
                                         android:textStyle="bold" />
                                 </LinearLayout>
 
@@ -1177,7 +1163,7 @@
                                         android:layout_marginStart="6dp"
                                         android:text="@string/records_tempo"
                                         android:textColor="@color/text_composition"
-                                        android:textSize="9sp"
+                                        android:textSize="11sp"
                                         android:textStyle="bold" />
                                 </LinearLayout>
 
@@ -1215,7 +1201,7 @@
                                         android:layout_marginStart="6dp"
                                         android:text="@string/records_long"
                                         android:textColor="@color/text_composition"
-                                        android:textSize="9sp"
+                                        android:textSize="11sp"
                                         android:textStyle="bold" />
                                 </LinearLayout>
 
@@ -1290,7 +1276,7 @@
                                     android:paddingBottom="2dp"
                                     android:text="@string/records_ai_insight"
                                     android:textColor="@color/accent_lime"
-                                    android:textSize="7sp"
+                                    android:textSize="11sp"
                                     android:textStyle="bold" />
                             </LinearLayout>
 
@@ -1302,7 +1288,7 @@
                                 android:lineSpacingExtra="3dp"
                                 android:text="@string/placeholder_insight"
                                 android:textColor="@color/text_insight"
-                                android:textSize="9sp" />
+                                android:textSize="11sp" />
                         </LinearLayout>
                     </LinearLayout>
 
@@ -1314,7 +1300,7 @@
                         android:paddingBottom="8dp"
                         android:text="@string/records_report_footer"
                         android:textColor="@color/text_faint2"
-                        android:textSize="9sp" />
+                        android:textSize="11sp" />
                 </LinearLayout>
             </ScrollView>
         </FrameLayout>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">RUN CLUB</string>
+    <string name="app_name">逐日</string>
 
     <!-- 底部导航 -->
     <string name="tab_sport">运动</string>
@@ -23,15 +23,15 @@
     <string name="records_title">记录</string>
 
     <!-- 首页（复刻原型 activity.html） -->
-    <string name="home_brand">Run Club</string>
+    <string name="home_brand">逐日</string>
     <string name="home_weather">18°C</string>
     <string name="home_avatar">K</string>
     <string name="home_hero_mark">Morning Run</string>
     <string name="home_ready">Ready to move</string>
     <string name="home_title">今天，跑出\n你的节奏<span style="color:#FF5C35">。</span></string>
     <string name="home_suggestion_label">今日建议</string>
-    <string name="home_suggestion_value">轻松跑 · 5.0 KM</string>
-    <string name="home_estimate">预计 30 分钟</string>
+    <string name="home_suggestion_value">出门走走 · 3.0 KM</string>
+    <string name="home_estimate">大概 20 分钟</string>
     <string name="home_go">GO</string>
     <string name="home_go_hint">起跑</string>
     <string name="home_week_distance">本周里程</string>
@@ -41,14 +41,11 @@
     <string name="home_unit_kcal">KCAL</string>
     <string name="home_this_week">This Week</string>
     <string name="home_week_rhythm">本周节奏</string>
-    <string name="home_week_chip">0.0 / 30 KM</string>
-    <string name="home_week_runs">本周已完成 0 次训练</string>
-    <string name="home_week_remaining">还差 30.0 km 达标</string>
-    <string name="home_week_remaining_value">还差 %1$.1f km 达标</string>
-    <plurals name="home_week_runs_plural">
-        <item quantity="one">本周已完成 %d 次训练</item>
-        <item quantity="other">本周已完成 %d 次训练</item>
-    </plurals>
+    <string name="home_week_active_days_chip">动了 %1$d 天</string>
+    <string name="home_week_active_days_value">本周动了 %1$d 天，共 %2$d 天</string>
+    <string name="home_week_encourage_more">明天也出门走走？</string>
+    
+
     <string name="home_last_run">上次跑步</string>
     <string name="home_all_records">全部记录</string>
     <string name="home_pb">PB</string>
@@ -71,19 +68,19 @@
     <string name="records_delete_confirm">确定删除这条跑步记录吗？删除后无法恢复。</string>
     <string name="records_delete_done">记录已删除</string>
     <string name="records_month_title">本月回顾</string>
-    <string name="records_month_runs">次训练</string>
-    <string name="records_brand">Run Log</string>
+    <string name="records_month_runs">次运动</string>
+    <string name="records_brand">逐日 · 记录</string>
     <string name="records_page_title">跑步记录</string>
-    <string name="records_subtitle">每一步，都值得被记住。</string>
-    <string name="records_streak_label">连续运动</string>
+    <string name="records_subtitle">每天一点，一年很远。</string>
+    <string name="records_streak_label">累计运动</string>
     <string name="records_tab_history">历史</string>
     <string name="records_tab_report">报告</string>
     <string name="records_month_mark">October 2026</string>
     <string name="records_month_badge">Monthly recap</string>
     <string name="records_toreport">查看月报</string>
     <string name="records_month_total">本月累计</string>
-    <string name="records_month_goal">月度目标 120 KM</string>
-    <string name="records_month_goal_value">月度目标 %1$d KM</string>
+    <string name="records_month_goal_value">本月动了 %1$d 天</string>
+    
 
     <!-- 报告页 -->
     <string name="records_performance">Performance</string>
@@ -91,26 +88,26 @@
     <string name="records_period_week">周</string>
     <string name="records_period_month">月</string>
     <string name="records_period_year">年</string>
-    <string name="records_week_badge">本周战报</string>
+    
     <string name="records_total_distance">累计里程</string>
     <string name="records_run_count">跑步次数</string>
     <string name="records_total_duration">总时长</string>
     <string name="records_trend">Trend</string>
     <string name="records_chart_title">每日里程</string>
     <string name="records_legend_km">里程</string>
-    <string name="records_legend_pace">配速</string>
-    <string name="records_composition">训练构成</string>
-    <string name="records_composition_hint">按里程占比</string>
-    <string name="records_easy">轻松跑</string>
-    <string name="records_tempo">节奏跑</string>
-    <string name="records_long">长距离</string>
+    <string name="records_legend_pace">快慢</string>
+    <string name="records_composition">运动构成</string>
+    <string name="records_composition_hint">按距离占比</string>
+    <string name="records_easy">慢走</string>
+    <string name="records_tempo">常跑</string>
+    <string name="records_long">远足</string>
     <string name="records_insight">教练观察</string>
     <string name="records_ai_insight">AI INSIGHT</string>
     <string name="records_report_footer">每次跑步完成后，报告会自动更新</string>
     <string name="placeholder_range">--.-- — --.--</string>
     <string name="placeholder_delta">较上期</string>
     <string name="placeholder_progress">目标进度</string>
-    <string name="placeholder_chart_sub">本周共 0 次训练</string>
+    <string name="placeholder_chart_sub">这周动了 0 天</string>
     <string name="placeholder_insight">完成一次跑步后，这里会给出针对你的观察与建议。</string>
     <string name="records_delta_up">较上期 +%1$d%%</string>
     <string name="records_delta_down">较上期 −%1$d%%</string>
@@ -140,10 +137,10 @@
 
     <string name="live_distance_label">Distance</string>
     <string name="live_realtime_chip">实时</string>
-    <string name="live_goal_label">今日目标</string>
+    <string name="live_goal_label">今天想走</string>
     <string name="live_goal_value">5.00 KM</string>
     <string name="live_time_label">用时</string>
-    <string name="live_pace_label">当前配速</string>
+    <string name="live_pace_label">当前速度</string>
     <string name="live_calorie_label">消耗</string>
     <string name="live_unit_per_km">/KM</string>
     <string name="live_unit_kcal">KCAL</string>
@@ -157,7 +154,7 @@
 
     <!-- 定位权限 -->
     <string name="perm_title">需要定位权限</string>
-    <string name="perm_body">用于记录本次跑步的轨迹、距离与配速。位置只在你使用 App 期间获取，不会在后台偷偷采集。</string>
+    <string name="perm_body">用于记录你这次走了多远、多久。位置只在你使用 App 期间获取，不会在后台偷偷采集。</string>
     <string name="perm_grant">授予定位权限</string>
     <string name="perm_settings">去系统设置</string>
     <string name="perm_denied">权限被拒绝了。可以再次授权，或到系统设置里手动开启。</string>
@@ -171,19 +168,19 @@
 
     <!-- 结束确认弹窗（复刻原型 endModal） -->
     <string name="end_modal_title">结束本次跑步？</string>
-    <string name="end_modal_body">结束后会保存本次轨迹，并生成完整的分段配速与路线图。</string>
+    <string name="end_modal_body">结束后会保存这次的路线和用时。</string>
     <string name="end_modal_distance">距离</string>
     <string name="end_modal_time">用时</string>
-    <string name="end_modal_pace">配速</string>
+    <string name="end_modal_pace">每公里</string>
     <string name="end_modal_continue">继续跑</string>
     <string name="end_modal_confirm">结束并保存</string>
 
     <!-- 成绩页（复刻原型 run-result.html） -->
-    <string name="result_header_title">训练已完成</string>
+    <string name="result_header_title">今天也动了</string>
     <string name="result_header_subtitle">Run Saved</string>
     <string name="result_share">分享跑步成绩</string>
     <string name="result_greeting">干得漂亮，K。</string>
-    <string name="result_greeting_sub">本次用时 %1$s，平均配速 %2$s。</string>
+    <string name="result_greeting_sub">本次用时 %1$s，每公里约 %2$s。</string>
     <string name="result_total_distance">Total distance</string>
     <string name="result_eyebrow_route">Route recap</string>
     <string name="result_title_route">本次跑步路线</string>
@@ -195,15 +192,15 @@
     <string name="result_calories_title">消耗</string>
     <string name="result_calories_sub">按 60 kg 体重估算</string>
     <string name="result_no_splits">距离不足 1 公里，暂无分段</string>
-    <string name="result_tip_short">这次距离比较短，先积累几次完整跑步，就能看出配速趋势。</string>
-    <string name="result_tip_stable">每公里配速波动只有 %1$d 秒，节奏非常稳。</string>
-    <string name="result_tip_wave">每公里配速波动约 %1$d 秒，前段偏快、后段略慢。</string>
+    <string name="result_tip_short">出门动一动就是好的，每一天都算数。</string>
+    <string name="result_tip_stable">每公里的快慢只差 %1$d 秒，节奏很稳。</string>
+    <string name="result_tip_wave">每公里的快慢相差约 %1$d 秒，前段稍快、后段慢一点。</string>
     <string name="result_tip_negative_split">最后一段还提了速，收尾很有力。</string>
-    <string name="result_tip_default">本次平均配速 %1$s，继续保持这个节奏。</string>
-    <string name="result_eyebrow_pace">Pace analysis</string>
-    <string name="result_title_pace">分段配速</string>
-    <string name="result_avg_pace">平均配速</string>
-    <string name="result_pace_label">配速</string>
+    <string name="result_tip_default">每公里约 %1$s，保持这个节奏就好。</string>
+    <string name="result_eyebrow_pace">Every kilometer</string>
+    <string name="result_title_pace">每公里用时</string>
+    <string name="result_avg_pace">每公里约</string>
+    <string name="result_pace_label">每公里</string>
     <string name="result_split_km">第 %1$d 公里</string>
     <string name="result_split_last">最后 %1$s 公里</string>
     <string name="result_back_home">回到运动</string>
@@ -243,4 +240,17 @@
     <string name="debug_rejected">剔除</string>
     <string name="debug_distance">累计</string>
     <string name="debug_breakdown">剔除明细：精度 %1$d · 时间 %2$d · 速度 %3$d · 一致性 %4$d</string>
+
+    <string name="home_week_encourage_start">今天还没动，出去走走吧</string>
+    <string name="home_week_encourage_all">这七天都动过了，很好</string>
+    <!-- 逐日：口语化文案 -->
+    <string name="unit_days">天</string>
+    <string name="records_active_days">动过的天数</string>
+    <string name="records_run_count_plain">跑了多少次</string>
+    <string name="records_total_duration_plain">累计用时</string>
+    <string name="records_week_badge">本周战报</string>
+    <string name="records_month_goal_placeholder">本月动了 0 天</string>
+    <string name="records_month_active_days_label">本月动过</string>
+    <string name="records_month_km_placeholder">累计 0.0 KM</string>
+    <string name="records_month_km_value">累计 %1$.1f KM</string>
 </resources>

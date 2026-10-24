@@ -193,7 +193,7 @@
                             android:text="@string/home_hero_mark"
                             android:textAllCaps="true"
                             android:textColor="@color/ink_40"
-                            android:textSize="9sp"
+                            android:textSize="11sp"
                             android:textStyle="bold" />
 
                         <LinearLayout
@@ -226,7 +226,7 @@
                                     android:text="@string/home_ready"
                                     android:textAllCaps="true"
                                     android:textColor="@color/accent_lime"
-                                    android:textSize="10sp"
+                                    android:textSize="11sp"
                                     android:textStyle="bold" />
                             </LinearLayout>
 
@@ -262,7 +262,7 @@
                                         android:layout_height="wrap_content"
                                         android:text="@string/home_suggestion_label"
                                         android:textColor="@color/ink_50"
-                                        android:textSize="10sp" />
+                                        android:textSize="11sp" />
 
                                     <TextView
                                         android:id="@+id/tvSuggestion"
@@ -351,7 +351,7 @@
                                                 android:text="@string/home_go_hint"
                                                 android:textAllCaps="true"
                                                 android:textColor="@color/white_60"
-                                                android:textSize="9sp"
+                                                android:textSize="11sp"
                                                 android:textStyle="bold" />
 
                                             <ImageView
@@ -536,7 +536,7 @@
                             android:paddingTop="6dp"
                             android:paddingEnd="12dp"
                             android:paddingBottom="6dp"
-                            android:text="@string/home_week_chip"
+                            android:text="@string/home_week_active_days_chip"
                             android:textColor="@color/accent_lime"
                             android:textSize="11sp"
                             android:textStyle="bold" />
@@ -572,7 +572,7 @@
                             style="@style/Text.WeeklyFooter"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/home_week_runs" />
+                            android:text="@string/home_week_active_days_value" />
 
                         <TextView
                             android:id="@+id/tvWeekRemaining"
@@ -580,7 +580,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
-                            android:text="@string/home_week_remaining" />
+                            android:text="@string/home_week_encourage_more" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -682,7 +682,7 @@
                                     android:paddingBottom="1dp"
                                     android:text="@string/home_pb"
                                     android:textColor="@color/orange_soft"
-                                    android:textSize="8sp"
+                                    android:textSize="11sp"
                                     android:textStyle="bold"
                                     android:visibility="gone" />
                             </LinearLayout>
@@ -693,7 +693,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="4dp"
                                 android:textColor="@color/text_dim"
-                                android:textSize="10sp" />
+                                android:textSize="11sp" />
 
                             <LinearLayout
                                 android:layout_width="wrap_content"

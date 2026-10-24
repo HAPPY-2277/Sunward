@@ -329,7 +329,7 @@ class TrendChartView @JvmOverloads constructor(
         val lines = ArrayList<Triple<String, Paint, Float>>()
         lines += Triple(labels[i], tipTitle, 0f)
         if (km > 0.001) lines += Triple(String.format("%.2f km", km), tipValue, 0f)
-        pace?.let { lines += Triple("配速 ${paceText(it)}", tipPace, 0f) }
+        pace?.let { lines += Triple("每公里 ${paceText(it)}", tipPace, 0f) }
 
         val textWidth = lines.maxOf { it.second.measureText(it.first) }
         val boxW = textWidth + pad * 2

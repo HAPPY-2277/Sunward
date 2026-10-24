@@ -88,14 +88,21 @@ class HomeActivity : AppCompatActivity() {
 
         findViewById<WeekBarsView>(R.id.weekBars).dailyKm = weekly.dailyKm
 
+        // 顶部 chip：说「动了几天」，不是「还差多少公里」
         findViewById<TextView>(R.id.tvWeekProgressChip).text =
-            String.format(Locale.US, "%.1f / %.0f KM", weekly.totalKm, weekly.goalKm)
+            getString(R.string.home_week_active_days_chip, weekly.activeDays)
 
-        findViewById<TextView>(R.id.tvWeekRuns).text =
-            resources.getQuantityString(R.plurals.home_week_runs_plural, weekly.runCount, weekly.runCount)
+        findViewById<TextView>(R.id.tvWeekRuns).text = getString(
+            R.string.home_week_active_days_value, weekly.activeDays, weekly.targetDays
+        )
 
+        // 底部一行只做鼓励，不提欠账
         findViewById<TextView>(R.id.tvWeekRemaining).text =
-            getString(R.string.home_week_remaining_value, weekly.remainingKm)
+            when {
+                weekly.activeDays == 0 -> getString(R.string.home_week_encourage_start)
+                weekly.activeDays >= weekly.targetDays -> getString(R.string.home_week_encourage_all)
+                else -> getString(R.string.home_week_encourage_more)
+            }
 
         val progress = findViewById<View>(R.id.weekProgress)
         progress.post {

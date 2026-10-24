@@ -196,9 +196,10 @@ class RecordsActivity : AppCompatActivity() {
 
     private fun refreshStreak() {
         ioExecutor.execute {
-            val streak = repo.streakDays()
+            // 累计运动天数（不归零）——逐日不用「连续」，避免漏一天就有负罪感
+            val total = repo.activeDaysTotal()
             mainHandler.post {
-                findViewById<TextView>(R.id.tvStreak).text = streak.toString()
+                findViewById<TextView>(R.id.tvStreak).text = total.toString()
             }
         }
     }
@@ -224,7 +225,10 @@ class RecordsActivity : AppCompatActivity() {
         val runs: Int,
         val durationMs: Long,
         val avgPace: Double?,
-        val goalKm: Double
+        /** 本月动过的天数 */
+        val activeDays: Int,
+        /** 本月共有多少天 */
+        val totalDays: Int
     )
 
     private fun monthSummary(all: List<RunRecord>): MonthSummary {
@@ -238,24 +242,28 @@ class RecordsActivity : AppCompatActivity() {
         val km = inMonth.sumOf { it.distanceKm }
         val ms = inMonth.sumOf { it.durationMs }
         val pace = if (km * 1000.0 > 50 && ms > 0) ms / 1000.0 / km else null
-        return MonthSummary(km, inMonth.size, ms, pace, 120.0)
+        val activeDays = inMonth
+            .map { java.time.Instant.ofEpochMilli(it.startTimeMs).atZone(zone).toLocalDate() }
+            .toSet().size
+        return MonthSummary(km, inMonth.size, ms, pace, activeDays, today.lengthOfMonth())
     }
 
     private fun renderMonthCard(s: MonthSummary) {
         val minutes = s.durationMs / 60_000
-        findViewById<TextView>(R.id.tvMonthDistance).text = String.format(Locale.US, "%.1f", s.km)
+        // 大数字是「动过几天」——逐日的主指标
+        findViewById<TextView>(R.id.tvMonthActiveDays).text = s.activeDays.toString()
+        // 右上角放累计距离与天数进度
+        findViewById<TextView>(R.id.tvMonthGoal).text =
+            getString(R.string.records_month_km_value, s.km)
+        val percent = if (s.totalDays <= 0) 0
+        else ((s.activeDays * 100.0) / s.totalDays).roundToInt().coerceIn(0, 100)
+        findViewById<TextView>(R.id.tvMonthProgress).text = "$percent%"
+        // 底部三栏
         findViewById<TextView>(R.id.tvMonthRuns).text = s.runs.toString()
         findViewById<TextView>(R.id.tvMonthDuration).text =
             if (minutes < 1) String.format(Locale.US, "%dS", s.durationMs / 1000)
             else String.format(Locale.US, "%dH%02dM", minutes / 60, minutes % 60)
         findViewById<TextView>(R.id.tvMonthPace).text = Format.pace(s.avgPace)
-        findViewById<TextView>(R.id.tvMonthGoal).text =
-            getString(R.string.records_month_goal_value, s.goalKm.toInt())
-        val percent = if (s.goalKm <= 0) 0 else ((s.km / s.goalKm) * 100).toInt().coerceIn(0, 100)
-        findViewById<TextView>(R.id.tvMonthProgress).text = "$percent%"
-        findViewById<TextView>(R.id.tvMonthMark).text = SimpleDateFormat(
-            "MMMM yyyy", Locale.US
-        ).format(Date()).uppercase(Locale.US)
     }
 
     private fun refreshReport() {
@@ -272,12 +280,14 @@ class RecordsActivity : AppCompatActivity() {
     private fun renderReport(data: ReportData) {
         findViewById<TextView>(R.id.tvReportLabel).text = data.label
         findViewById<TextView>(R.id.tvReportRange).text = data.rangeText
-        findViewById<TextView>(R.id.tvReportDistance).text =
-            String.format(Locale.US, "%.1f", data.distanceKm)
+        // 主数字：动的天数（逐日的核心指标），距离作为副信息
+        findViewById<TextView>(R.id.tvReportDistance).text = data.activeDays.toString()
+        findViewById<TextView>(R.id.tvReportDistanceUnit).text = getString(R.string.unit_days)
         findViewById<TextView>(R.id.tvReportCount).text = data.runCount.toString()
         findViewById<TextView>(R.id.tvReportDuration).text = durationText(data.durationMs)
         findViewById<TextView>(R.id.tvReportPace).text = Format.pace(data.avgPaceSecPerKm)
 
+        // 「较上期」改成比「动的天数」，而不是比里程
         val deltaView = findViewById<TextView>(R.id.tvReportDelta)
         val delta = data.deltaPercent
         if (delta == null) {
