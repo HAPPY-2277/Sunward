@@ -1,5 +1,7 @@
 package com.runclub.android.data.model
 
+import kotlin.math.roundToInt
+
 /** 报告周期 */
 enum class ReportPeriod(val storageKey: String) {
     WEEK("week"),
@@ -36,7 +38,16 @@ data class ReportData(
     val avgPaceSecPerKm: Double?,
     /** 与上一周期的变化百分比；上一周期为 0 或本周期为 0 时 null */
     val deltaPercent: Int?,
-    val goalKm: Double,
+    /**
+     * 本周期「动过的天数」——这是逐日的核心指标，不是公里数。
+     * 同一天跑多次只算一天。
+     */
+    val activeDays: Int,
+    /**
+     * 本周期可选的天数（周=7，月=当月天数，年=365）。
+     * 目标是「这一段时间里，动了几天」，不制造任何欠账。
+     */
+    val targetDays: Int,
     val chartTitle: String,
     val chartSubtitle: String,
     /** X 轴标签 */
@@ -51,16 +62,20 @@ data class ReportData(
 ) {
     val hasData: Boolean get() = runCount > 0 || distanceKm > 0.0
 
+    /**
+     * 进度 = 动过的天数占比。
+     *
+     * 刻意**不是**公里目标：公里目标会让「今天只跑了 1 公里」变成一件
+     * 亏欠的事，而逐日的立场是——动了就是完成，一天就是一天。
+     */
     val progressPercent: Int
-        get() = if (goalKm <= 0) 0 else ((distanceKm / goalKm) * 100).toInt().coerceIn(0, 100)
+        get() = if (targetDays <= 0) 0 else ((activeDays * 100.0) / targetDays).roundToInt().coerceIn(0, 100)
 
-    val remainingKm: Double get() = (goalKm - distanceKm).coerceAtLeast(0.0)
-
-    /** 进度条下方文案 */
+    /** 进度条下方文案：只讲「动了几天」，不讲「还差多少」 */
     val progressText: String
-        get() = if (goalKm <= 0 || remainingKm <= 0.0) {
-            "已达成 ${goalKm.toInt()} km 目标"
+        get() = if (targetDays > 0 && activeDays >= targetDays) {
+            "这 ${targetDays} 天都动过了"
         } else {
-            "距 ${goalKm.toInt()} km 目标还差 ${"%.1f".format(remainingKm)} km"
+            "已动 ${activeDays} 天，共 ${targetDays} 天"
         }
 }

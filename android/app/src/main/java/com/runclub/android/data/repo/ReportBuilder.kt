@@ -26,12 +26,19 @@ import kotlin.math.roundToInt
  */
 object ReportBuilder {
 
-    const val WEEKLY_GOAL_KM = 30.0
-    const val MONTHLY_GOAL_KM = 120.0
-    const val YEARLY_GOAL_KM = 1000.0
+    // 逐日刻意不再有「公里目标」：目标是「这一段时间动了几天」，
+    // 由 ReportData.targetDays 表达，不设 km 门槛，避免欠账式表达。
 
-    /** 长距离门槛下限：单次 8 公里以上算长距离 */
+    /** 长距离门槛下限：单次 8 公里以上算「远足」 */
     private const val LONG_RUN_MIN_KM = 8.0
+
+    /** 慢走门槛上限：单次不到 2.5 公里算「散散步」 */
+    private const val SLOW_RUN_MAX_KM = 2.5
+
+    /** 运动构成的三类名称（口语化，不用训练术语） */
+    const val COMPOSITION_SLOW = "慢走"
+    const val COMPOSITION_REGULAR = "常跑"
+    const val COMPOSITION_LONG = "远足"
 
     fun build(
         records: List<RunRecord>,
@@ -54,43 +61,58 @@ object ReportBuilder {
         val labels = listOf("周一", "周二", "周三", "周四", "周五", "周六", "周日")
         val mileage = days.map { d -> inWeek.filter { localDate(it, zone) == d }.sumOf { it.distanceKm } }
         val pace = days.map { d -> paceOf(inWeek.filter { localDate(it, zone) == d }) }
+        val activeDays = days.count { d -> inWeek.any { localDate(it, zone) == d } }
 
         val prevStart = start.minusDays(7)
         val prevDays = (0..6).map { prevStart.plusDays(it.toLong()) }
-        val prevKm = records.filter { localDate(it, zone) in prevDays }.sumOf { it.distanceKm }
+        val prevInWeek = records.filter { localDate(it, zone) in prevDays }
+        val prevActiveDays = prevInWeek.map { localDate(it, zone) }.toSet().size
 
         return assemble(
             period = ReportPeriod.WEEK,
             records = inWeek,
             label = "本周战报",
             rangeText = "${start.formatShort()} — ${start.plusDays(6).formatShort()}",
-            goalKm = WEEKLY_GOAL_KM,
+            activeDays = activeDays,
+            targetDays = 7,
             chartTitle = "每日里程",
-            chartSubtitle = "本周共 ${inWeek.size} 次训练",
+            chartSubtitle = "这周动了 $activeDays 天",
             labels = labels,
             mileage = mileage,
             pace = pace,
-            previousKm = prevKm,
-            insight = weekInsight(inWeek, mileage, labels)
+            previousActiveDays = prevActiveDays,
+            insight = weekInsight(inWeek, mileage, labels, activeDays)
         )
     }
 
-    private fun weekInsight(inWeek: List<RunRecord>, mileage: List<Double>, labels: List<String>): String {
+    /**
+     * 每周观察：**只肯定已经做到的事，不提欠账**。
+     *
+     * 旧版会写「还差 X km 达标，安排一次轻松跑就能补上」——那是欠账式的话，
+     * 会让「今天只跑了一点」变成一件有负罪感的事。逐日不这么说话。
+     */
+    private fun weekInsight(
+        inWeek: List<RunRecord>,
+        mileage: List<Double>,
+        labels: List<String>,
+        activeDays: Int
+    ): String {
         if (inWeek.isEmpty()) {
-            return "这周还没有跑步记录。从一个 20 分钟的轻松跑开始，先把节奏找回来。"
+            return "这周还没有动过。挑一个天气好的日子，出门走 20 分钟就够了。"
         }
         val bestIndex = mileage.indices.maxByOrNull { mileage[it] } ?: 0
         val bestKm = mileage[bestIndex]
-        val avgPace = paceOf(inWeek)
-        val paceText = avgPace?.let { "平均配速 ${it.paceText()}。" } ?: ""
         val totalKm = mileage.sum()
-        val remain = (WEEKLY_GOAL_KM - totalKm).coerceAtLeast(0.0)
-        val tail = if (remain <= 0.0) {
-            "本周目标已达成，保持这个频率就好。"
-        } else {
-            "还差 ${"%.1f".format(remain)} km 达标，安排一次轻松跑就能补上。"
+
+        val head = when {
+            activeDays >= 6 -> "这周动了 $activeDays 天，几乎每天都出门，很稳。"
+            activeDays >= 3 -> "这周动了 $activeDays 天，一周里有好几天在动，这就很好。"
+            else -> "这周动了 $activeDays 天，每一次都算数。"
         }
-        return "${labels[bestIndex]}的 ${"%.1f".format(bestKm)} km 是本周最远的一次，$paceText$tail"
+        val detail = "${labels[bestIndex]}那次最远，走了 ${"%.1f".format(bestKm)} km，" +
+            "这周一共走了 ${"%.1f".format(totalKm)} km。"
+        val tail = if (activeDays < 7) "明天也出门走走？" else "保持就好，不用加量。"
+        return "$head$detail$tail"
     }
 
     // ---------------- 月 ----------------
@@ -107,68 +129,50 @@ object ReportBuilder {
         val pace = (0 until weekCount).map { i -> paceOf(inMonth.filter { bucketOf(it) == i }) }
 
         val prevMonth = month.minusMonths(1)
-        val prevKm = records
-            .filter { YearMonth.from(localDate(it, zone)) == prevMonth }
-            .sumOf { it.distanceKm }
+        val prevInMonth = records.filter { YearMonth.from(localDate(it, zone)) == prevMonth }
+        val prevActiveDays = prevInMonth.map { localDate(it, zone) }.toSet().size
+        val activeDays = inMonth.map { localDate(it, zone) }.toSet().size
 
         return assemble(
             period = ReportPeriod.MONTH,
             records = inMonth,
             label = "${month.monthValue}月战报",
             rangeText = "${month.atDay(1).formatShort()} — ${month.atEndOfMonth().formatShort()}",
-            goalKm = MONTHLY_GOAL_KM,
+            activeDays = activeDays,
+            targetDays = month.lengthOfMonth(),
             chartTitle = "每周里程",
-            chartSubtitle = "本月共 ${inMonth.size} 次训练",
+            chartSubtitle = "这个月动了 $activeDays 天",
             labels = labels,
             mileage = mileage,
             pace = pace,
-            previousKm = prevKm,
-            insight = monthInsight(inMonth, month, zone)
+            previousActiveDays = prevActiveDays,
+            insight = monthInsight(inMonth, month, zone, activeDays)
         )
     }
 
-    private fun monthInsight(inMonth: List<RunRecord>, month: YearMonth, zone: ZoneId): String {
+    /** 每月观察：肯定频率，不评价强度，也不提欠账 */
+    private fun monthInsight(
+        inMonth: List<RunRecord>,
+        month: YearMonth,
+        zone: ZoneId,
+        activeDays: Int
+    ): String {
         if (inMonth.isEmpty()) {
-            return "${month.monthValue} 月还没有跑步记录。先跑一次，这份报告就会自动生成。"
-        }
-        val mid = month.lengthOfMonth() / 2
-        val firstHalf = inMonth.filter { localDate(it, zone).dayOfMonth <= mid }
-        val secondHalf = inMonth.filter { localDate(it, zone).dayOfMonth > mid }
-        val firstPace = paceOf(firstHalf)
-        val secondPace = paceOf(secondHalf)
-
-        val trend = if (firstPace != null && secondPace != null) {
-            val diff = firstPace - secondPace   // 正数 = 后半程更快
-            when {
-                abs(diff) < 3 -> "上下半程配速很稳定，节奏控制得不错。"
-                diff > 0 -> "后半程比前半程快了 ${diff.roundToInt()} 秒，状态在回升。"
-                else -> "后半程比前半程慢了 ${abs(diff).roundToInt()} 秒，注意别练过头。"
-            }
-        } else {
-            ""
+            return "${month.monthValue} 月还没有动过。这个月还长，先挑一天出门走走。"
         }
         val total = inMonth.sumOf { it.distanceKm }
-        // 与「训练构成」用同一套长距离规则，避免两处口径不一致（真实踩过：
-        // 构成卡显示长距离 33%，教练观察却说「单次最长只占 17%」，看起来自相矛盾）
-        val avgDistance = total / inMonth.size
-        val longThreshold = max(LONG_RUN_MIN_KM, avgDistance * 1.5)
-        val longKm = inMonth.filter { it.distanceKm >= longThreshold }.sumOf { it.distanceKm }
-        val longShare = if (total > 0) longKm / total * 100 else 0.0
-        val longest = inMonth.maxByOrNull { it.distanceM }?.distanceKm ?: 0.0
-        val longTip = if (longShare < 25.0) {
-            String.format(
-                Locale.US,
-                "长距离只占 %.0f%%，建议每周安排一次 %.0f km 的慢跑。",
-                longShare, max(8.0, longest * 1.2)
-            )
-        } else {
-            String.format(
-                Locale.US,
-                "长距离占 %.0f%%（最长 %.1f km），训练结构健康。",
-                longShare, longest
-            )
+        val head = when {
+            activeDays >= 20 -> "这个月动了 $activeDays 天，几乎一天没落。"
+            activeDays >= 12 -> "这个月动了 $activeDays 天，一半以上的日子都在动。"
+            else -> "这个月动了 $activeDays 天，每一次都记下来了。"
         }
-        return "$trend$longTip"
+        val detail = "一共走了 ${"%.1f".format(total)} km。"
+        val tail = if (activeDays < month.lengthOfMonth()) {
+            "剩下的日子不用赶，出门就行。"
+        } else {
+            "下个月也这样就好。"
+        }
+        return "$head$detail$tail"
     }
 
     // ---------------- 年 ----------------
@@ -181,35 +185,45 @@ object ReportBuilder {
         val mileage = (1..12).map { m -> inYear.filter { localDate(it, zone).monthValue == m }.sumOf { it.distanceKm } }
         val pace = (1..12).map { m -> paceOf(inYear.filter { localDate(it, zone).monthValue == m }) }
 
-        val prevKm = records.filter { localDate(it, zone).year == year - 1 }.sumOf { it.distanceKm }
+        val prevInYear = records.filter { localDate(it, zone).year == year - 1 }
+        val prevActiveDays = prevInYear.map { localDate(it, zone) }.toSet().size
+        val activeDays = inYear.map { localDate(it, zone) }.toSet().size
 
         return assemble(
             period = ReportPeriod.YEAR,
             records = inYear,
             label = "$year 战报",
             rangeText = "01.01 — 至今",
-            goalKm = YEARLY_GOAL_KM,
+            activeDays = activeDays,
+            targetDays = 365,
             chartTitle = "月度里程",
-            chartSubtitle = "今年已完成 ${inYear.size} 次跑步",
+            chartSubtitle = "今年动了 $activeDays 天",
             labels = labels,
             mileage = mileage,
             pace = pace,
-            previousKm = prevKm,
-            insight = yearInsight(inYear, mileage, labels)
+            previousActiveDays = prevActiveDays,
+            insight = yearInsight(inYear, mileage, labels, activeDays)
         )
     }
 
-    private fun yearInsight(inYear: List<RunRecord>, mileage: List<Double>, labels: List<String>): String {
+    /** 年度观察：把一年拆成「动了多少天」的故事 */
+    private fun yearInsight(
+        inYear: List<RunRecord>,
+        mileage: List<Double>,
+        labels: List<String>,
+        activeDays: Int
+    ): String {
         if (inYear.isEmpty()) {
-            return "今年还没有跑步记录。跑起来，明年的今天会感谢现在的自己。"
+            return "今年还没有动过。不用等一个完美的开始，明天出门就行。"
         }
         val total = mileage.sum()
         val bestIndex = mileage.indices.maxByOrNull { mileage[it] } ?: 0
-        val avgPace = paceOf(inYear)
-        val paceText = avgPace?.let { "全年平均配速 ${it.paceText()}。" } ?: ""
         val activeMonths = mileage.count { it > 0.01 }
-        return "今年已累计 ${"%.0f".format(total)} km，活跃 $activeMonths 个月，" +
-            "${labels[bestIndex]}状态最好（${"%.1f".format(mileage[bestIndex])} km）。$paceText"
+        val head = "今年动了 $activeDays 天，分布在 $activeMonths 个月里。"
+        val detail = "一共走了 ${"%.0f".format(total)} km，${labels[bestIndex]}走得最多" +
+            "（${"%.1f".format(mileage[bestIndex])} km）。"
+        val tail = "每天一点，一年很远。"
+        return "$head$detail$tail"
     }
 
     // ---------------- 共用装配 ----------------
@@ -219,13 +233,14 @@ object ReportBuilder {
         records: List<RunRecord>,
         label: String,
         rangeText: String,
-        goalKm: Double,
+        activeDays: Int,
+        targetDays: Int,
         chartTitle: String,
         chartSubtitle: String,
         labels: List<String>,
         mileage: List<Double>,
         pace: List<Double?>,
-        previousKm: Double,
+        previousActiveDays: Int,
         insight: String
     ): ReportData {
         val totalKm = mileage.sum()
@@ -234,9 +249,11 @@ object ReportBuilder {
             totalKm * 1000.0 > 50.0 && totalMs > 0 -> totalMs / 1000.0 / totalKm
             else -> null
         }
+        // 「较上期」比的是**动过的天数**，不是里程。
+        // 逐日不奖励「跑得多」，只奖励「来得勤」。
         val delta = when {
-            previousKm <= 0.01 || totalKm <= 0.01 -> null
-            else -> (((totalKm - previousKm) / previousKm) * 100).roundToInt()
+            previousActiveDays <= 0 || activeDays <= 0 -> null
+            else -> (((activeDays - previousActiveDays) * 100.0) / previousActiveDays).roundToInt()
         }
 
         return ReportData(
@@ -248,7 +265,8 @@ object ReportBuilder {
             durationMs = totalMs,
             avgPaceSecPerKm = avgPace,
             deltaPercent = delta,
-            goalKm = goalKm,
+            activeDays = activeDays,
+            targetDays = targetDays,
             chartTitle = chartTitle,
             chartSubtitle = chartSubtitle,
             labels = labels,
@@ -260,42 +278,43 @@ object ReportBuilder {
     }
 
     /**
-     * 训练构成：按里程占比分三类。
+     * 运动构成：按里程占比分三类。
      *
-     * 分类规则（写进验收报告，便于你核对）：
-     * - 长距离：单次 ≥ max(8 km, 本周期平均单次距离 × 1.5)
-     * - 节奏跑：配速比本周期平均配速快 3% 以上
-     * - 轻松跑：其余
+     * 分类名刻意用**家人能懂的说法**，而不是「轻松跑 / 节奏跑 / 长距离」这类
+     * 训练术语——后者是给竞技跑者的词汇，日常锻炼者用不上：
+     * - 慢走：单次距离短（< 2.5 km），是「散散步」级别的运动
+     * - 常跑：中等距离，是最常见的日常跑步
+     * - 远足：单次较长，走得比平时久
+     *
+     * 阈值：远足 = 单次 ≥ max(8 km, 平均单次 × 1.5)；慢走 = 单次 < 2.5 km；其余为常跑。
      */
     private fun composition(records: List<RunRecord>, totalKm: Double): List<CompositionSlice> {
         if (records.isEmpty() || totalKm <= 0.0) {
             return listOf(
-                CompositionSlice("轻松跑", 0, 0.0, "#D9FF43"),
-                CompositionSlice("节奏跑", 0, 0.0, "#FF5C35"),
-                CompositionSlice("长距离", 0, 0.0, "#5B675B")
+                CompositionSlice(COMPOSITION_SLOW, 0, 0.0, "#D9FF43"),
+                CompositionSlice(COMPOSITION_REGULAR, 0, 0.0, "#FF5C35"),
+                CompositionSlice(COMPOSITION_LONG, 0, 0.0, "#5B675B")
             )
         }
         val avgDistance = totalKm / records.size
         val longThreshold = max(LONG_RUN_MIN_KM, avgDistance * 1.5)
-        val avgPace = records.mapNotNull { it.avgPaceSecPerKm }.average().takeIf { !it.isNaN() }
 
-        var easy = 0.0
-        var tempo = 0.0
+        var slow = 0.0
+        var regular = 0.0
         var long = 0.0
         records.forEach { r ->
             when {
                 r.distanceKm >= longThreshold -> long += r.distanceKm
-                avgPace != null && r.avgPaceSecPerKm != null &&
-                    r.avgPaceSecPerKm < avgPace * 0.97 -> tempo += r.distanceKm
-                else -> easy += r.distanceKm
+                r.distanceKm < SLOW_RUN_MAX_KM -> slow += r.distanceKm
+                else -> regular += r.distanceKm
             }
         }
 
-        val percents = roundToHundred(listOf(easy, tempo, long), totalKm)
+        val percents = roundToHundred(listOf(slow, regular, long), totalKm)
         return listOf(
-            CompositionSlice("轻松跑", percents[0], easy, "#D9FF43"),
-            CompositionSlice("节奏跑", percents[1], tempo, "#FF5C35"),
-            CompositionSlice("长距离", percents[2], long, "#5B675B")
+            CompositionSlice(COMPOSITION_SLOW, percents[0], slow, "#D9FF43"),
+            CompositionSlice(COMPOSITION_REGULAR, percents[1], regular, "#FF5C35"),
+            CompositionSlice(COMPOSITION_LONG, percents[2], long, "#5B675B")
         )
     }
 

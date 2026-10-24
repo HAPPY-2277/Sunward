@@ -41,12 +41,12 @@ class RunRepository private constructor(context: Context) {
 
     /**
      * 本周汇总。
-     * @param zoneId 统计所用时区，默认取系统时区
+     *
+     * 进度指标是「本周动了几天」，不是「离 30 km 还差多少」——
+     * 逐日的立场是频率优先，公里只是副产品。
      */
     fun weeklyStats(
-        zoneId: ZoneId = ZoneId.systemDefault(),
-        goalKm: Double = WEEKLY_GOAL_KM,
-        targetKmPerDay: Double = DAILY_TARGET_KM
+        zoneId: ZoneId = ZoneId.systemDefault()
     ): WeeklyStats {
         val today = LocalDate.now(zoneId)
         val weekStart = today.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
@@ -65,14 +65,18 @@ class RunRepository private constructor(context: Context) {
             daily += km
         }
 
+        val activeDays = inWeek
+            .map { LocalDate.ofInstant(Instant.ofEpochMilli(it.startTimeMs), zoneId) }
+            .toSet().size
+
         return WeeklyStats(
             totalKm = inWeek.sumOf { it.distanceKm },
             totalDurationMs = inWeek.sumOf { it.durationMs },
             totalCalories = inWeek.sumOf { it.calories },
             runCount = inWeek.size,
             dailyKm = daily,
-            goalKm = goalKm,
-            targetKmPerDay = targetKmPerDay
+            activeDays = activeDays,
+            targetDays = 7
         )
     }
 
@@ -97,15 +101,26 @@ class RunRepository private constructor(context: Context) {
     ): ReportData = ReportBuilder.build(all(), period, zone, today)
 
     /**
-     * 连续运动天数：从今天（或昨天，避免「今天还没跑」就断）往前数。
-     * 一天内多次跑步只算一天。
+     * 累计运动天数（**不归零**）。
+     *
+     * 逐日刻意不用「连续 N 天」：连续断了会归零，而归零会让「漏了一天」
+     * 变成一件有负罪感的事——家里长辈最可能因此放弃。
+     * 这里统计的是「一共动了多少天」，漏掉的日子只是不增加，绝不惩罚。
      */
-    fun streakDays(zone: ZoneId = ZoneId.systemDefault(), today: LocalDate = LocalDate.now(zone)): Int {
+    fun activeDaysTotal(zone: ZoneId = ZoneId.systemDefault()): Int =
+        all().map { LocalDate.ofInstant(Instant.ofEpochMilli(it.startTimeMs), zone) }
+            .toSet().size
+
+    /**
+     * 最近的连续天数（用于首页鼓励语）。
+     * 只在「今天或昨天动过」时才有意义，否则返回 0。
+     */
+    fun currentStreak(zone: ZoneId = ZoneId.systemDefault(), today: LocalDate = LocalDate.now(zone)): Int {
         val days = all()
             .map { LocalDate.ofInstant(Instant.ofEpochMilli(it.startTimeMs), zone) }
             .toSet()
         if (days.isEmpty()) return 0
-        // 今天没跑不算断，从昨天开始数
+        // 今天没动不算断，从昨天开始数
         var cursor = if (days.contains(today)) today else today.minusDays(1)
         if (!days.contains(cursor)) return 0
         var count = 0
@@ -117,9 +132,6 @@ class RunRepository private constructor(context: Context) {
     }
 
     companion object {
-        /** 周目标 30 KM（与原型一致） */
-        const val WEEKLY_GOAL_KM = 30.0
-
         /** 每日目标 5 KM */
         const val DAILY_TARGET_KM = 5.0
 

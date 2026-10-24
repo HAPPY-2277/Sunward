@@ -41,7 +41,8 @@ data class StoredTrackPoint(
 
 /**
  * 某一周的汇总（首页「本周节奏」用）。
- * @param dailyKm 周一→周日的每日里程，0 表示当天没跑
+ * @param dailyKm 周一→周日的每日里程，0 表示当天没动
+ * @param activeDays 本周动过的天数（同一天多次只算一天）——逐日的核心指标
  */
 data class WeeklyStats(
     val totalKm: Double,
@@ -49,13 +50,16 @@ data class WeeklyStats(
     val totalCalories: Int,
     val runCount: Int,
     val dailyKm: List<Double>,
-    val goalKm: Double,
-    val targetKmPerDay: Double
+    val activeDays: Int,
+    /** 本周可选天数，恒为 7 */
+    val targetDays: Int = 7
 ) {
+    /**
+     * 进度 = 动过的天数占比。
+     *
+     * 刻意不是公里目标：「还差 X km 达标」是欠账式表达，会让只跑了一点的人
+     * 觉得亏欠。逐日的立场是动了就算数。
+     */
     val progressPercent: Int
-        get() = if (goalKm <= 0) 0 else ((totalKm / goalKm) * 100).toInt().coerceIn(0, 100)
-
-    /** 距离周目标还差多少（已达���返回 0） */
-    val remainingKm: Double
-        get() = (goalKm - totalKm).coerceAtLeast(0.0)
+        get() = if (targetDays <= 0) 0 else ((activeDays * 100.0) / targetDays).toInt().coerceIn(0, 100)
 }
