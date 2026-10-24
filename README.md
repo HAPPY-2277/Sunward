@@ -35,10 +35,18 @@ $env:ANDROID_USER_HOME  = 'D:\a\tools\android-user'   # 不能同时设 ANDROID_
 $env:GRADLE_USER_HOME   = 'D:\a\tools\gradle-home'    # 默认 ~/.gradle 在工作区外，会被文件沙箱拒绝
 
 cd D:\a\android
-.\gradlew.bat assembleDebug
+.\gradlew.bat assembleLocalDebug     # 不含高德 SDK，可在 x86_64 模拟器安装（手绘地图）
+.\gradlew.bat assembleAmapDebug      # 含高德底图，装真机（ARM only）
 ```
 
-产物：`android\app\build\outputs\apk\debug\app-debug.apk`
+| 变体 | 产物 | 用途 |
+|---|---|---|
+| `local` | `app\build\outputs\apk\local\debug\app-local-debug.apk`（约 7 MB） | 模拟器 / 无 ARM 环境，用手绘地图 |
+| `amap` | `app\build\outputs\apk\amap\debug\app-amap-debug.apk`（约 42 MB） | 真机，真实高德底图 |
+
+> ⚠️ **为什么拆两个变体**：高德 3D 地图 SDK 只带 `arm64-v8a` / `armeabi-v7a` 的 native 库。
+> 一旦把这个依赖打进主变体，**x86_64 模拟器连安装都会报 `INSTALL_FAILED_NO_MATCHING_ABIS`**，
+> 开发期就没法自测了。两个变体共用同一个 `applicationId`，所以高德 Key 对两者都有效。
 
 若 `local.properties` 不存在，创建它并写入：`sdk.dir=D:/a/tools/android-sdk`
 
