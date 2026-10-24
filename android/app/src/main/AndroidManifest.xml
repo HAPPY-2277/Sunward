@@ -44,6 +44,13 @@
             android:name=".ui.RecordsActivity"
             android:exported="false" />
 
+        <!-- M3：跑步记录前台服务。foregroundServiceType 必须是 location，
+             不能用 dataSync（Android 15 起每 24h 最多 6 小时会被系统停掉） -->
+        <service
+            android:name=".service.RunForegroundService"
+            android:exported="false"
+            android:foregroundServiceType="location" />
+
     </application>
 
 </manifest>

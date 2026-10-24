@@ -75,6 +75,23 @@
     <string name="perm_denied">权限被拒绝了。可以再次授权，或到系统设置里手动开启。</string>
     <string name="gps_disabled">GPS 未开启，请到系统设置中打开定位。</string>
 
+    <!-- 通知（M3 前台服务） -->
+    <string name="notif_channel_name">跑步记录</string>
+    <string name="notif_channel_desc">跑步时在通知栏显示实时数据，锁屏后也能查看</string>
+    <string name="notif_title_running">跑步记录中</string>
+    <string name="notif_title_paused">已暂停</string>
+    <string name="notif_title_finished">跑步已结束</string>
+    <string name="notif_pause">暂停</string>
+    <string name="notif_resume">继续</string>
+    <string name="notif_end">结束</string>
+
+    <!-- 恢复未完成的跑步 -->
+    <string name="restore_title">检测到未完成的跑步</string>
+    <string name="restore_message">上次记录在 %1$s 中断，已记录 %2$s KM、用时 %3$s。要恢复继续记录吗？</string>
+    <string name="restore_yes">恢复</string>
+    <string name="restore_no">丢弃</string>
+    <string name="restore_discarded">未完成的记录已丢弃</string>
+
     <!-- 调试面板（仅 debug 构建可见） -->
     <string name="debug_title">定位调试</string>
     <string name="debug_hint">点击这里展开 / 收起</string>
