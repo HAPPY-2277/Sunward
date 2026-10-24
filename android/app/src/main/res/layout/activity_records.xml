@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 记录页 · 复刻原型 records.html 的历史 Tab（报告 Tab 在 M7 接入） -->
+<!--
+    记录页 · 1:1 复刻 design/prototype/records.html
+    顶栏（Run Log + 跑步记录 + 连续运动徽章）+ 历史/报告 Tab + 两个面板
+-->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,73 +14,587 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <!-- 顶栏 -->
+        <!-- ===== 顶栏 ===== -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="64dp"
-            android:gravity="center_vertical"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
             android:orientation="horizontal"
             android:paddingStart="20dp"
+            android:paddingTop="20dp"
             android:paddingEnd="20dp">
 
-            <TextView
-                android:id="@+id/btnBackRecords"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bg_chip_glass"
-                android:clickable="true"
-                android:focusable="true"
-                android:paddingStart="14dp"
-                android:paddingTop="8dp"
-                android:paddingEnd="14dp"
-                android:paddingBottom="8dp"
-                android:text="@string/back"
-                android:textColor="@color/text_muted"
-                android:textSize="12sp" />
-
-            <TextView
-                style="@style/Text.Brand"
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="end"
-                android:text="@string/records_title" />
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <FrameLayout
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:background="@drawable/bg_logo_square">
+
+                        <ImageView
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:layout_gravity="center"
+                            android:contentDescription="@string/records_title"
+                            android:src="@drawable/ic_chart"
+                            android:tint="@color/bg_base" />
+                    </FrameLayout>
+
+                    <TextView
+                        style="@style/Text.Eyebrow"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:letterSpacing="0.26"
+                        android:text="@string/records_brand"
+                        android:textColor="@color/text_muted2" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:letterSpacing="-0.06"
+                    android:text="@string/records_page_title"
+                    android:textColor="@color/text_primary"
+                    android:textSize="30sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/records_subtitle"
+                    android:textColor="@color/text_muted2"
+                    android:textSize="11sp" />
+            </LinearLayout>
+
+            <!-- 连续运动徽章 -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_streak_badge"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:paddingStart="14dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="14dp"
+                android:paddingBottom="10dp">
+
+                <TextView
+                    android:id="@+id/tvStreak"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textColor="@color/accent_lime"
+                    android:textSize="19sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:letterSpacing="0.06"
+                    android:text="@string/records_streak_label"
+                    android:textColor="@color/text_olive"
+                    android:textSize="8sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
         </LinearLayout>
 
-        <ScrollView
+        <!-- ===== 历史 / 报告 Tab ===== -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/bg_tab_track"
+            android:orientation="horizontal"
+            android:padding="4dp">
+
+            <LinearLayout
+                android:id="@+id/tabHistory"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/bg_nav_active"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp">
+
+                <ImageView
+                    android:id="@+id/ivTabHistory"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:contentDescription="@string/records_tab_history"
+                    android:src="@drawable/ic_history"
+                    android:tint="@color/bg_base" />
+
+                <TextView
+                    android:id="@+id/tvTabHistory"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="@string/records_tab_history"
+                    android:textColor="@color/bg_base"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/tabReport"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp">
+
+                <ImageView
+                    android:id="@+id/ivTabReport"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:contentDescription="@string/records_tab_report"
+                    android:src="@drawable/ic_chart_column"
+                    android:tint="@color/text_tab_inactive" />
+
+                <TextView
+                    android:id="@+id/tvTabReport"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="@string/records_tab_report"
+                    android:textColor="@color/text_tab_inactive"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- ===== 面板区 ===== -->
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:scrollbars="none">
+            android:layout_marginTop="12dp">
 
-            <LinearLayout
+            <ScrollView
+                android:id="@+id/scrollHistory"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingBottom="20dp">
+                android:layout_height="match_parent"
+                android:scrollbars="none">
 
-                <!-- 月度回顾卡 -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginEnd="20dp"
-                    android:background="@drawable/bg_card_month"
                     android:orientation="vertical"
-                    android:padding="20dp">
+                    android:paddingBottom="20dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <!-- 月度回顾卡（橙色，复刻原型） -->
+                    <FrameLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        style="@style/Text.Eyebrow"
-                        android:text="@string/records_month_title" />
+                        android:layout_marginStart="20dp"
+                        android:layout_marginEnd="20dp"
+                        android:background="@drawable/bg_month_orange"
+                        android:padding="20dp">
 
+                        <View
+                            android:layout_width="160dp"
+                            android:layout_height="160dp"
+                            android:layout_gravity="end|top"
+                            android:layout_marginTop="-56dp"
+                            android:layout_marginEnd="-48dp"
+                            android:background="@drawable/bg_decor_ring_ink" />
+
+                        <View
+                            android:layout_width="96dp"
+                            android:layout_height="96dp"
+                            android:layout_gravity="start|bottom"
+                            android:layout_marginStart="48dp"
+                            android:layout_marginBottom="-48dp"
+                            android:background="@drawable/bg_decor_ring_lime30" />
+
+                        <TextView
+                            android:id="@+id/tvMonthMark"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="end|bottom"
+                            android:layout_marginEnd="10dp"
+                            android:layout_marginBottom="6dp"
+                            android:letterSpacing="0.32"
+                            android:rotation="90"
+                            android:text="@string/records_month_mark"
+                            android:textAllCaps="true"
+                            android:textColor="@color/ink_month_30"
+                            android:textSize="8sp"
+                            android:textStyle="bold" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:baselineAligned="false"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/bg_badge_ink"
+                                    android:gravity="center_vertical"
+                                    android:orientation="horizontal"
+                                    android:paddingStart="12dp"
+                                    android:paddingTop="6dp"
+                                    android:paddingEnd="12dp"
+                                    android:paddingBottom="6dp">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:letterSpacing="0.16"
+                                        android:text="@string/records_month_badge"
+                                        android:textAllCaps="true"
+                                        android:textColor="@color/orange_light"
+                                        android:textSize="8sp"
+                                        android:textStyle="bold" />
+                                </LinearLayout>
+
+                                <View
+                                    android:layout_width="0dp"
+                                    android:layout_height="1dp"
+                                    android:layout_weight="1" />
+
+                                <TextView
+                                    android:id="@+id/btnToReport"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:clickable="true"
+                                    android:focusable="true"
+                                    android:paddingStart="6dp"
+                                    android:paddingTop="4dp"
+                                    android:paddingEnd="6dp"
+                                    android:paddingBottom="4dp"
+                                    android:text="@string/records_toreport"
+                                    android:textColor="@color/ink_month_65"
+                                    android:textSize="10sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="20dp"
+                                android:baselineAligned="false"
+                                android:orientation="horizontal">
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:letterSpacing="0.18"
+                                        android:text="@string/records_month_total"
+                                        android:textAllCaps="true"
+                                        android:textColor="@color/ink_month_45"
+                                        android:textSize="9sp"
+                                        android:textStyle="bold" />
+
+                                    <LinearLayout
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="4dp"
+                                        android:gravity="bottom"
+                                        android:orientation="horizontal">
+
+                                        <TextView
+                                            android:id="@+id/tvMonthDistance"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:letterSpacing="-0.07"
+                                            android:text="0.0"
+                                            android:textColor="@color/ink_month"
+                                            android:textSize="45sp"
+                                            android:textStyle="bold" />
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginStart="6dp"
+                                            android:layout_marginBottom="6dp"
+                                            android:text="@string/home_unit_km"
+                                            android:textColor="@color/ink_month"
+                                            android:textSize="10sp"
+                                            android:textStyle="bold" />
+                                    </LinearLayout>
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="end"
+                                    android:orientation="vertical"
+                                    android:paddingBottom="4dp">
+
+                                    <TextView
+                                        android:id="@+id/tvMonthGoal"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="@string/records_month_goal"
+                                        android:textColor="@color/ink_month_50"
+                                        android:textSize="9sp"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:id="@+id/tvMonthProgress"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="4dp"
+                                        android:text="0%"
+                                        android:textColor="@color/ink_month"
+                                        android:textSize="14sp"
+                                        android:textStyle="bold" />
+                                </LinearLayout>
+                            </LinearLayout>
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_marginTop="16dp"
+                                android:background="@color/ink_month_12" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="12dp"
+                                android:baselineAligned="false"
+                                android:orientation="horizontal">
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:letterSpacing="0.1"
+                                        android:text="@string/records_month_runs"
+                                        android:textColor="@color/ink_month_45"
+                                        android:textSize="8sp"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:id="@+id/tvMonthRuns"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="4dp"
+                                        android:text="0"
+                                        android:textColor="@color/ink_month"
+                                        android:textSize="13sp"
+                                        android:textStyle="bold" />
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:letterSpacing="0.1"
+                                        android:text="@string/home_week_duration"
+                                        android:textColor="@color/ink_month_45"
+                                        android:textSize="8sp"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:id="@+id/tvMonthDuration"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="4dp"
+                                        android:text="0H00M"
+                                        android:textColor="@color/ink_month"
+                                        android:textSize="13sp"
+                                        android:textStyle="bold" />
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:letterSpacing="0.1"
+                                        android:text="@string/result_avg_pace"
+                                        android:textColor="@color/ink_month_45"
+                                        android:textSize="8sp"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:id="@+id/tvMonthPace"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="4dp"
+                                        android:text="@string/placeholder_pace"
+                                        android:textColor="@color/ink_month"
+                                        android:textSize="13sp"
+                                        android:textStyle="bold" />
+                                </LinearLayout>
+                            </LinearLayout>
+                        </LinearLayout>
+                    </FrameLayout>
+
+                    <!-- 筛选 -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="20dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/filterAll"
+                            android:layout_width="0dp"
+                            android:layout_height="36dp"
+                            android:layout_marginEnd="6dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_nav_active"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center"
+                            android:text="@string/records_filter_all"
+                            android:textColor="@color/bg_base"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/filter5"
+                            android:layout_width="0dp"
+                            android:layout_height="36dp"
+                            android:layout_marginStart="3dp"
+                            android:layout_marginEnd="3dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_chip_glass"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center"
+                            android:text="@string/records_filter_5"
+                            android:textColor="@color/text_dim"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/filter10"
+                            android:layout_width="0dp"
+                            android:layout_height="36dp"
+                            android:layout_marginStart="6dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_chip_glass"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center"
+                            android:text="@string/records_filter_10"
+                            android:textColor="@color/text_dim"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp">
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/recycler"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:clipToPadding="false"
+                            android:nestedScrollingEnabled="false"
+                            android:paddingStart="20dp"
+                            android:paddingEnd="20dp" />
+
+                        <LinearLayout
+                            android:id="@+id/emptyView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:paddingTop="40dp"
+                            android:paddingBottom="40dp"
+                            android:visibility="gone">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/records_empty"
+                                android:textColor="@color/text_muted"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:text="@string/records_empty_hint"
+                                android:textColor="@color/text_dim"
+                                android:textSize="11sp" />
+                        </LinearLayout>
+                    </FrameLayout>
+                </LinearLayout>
+            </ScrollView>
+
+            <!-- ===== 报告面板 ===== -->
+            <ScrollView
+                android:id="@+id/scrollReport"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="none"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingBottom="20dp">
+
+                    <!-- 标题 + 周/月/年 -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginEnd="20dp"
                         android:baselineAligned="false"
+                        android:gravity="center_vertical"
                         android:orientation="horizontal">
 
                         <LinearLayout
@@ -87,184 +604,722 @@
                             android:orientation="vertical">
 
                             <TextView
-                                android:id="@+id/tvMonthDistance"
+                                style="@style/Text.Eyebrow"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:letterSpacing="-0.05"
-                                android:text="0.0"
+                                android:text="@string/records_performance" />
+
+                            <TextView
+                                style="@style/Text.SectionTitle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:text="@string/records_report_title" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/periodWeek"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/bg_period_active"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:paddingStart="12dp"
+                                android:paddingTop="6dp"
+                                android:paddingEnd="12dp"
+                                android:paddingBottom="6dp"
+                                android:text="@string/records_period_week"
+                                android:textColor="@color/bg_base"
+                                android:textSize="9sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/periodMonth"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="4dp"
+                                android:background="@drawable/bg_period_inactive"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:paddingStart="12dp"
+                                android:paddingTop="6dp"
+                                android:paddingEnd="12dp"
+                                android:paddingBottom="6dp"
+                                android:text="@string/records_period_month"
+                                android:textColor="@color/text_period_inactive"
+                                android:textSize="9sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/periodYear"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="4dp"
+                                android:background="@drawable/bg_period_inactive"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:paddingStart="12dp"
+                                android:paddingTop="6dp"
+                                android:paddingEnd="12dp"
+                                android:paddingBottom="6dp"
+                                android:text="@string/records_period_year"
+                                android:textColor="@color/text_period_inactive"
+                                android:textSize="9sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <!-- 战报主卡 -->
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="20dp"
+                        android:background="@drawable/bg_report_hero"
+                        android:padding="20dp">
+
+                        <View
+                            android:layout_width="144dp"
+                            android:layout_height="144dp"
+                            android:layout_gravity="end|top"
+                            android:layout_marginTop="-48dp"
+                            android:layout_marginEnd="-40dp"
+                            android:background="@drawable/bg_decor_ring_lime06" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:baselineAligned="false"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:id="@+id/tvReportLabel"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/bg_chip_lime_solid"
+                                    android:letterSpacing="0.12"
+                                    android:paddingStart="12dp"
+                                    android:paddingTop="6dp"
+                                    android:paddingEnd="12dp"
+                                    android:paddingBottom="6dp"
+                                    android:text="@string/records_week_badge"
+                                    android:textColor="@color/bg_base"
+                                    android:textSize="8sp"
+                                    android:textStyle="bold" />
+
+                                <View
+                                    android:layout_width="0dp"
+                                    android:layout_height="1dp"
+                                    android:layout_weight="1" />
+
+                                <TextView
+                                    android:id="@+id/tvReportRange"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/placeholder_range"
+                                    android:textColor="@color/text_range"
+                                    android:textSize="9sp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="20dp"
+                                android:baselineAligned="false"
+                                android:gravity="bottom"
+                                android:orientation="horizontal">
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:letterSpacing="0.18"
+                                        android:text="@string/records_total_distance"
+                                        android:textAllCaps="true"
+                                        android:textColor="@color/text_report_dim"
+                                        android:textSize="9sp"
+                                        android:textStyle="bold" />
+
+                                    <LinearLayout
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="4dp"
+                                        android:gravity="bottom"
+                                        android:orientation="horizontal">
+
+                                        <TextView
+                                            android:id="@+id/tvReportDistance"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:letterSpacing="-0.07"
+                                            android:text="0.0"
+                                            android:textColor="@color/accent_lime"
+                                            android:textSize="43sp"
+                                            android:textStyle="bold" />
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginStart="6dp"
+                                            android:layout_marginBottom="6dp"
+                                            android:text="@string/home_unit_km"
+                                            android:textColor="@color/text_km_olive"
+                                            android:textSize="10sp"
+                                            android:textStyle="bold" />
+                                    </LinearLayout>
+                                </LinearLayout>
+
+                                <TextView
+                                    android:id="@+id/tvReportDelta"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="4dp"
+                                    android:background="@drawable/bg_chip_orange"
+                                    android:paddingStart="10dp"
+                                    android:paddingTop="4dp"
+                                    android:paddingEnd="10dp"
+                                    android:paddingBottom="4dp"
+                                    android:text="@string/placeholder_delta"
+                                    android:textColor="@color/orange_light"
+                                    android:textSize="9sp"
+                                    android:textStyle="bold"
+                                    android:visibility="gone" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="16dp"
+                                android:baselineAligned="false"
+                                android:orientation="horizontal"
+                                android:paddingTop="12dp"
+                                android:paddingBottom="12dp">
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:letterSpacing="0.1"
+                                        android:text="@string/records_run_count"
+                                        android:textAllCaps="true"
+                                        android:textColor="@color/text_range"
+                                        android:textSize="8sp"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:id="@+id/tvReportCount"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="4dp"
+                                        android:text="0"
+                                        android:textColor="@color/text_primary"
+                                        android:textSize="13sp"
+                                        android:textStyle="bold" />
+                                </LinearLayout>
+
+                                <View
+                                    android:layout_width="1dp"
+                                    android:layout_height="match_parent"
+                                    android:background="@color/white_08" />
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical"
+                                    android:paddingStart="12dp">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:letterSpacing="0.1"
+                                        android:text="@string/records_total_duration"
+                                        android:textAllCaps="true"
+                                        android:textColor="@color/text_range"
+                                        android:textSize="8sp"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:id="@+id/tvReportDuration"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="4dp"
+                                        android:text="0H00M"
+                                        android:textColor="@color/text_primary"
+                                        android:textSize="13sp"
+                                        android:textStyle="bold" />
+                                </LinearLayout>
+
+                                <View
+                                    android:layout_width="1dp"
+                                    android:layout_height="match_parent"
+                                    android:background="@color/white_08" />
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical"
+                                    android:paddingStart="12dp">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:letterSpacing="0.1"
+                                        android:text="@string/result_avg_pace"
+                                        android:textAllCaps="true"
+                                        android:textColor="@color/text_range"
+                                        android:textSize="8sp"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:id="@+id/tvReportPace"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="4dp"
+                                        android:text="@string/placeholder_pace"
+                                        android:textColor="@color/text_primary"
+                                        android:textSize="13sp"
+                                        android:textStyle="bold" />
+                                </LinearLayout>
+                            </LinearLayout>
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:background="@color/white_08" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="14dp"
+                                android:orientation="vertical">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:baselineAligned="false"
+                                    android:orientation="horizontal">
+
+                                    <TextView
+                                        android:id="@+id/tvReportProgressText"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:text="@string/placeholder_progress"
+                                        android:textColor="@color/text_progress_dim"
+                                        android:textSize="8sp" />
+
+                                    <TextView
+                                        android:id="@+id/tvReportProgressValue"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="0%"
+                                        android:textColor="@color/accent_lime"
+                                        android:textSize="8sp"
+                                        android:textStyle="bold" />
+                                </LinearLayout>
+
+                                <FrameLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="6dp"
+                                    android:layout_marginTop="8dp"
+                                    android:background="@drawable/bg_goal_track">
+
+                                    <View
+                                        android:id="@+id/reportProgressBar"
+                                        android:layout_width="0dp"
+                                        android:layout_height="6dp"
+                                        android:background="@drawable/bg_goal_fill" />
+                                </FrameLayout>
+                            </LinearLayout>
+                        </LinearLayout>
+                    </FrameLayout>
+
+                    <!-- 趋势图 -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="20dp"
+                        android:background="@drawable/bg_card"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:baselineAligned="false"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:letterSpacing="0.16"
+                                    android:text="@string/records_trend"
+                                    android:textAllCaps="true"
+                                    android:textColor="@color/text_dim"
+                                    android:textSize="9sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/tvChartTitle"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="4dp"
+                                    android:text="@string/records_chart_title"
+                                    android:textColor="@color/text_primary"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/tvChartSubtitle"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="4dp"
+                                    android:text="@string/placeholder_chart_sub"
+                                    android:textColor="@color/text_dim"
+                                    android:textSize="9sp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:paddingTop="4dp">
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center_vertical"
+                                    android:orientation="horizontal">
+
+                                    <View
+                                        android:layout_width="8dp"
+                                        android:layout_height="8dp"
+                                        android:background="@drawable/bg_legend_bar" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="4dp"
+                                        android:text="@string/records_legend_km"
+                                        android:textColor="@color/text_muted"
+                                        android:textSize="8sp" />
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="6dp"
+                                    android:gravity="center_vertical"
+                                    android:orientation="horizontal">
+
+                                    <View
+                                        android:layout_width="8dp"
+                                        android:layout_height="8dp"
+                                        android:background="@drawable/bg_legend_dot" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="4dp"
+                                        android:text="@string/records_legend_pace"
+                                        android:textColor="@color/text_muted"
+                                        android:textSize="8sp" />
+                                </LinearLayout>
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <com.runclub.android.ui.widget.TrendChartView
+                            android:id="@+id/trendChart"
+                            android:layout_width="match_parent"
+                            android:layout_height="200dp"
+                            android:layout_marginTop="12dp" />
+                    </LinearLayout>
+
+                    <!-- 训练构成 -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="20dp"
+                        android:background="@drawable/bg_card"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:baselineAligned="false"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/records_composition"
                                 android:textColor="@color/text_primary"
-                                android:textSize="30sp"
+                                android:textSize="15sp"
                                 android:textStyle="bold" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                style="@style/Text.WeeklyUnit"
-                                android:text="@string/home_unit_km" />
+                                android:text="@string/records_composition_hint"
+                                android:textColor="@color/text_range"
+                                android:textSize="9sp" />
                         </LinearLayout>
 
                         <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:paddingStart="16dp">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/tvMonthRuns"
-                                style="@style/Text.WeeklyValue"
-                                android:text="0" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                style="@style/Text.WeeklyLabel"
-                                android:text="@string/records_month_runs" />
-                        </LinearLayout>
+                            android:id="@+id/compositionBar"
+                            android:layout_width="match_parent"
+                            android:layout_height="12dp"
+                            android:layout_marginTop="16dp"
+                            android:background="@drawable/bg_composition_track"
+                            android:orientation="horizontal" />
 
                         <LinearLayout
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:paddingStart="16dp">
+                            android:layout_marginTop="16dp"
+                            android:baselineAligned="false"
+                            android:orientation="horizontal">
 
-                            <TextView
-                                android:layout_width="wrap_content"
+                            <LinearLayout
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:id="@+id/tvMonthDuration"
-                                style="@style/Text.WeeklyValue"
-                                android:text="0H00M" />
+                                android:layout_weight="1"
+                                android:orientation="vertical">
 
-                            <TextView
-                                android:layout_width="wrap_content"
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center_vertical"
+                                    android:orientation="horizontal">
+
+                                    <View
+                                        android:layout_width="8dp"
+                                        android:layout_height="8dp"
+                                        android:background="@drawable/bg_legend_dot_lime" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="6dp"
+                                        android:text="@string/records_easy"
+                                        android:textColor="@color/text_composition"
+                                        android:textSize="9sp"
+                                        android:textStyle="bold" />
+                                </LinearLayout>
+
+                                <TextView
+                                    android:id="@+id/tvEasyPercent"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="4dp"
+                                    android:text="0%"
+                                    android:textColor="@color/text_primary"
+                                    android:textSize="15sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                style="@style/Text.WeeklyLabel"
-                                android:text="@string/home_week_duration" />
-                        </LinearLayout>
+                                android:layout_weight="1"
+                                android:orientation="vertical">
 
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:paddingStart="16dp">
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center_vertical"
+                                    android:orientation="horizontal">
 
-                            <TextView
-                                android:layout_width="wrap_content"
+                                    <View
+                                        android:layout_width="8dp"
+                                        android:layout_height="8dp"
+                                        android:background="@drawable/bg_legend_dot_orange" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="6dp"
+                                        android:text="@string/records_tempo"
+                                        android:textColor="@color/text_composition"
+                                        android:textSize="9sp"
+                                        android:textStyle="bold" />
+                                </LinearLayout>
+
+                                <TextView
+                                    android:id="@+id/tvTempoPercent"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="4dp"
+                                    android:text="0%"
+                                    android:textColor="@color/text_primary"
+                                    android:textSize="15sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:id="@+id/tvMonthPace"
-                                style="@style/Text.WeeklyValue"
-                                android:text="@string/placeholder_pace" />
+                                android:layout_weight="1"
+                                android:orientation="vertical">
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                style="@style/Text.WeeklyLabel"
-                                android:text="@string/live_pace_label" />
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center_vertical"
+                                    android:orientation="horizontal">
+
+                                    <View
+                                        android:layout_width="8dp"
+                                        android:layout_height="8dp"
+                                        android:background="@drawable/bg_legend_dot_gray" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="6dp"
+                                        android:text="@string/records_long"
+                                        android:textColor="@color/text_composition"
+                                        android:textSize="9sp"
+                                        android:textStyle="bold" />
+                                </LinearLayout>
+
+                                <TextView
+                                    android:id="@+id/tvLongPercent"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="4dp"
+                                    android:text="0%"
+                                    android:textColor="@color/text_primary"
+                                    android:textSize="15sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
                         </LinearLayout>
                     </LinearLayout>
-                </LinearLayout>
 
-                <!-- 筛选按钮 -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="20dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/filterAll"
-                        android:layout_width="0dp"
-                        android:layout_height="36dp"
-                        android:layout_marginEnd="6dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/bg_nav_active"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:gravity="center"
-                        android:text="@string/records_filter_all"
-                        android:textColor="@color/bg_base"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/filter5"
-                        android:layout_width="0dp"
-                        android:layout_height="36dp"
-                        android:layout_marginStart="3dp"
-                        android:layout_marginEnd="3dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/bg_chip_glass"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:gravity="center"
-                        android:text="@string/records_filter_5"
-                        android:textColor="@color/text_dim"
-                        android:textSize="12sp" />
-
-                    <TextView
-                        android:id="@+id/filter10"
-                        android:layout_width="0dp"
-                        android:layout_height="36dp"
-                        android:layout_marginStart="6dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/bg_chip_glass"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:gravity="center"
-                        android:text="@string/records_filter_10"
-                        android:textColor="@color/text_dim"
-                        android:textSize="12sp" />
-                </LinearLayout>
-
-                <!-- 列表 / 空态 -->
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp">
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recycler"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:clipToPadding="false"
-                        android:nestedScrollingEnabled="false"
-                        android:paddingStart="20dp"
-                        android:paddingEnd="20dp" />
-
+                    <!-- 教练观察 -->
                     <LinearLayout
-                        android:id="@+id/emptyView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="20dp"
+                        android:background="@drawable/bg_insight"
+                        android:orientation="horizontal"
+                        android:padding="16dp">
+
+                        <FrameLayout
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:background="@drawable/bg_square_lime_12">
+
+                            <ImageView
+                                android:layout_width="18dp"
+                                android:layout_height="18dp"
+                                android:layout_gravity="center"
+                                android:contentDescription="@string/records_insight"
+                                android:src="@drawable/ic_lightbulb"
+                                android:tint="@color/bg_base" />
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/records_insight"
+                                    android:textColor="@color/text_primary"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="8dp"
+                                    android:background="@drawable/bg_badge_ink"
+                                    android:letterSpacing="0.04"
+                                    android:paddingStart="8dp"
+                                    android:paddingTop="2dp"
+                                    android:paddingEnd="8dp"
+                                    android:paddingBottom="2dp"
+                                    android:text="@string/records_ai_insight"
+                                    android:textColor="@color/accent_lime"
+                                    android:textSize="7sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+                            <TextView
+                                android:id="@+id/tvInsight"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="6dp"
+                                android:lineSpacingExtra="3dp"
+                                android:text="@string/placeholder_insight"
+                                android:textColor="@color/text_insight"
+                                android:textSize="9sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:orientation="vertical"
-                        android:paddingTop="48dp"
-                        android:paddingBottom="48dp"
-                        android:visibility="gone">
+                        android:paddingTop="16dp"
+                        android:paddingBottom="8dp"
+                        android:text="@string/records_report_footer"
+                        android:textColor="@color/text_faint2"
+                        android:textSize="9sp" />
+                </LinearLayout>
+            </ScrollView>
+        </FrameLayout>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/records_empty"
-                            android:textColor="@color/text_muted"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:text="@string/records_empty_hint"
-                            android:textColor="@color/text_dim"
-                            android:textSize="11sp" />
-                    </LinearLayout>
-                </FrameLayout>
-            </LinearLayout>
-        </ScrollView>
-
-        <!-- 底部导航 -->
+        <!-- ===== 底部导航 ===== -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

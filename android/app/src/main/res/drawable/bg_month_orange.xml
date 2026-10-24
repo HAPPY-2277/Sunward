@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 月度回顾卡：原型的 bg-[#FF5C35] 橙色主卡 -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <solid android:color="@color/accent_orange" />
+    <corners android:radius="30dp" />
+</shape>

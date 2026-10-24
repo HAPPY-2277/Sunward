@@ -72,6 +72,50 @@
     <string name="records_delete_done">记录已删除</string>
     <string name="records_month_title">本月回顾</string>
     <string name="records_month_runs">次训练</string>
+    <string name="records_brand">Run Log</string>
+    <string name="records_page_title">跑步记录</string>
+    <string name="records_subtitle">每一步，都值得被记住。</string>
+    <string name="records_streak_label">连续运动</string>
+    <string name="records_tab_history">历史</string>
+    <string name="records_tab_report">报告</string>
+    <string name="records_month_mark">October 2026</string>
+    <string name="records_month_badge">Monthly recap</string>
+    <string name="records_toreport">查看月报</string>
+    <string name="records_month_total">本月累计</string>
+    <string name="records_month_goal">月度目标 120 KM</string>
+    <string name="records_month_goal_value">月度目标 %1$d KM</string>
+
+    <!-- 报告页 -->
+    <string name="records_performance">Performance</string>
+    <string name="records_report_title">跑步报告</string>
+    <string name="records_period_week">周</string>
+    <string name="records_period_month">月</string>
+    <string name="records_period_year">年</string>
+    <string name="records_week_badge">本周战报</string>
+    <string name="records_total_distance">累计里程</string>
+    <string name="records_run_count">跑步次数</string>
+    <string name="records_total_duration">总时长</string>
+    <string name="records_trend">Trend</string>
+    <string name="records_chart_title">每日里程</string>
+    <string name="records_legend_km">里程</string>
+    <string name="records_legend_pace">配速</string>
+    <string name="records_composition">训练构成</string>
+    <string name="records_composition_hint">按里程占比</string>
+    <string name="records_easy">轻松跑</string>
+    <string name="records_tempo">节奏跑</string>
+    <string name="records_long">长距离</string>
+    <string name="records_insight">教练观察</string>
+    <string name="records_ai_insight">AI INSIGHT</string>
+    <string name="records_report_footer">每次跑步完成后，报告会自动更新</string>
+    <string name="placeholder_range">--.-- — --.--</string>
+    <string name="placeholder_delta">较上期</string>
+    <string name="placeholder_progress">目标进度</string>
+    <string name="placeholder_chart_sub">本周共 0 次训练</string>
+    <string name="placeholder_insight">完成一次跑步后，这里会给出针对你的观察与建议。</string>
+    <string name="records_delta_up">较上期 +%1$d%%</string>
+    <string name="records_delta_down">较上期 −%1$d%%</string>
+    <string name="records_delta_flat">与上期持平</string>
+    <string name="records_pct">%1$d%%</string>
     <string name="records_simulated">模拟</string>
 
     <!-- 通用 -->
