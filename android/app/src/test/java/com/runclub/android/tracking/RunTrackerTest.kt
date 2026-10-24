@@ -91,7 +91,20 @@ class RunTrackerTest {
         val tracker = RunTracker()
         tracker.start(0)
         tracker.onPoint(point(1_000))
-        assertNull(tracker.averagePaceSecPerKm)
+        assertNull(tracker.averagePaceSecPerKm(1_000))
+    }
+
+    @Test
+    fun `平均配速使用实时耗时`() {
+        val tracker = RunTracker()
+        tracker.start(0)
+        // 走 100 米、耗时 60 秒（5 m/s 太快，直接构造距离）
+        tracker.restore(elapsedMs = 60_000, distanceM = 100.0, nowMs = 0)
+        val pace = tracker.averagePaceSecPerKm(0)
+        assertEquals("100 米 60 秒 = 600 秒/公里", 600.0, pace ?: 0.0, 1.0)
+        // 再过 60 秒，平均配速应变为 1200 秒/公里
+        val later = tracker.averagePaceSecPerKm(60_000)
+        assertEquals(1200.0, later ?: 0.0, 1.0)
     }
 
     @Test
@@ -100,5 +113,51 @@ class RunTrackerTest {
         tracker.restore(elapsedMs = 600_000, distanceM = 1_000.0, nowMs = 0)
         // 1 km × 60 kg × 1.036 ≈ 62 kcal
         assertEquals(62, tracker.calories)
+    }
+
+    @Test
+    fun `每满一公里生成一段且结束时补最后不足一公里的段`() {
+        val tracker = RunTracker()
+        tracker.start(0)
+
+        val startTime = 1_000_000L
+        var lat = baseLat
+        // 每秒 5 米，跑 500 步 = 2500 米
+        for (i in 0..500) {
+            tracker.onPoint(point(startTime + i * 1000L, lat = lat, speed = 5f))
+            lat += 5.0 / 111_195.0
+        }
+
+        val fullSplits = tracker.splits.filter { !it.partial }
+        assertEquals("2500 米应产生 2 个整公里分段", 2, fullSplits.size)
+        assertEquals(1000.0, fullSplits[0].distanceM, 0.5)
+        // 5 m/s → 200 秒/公里 = 3'20"
+        assertEquals(200.0, fullSplits[0].paceSecPerKm ?: 0.0, 3.0)
+
+        assertEquals("结束前不应有收尾段", 0, tracker.splits.count { it.partial })
+
+        tracker.finish(0)
+        val partial = tracker.splits.lastOrNull { it.partial }
+        assertEquals("结束后应补一段约 500 米", 500.0, partial?.distanceM ?: 0.0, 5.0)
+    }
+
+    @Test
+    fun `轨迹只收录被采纳的点`() {
+        val tracker = RunTracker()
+        tracker.start(0)
+        tracker.onPoint(point(1000L, speed = 3f))
+        // 精度 50 米，会被过滤链丢弃
+        tracker.onPoint(TrackPoint(
+            timeMs = 2000L,
+            lat = baseLat + 10.0 / 111_195.0,
+            lon = baseLon,
+            accuracyM = 50f,
+            speedMps = 3f,
+            provider = "test"
+        ))
+        tracker.onPoint(point(3000L, lat = baseLat + 3.0 / 111_195.0, speed = 3f))
+
+        assertEquals("只应收录 2 个采纳点", 2, tracker.track.size)
+        assertEquals(1, tracker.filter.stats.rejectedAccuracy)
     }
 }
