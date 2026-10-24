@@ -63,28 +63,37 @@ class WeeklyStatsTest {
     }
 
     @Test
-    fun `周进度百分比与剩余距离计算正确`() {
+    fun `周进度按动过的天数计算而不是公里`() {
+        // 刻意让总里程离 30 km 很远（只有 3.2 km），但只要动了 4 天，
+        // 进度就该是 4/7 而不是 3.2/30——这是逐日的核心口径。
         val stats = com.runclub.android.data.model.WeeklyStats(
-            totalKm = 23.6,
-            totalDurationMs = 8 * 3600_000L + 18 * 60_000L,
-            totalCalories = 1840,
-            runCount = 5,
-            dailyKm = listOf(5.0, 4.0, 0.0, 6.0, 8.6, 0.0, 0.0),
-            goalKm = 30.0,
-            targetKmPerDay = 5.0
+            totalKm = 3.2,
+            totalDurationMs = 40 * 60_000L,
+            totalCalories = 200,
+            runCount = 4,
+            dailyKm = listOf(0.8, 0.0, 0.9, 1.0, 0.5, 0.0, 0.0),
+            activeDays = 4,
+            targetDays = 7
         )
-        assertEquals(78, stats.progressPercent)      // 23.6/30 = 78.6% → 78
-        assertEquals(6.4, stats.remainingKm, 0.01)  // 30 - 23.6
-        assertEquals(23.6, stats.dailyKm.sum(), 0.01)
+        assertEquals(57, stats.progressPercent)      // 4/7 = 57.1% → 57
+        assertEquals(3.2, stats.dailyKm.sum(), 0.01)
     }
 
     @Test
-    fun `超出周目标时进度封顶 100 且剩余为 0`() {
+    fun `七天都动过时进度为 100`() {
         val stats = com.runclub.android.data.model.WeeklyStats(
-            totalKm = 35.0, totalDurationMs = 0, totalCalories = 0, runCount = 8,
-            dailyKm = List(7) { 5.0 }, goalKm = 30.0, targetKmPerDay = 5.0
+            totalKm = 2.1, totalDurationMs = 0, totalCalories = 0, runCount = 9,
+            dailyKm = List(7) { 0.3 }, activeDays = 7, targetDays = 7
         )
         assertEquals(100, stats.progressPercent)
-        assertEquals(0.0, stats.remainingKm, 0.001)
+    }
+
+    @Test
+    fun `一天都没动时进度为 0 且不产生负进度`() {
+        val stats = com.runclub.android.data.model.WeeklyStats(
+            totalKm = 0.0, totalDurationMs = 0, totalCalories = 0, runCount = 0,
+            dailyKm = List(7) { 0.0 }, activeDays = 0, targetDays = 7
+        )
+        assertEquals(0, stats.progressPercent)
     }
 }
