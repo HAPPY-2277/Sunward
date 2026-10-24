@@ -32,4 +32,62 @@
 
     <!-- 通用 -->
     <string name="m1_placeholder">骨架屏占位 · 该页面将在后续里程碑接入真实功能</string>
+
+    <!-- ===== M2：实时跑步页（复刻 live-run.html）===== -->
+    <string name="live_status_running">实时记录中</string>
+    <string name="live_status_paused">已暂停</string>
+    <string name="live_subtitle">Outdoor Running</string>
+    <string name="live_back">返回运动首页</string>
+
+    <string name="live_signal_strong">GPS 信号强</string>
+    <string name="live_signal_medium">GPS 信号一般</string>
+    <string name="live_signal_weak">GPS 信号弱</string>
+    <string name="live_signal_none">等待卫星</string>
+    <string name="live_place">滨江绿道</string>
+    <string name="live_weather">18°C · 微风</string>
+
+    <string name="live_track_eyebrow">Live track</string>
+    <string name="live_track_title">实时轨迹</string>
+    <string name="live_locate">回到当前位置</string>
+
+    <string name="live_distance_label">Distance</string>
+    <string name="live_realtime_chip">实时</string>
+    <string name="live_goal_label">今日目标</string>
+    <string name="live_goal_value">5.00 KM</string>
+    <string name="live_time_label">用时</string>
+    <string name="live_pace_label">当前配速</string>
+    <string name="live_calorie_label">消耗</string>
+    <string name="live_unit_per_km">/KM</string>
+    <string name="live_unit_kcal">KCAL</string>
+
+    <string name="live_pause">暂停</string>
+    <string name="live_resume">继续</string>
+    <string name="live_end_hint">结束后将自动生成本次跑步的完整路线图</string>
+
+    <string name="placeholder_time">00:00:00</string>
+    <string name="placeholder_pace">--\'--\"</string>
+
+    <!-- 定位权限 -->
+    <string name="perm_title">需要定位权限</string>
+    <string name="perm_body">用于记录本次跑步的轨迹、距离与配速。位置只在你使用 App 期间获取，不会在后台偷偷采集。</string>
+    <string name="perm_grant">授予定位权限</string>
+    <string name="perm_settings">去系统设置</string>
+    <string name="perm_denied">权限被拒绝了。可以再次授权，或到系统设置里手动开启。</string>
+    <string name="gps_disabled">GPS 未开启，请到系统设置中打开定位。</string>
+
+    <!-- 调试面板（仅 debug 构建可见） -->
+    <string name="debug_title">定位调试</string>
+    <string name="debug_hint">点击这里展开 / 收起</string>
+    <string name="debug_sim">模拟轨迹</string>
+    <string name="debug_sim_on">回放中 · 2.4 KM 环线</string>
+    <string name="debug_sim_off">使用真实 GPS</string>
+    <string name="debug_reset">重置统计</string>
+    <string name="debug_provider">来源</string>
+    <string name="debug_latlon">经纬度</string>
+    <string name="debug_accuracy">精度</string>
+    <string name="debug_points">点数</string>
+    <string name="debug_accepted">采纳</string>
+    <string name="debug_rejected">剔除</string>
+    <string name="debug_distance">累计</string>
+    <string name="debug_breakdown">剔除明细：精度 %1$d · 时间 %2$d · 速度 %3$d · 一致性 %4$d</string>
 </resources>
