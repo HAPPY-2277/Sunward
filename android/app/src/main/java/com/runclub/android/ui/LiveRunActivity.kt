@@ -5,25 +5,27 @@ import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.content.Intent
 import android.content.pm.ApplicationInfo
-import android.content.pm.PackageManager
-import android.location.Location
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.view.View
 import android.view.animation.LinearInterpolator
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.runclub.android.R
+import com.runclub.android.service.RunForegroundService
+import com.runclub.android.session.RunSession
 import com.runclub.android.tracking.LocationTracker
-import com.runclub.android.tracking.SimulatedTrack
-import com.runclub.android.tracking.TrackPoint
-import com.runclub.android.tracking.TrackPointFilter
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.Flow
+import com.runclub.android.tracking.RunState
+import com.runclub.android.tracking.RunUiState
+import com.runclub.android.util.Format
 import kotlinx.coroutines.launch
 import java.util.Locale
 import kotlin.math.roundToInt
@@ -31,21 +33,19 @@ import kotlin.math.roundToInt
 /**
  * 实时跑步页（对应原型 live-run.html）。
  *
- * M2 范围：运行时权限、真实 GPS 采集、四步去漂移过滤、调试面板、模拟轨迹开关。
- * 计时状态机在 M3、轨迹绘制与配速/卡路里在 M4、结束弹窗在 M5。
+ * 职责边界（M3 起）：
+ * - **采集与计时在 [RunForegroundService] + [RunSession] 里**，锁屏/切后台继续；
+ * - 本 Activity 只做「观察状态 → 渲染」和「按钮 → 下发指令」，
+ *   因此旋转屏幕、Activity 被回收重建都不会丢数据。
+ * - 界面上所有可变态（是否模拟、是否暂停）都**只从 RunSession.state 推导**，
+ *   本地不保存副本，避免两份状态打架。
  */
 class LiveRunActivity : AppCompatActivity() {
 
     private lateinit var tracker: LocationTracker
-    private val filter = TrackPointFilter()
 
-    private var collectJob: Job? = null
-    private var dotAnimator: ObjectAnimator? = null
-    private var paused = false
-    private var useSimulated = false
-
-    /** 平滑后的瞬时速度（m/s），用于「当前配速」 */
-    private var smoothedSpeed = 0.0
+    private var navigatedToResult = false
+    private var lastState: RunState = RunState.IDLE
 
     private lateinit var tvStatus: TextView
     private lateinit var liveDot: View
@@ -55,17 +55,20 @@ class LiveRunActivity : AppCompatActivity() {
     private lateinit var tvCalories: TextView
     private lateinit var tvTime: TextView
     private lateinit var goalFill: View
-    private lateinit var ivPause: View
+    private lateinit var ivPause: ImageView
     private lateinit var tvPauseLabel: TextView
 
     private lateinit var permOverlay: View
     private lateinit var tvPermHint: TextView
+
     private lateinit var debugPanel: View
     private lateinit var tvDebugProvider: TextView
     private lateinit var tvDebugLatLon: TextView
     private lateinit var tvDebugCounters: TextView
     private lateinit var tvDebugBreakdown: TextView
     private lateinit var tvSimToggle: TextView
+
+    private var dotAnimator: ObjectAnimator? = null
 
     private val isDebuggable: Boolean
         get() = (applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) != 0
@@ -76,7 +79,7 @@ class LiveRunActivity : AppCompatActivity() {
                 result[Manifest.permission.ACCESS_COARSE_LOCATION] == true
             if (granted) {
                 permOverlay.visibility = View.GONE
-                startTracking()
+                startNewRun(RunSession.current().simulated)
             } else {
                 tvPermHint.visibility = View.VISIBLE
                 permOverlay.visibility = View.VISIBLE
@@ -89,16 +92,50 @@ class LiveRunActivity : AppCompatActivity() {
         tracker = LocationTracker(this)
         bindViews()
         bindActions()
-        startDotPulse()
-
-        if (tracker.hasPermission()) {
-            permOverlay.visibility = View.GONE
-            startTracking()
-        } else {
-            permOverlay.visibility = View.VISIBLE
-            requestLocationPermission()
-        }
+        observeState()
+        restoreIfRequested(intent)
+        ensureRunning()
     }
+
+    // ---------- 启动与恢复 ----------
+
+    private fun restoreIfRequested(intent: Intent?) {
+        val elapsed = intent?.getLongExtra(EXTRA_RESTORE_ELAPSED, -1L) ?: -1L
+        if (elapsed < 0) return
+        val simulated = intent?.getBooleanExtra(EXTRA_RESTORE_SIMULATED, false) ?: false
+        val distance = intent?.getDoubleExtra(EXTRA_RESTORE_DISTANCE, 0.0) ?: 0.0
+        RunSession.restore(elapsed, distance, simulated)
+        ContextCompat.startForegroundService(
+            this,
+            RunForegroundService.intent(this, RunForegroundService.ACTION_RESUME)
+        )
+        intent?.removeExtra(EXTRA_RESTORE_ELAPSED)
+    }
+
+    private fun ensureRunning() {
+        val state = RunSession.trackerState()
+        if (state == RunState.RUNNING || state == RunState.PAUSED) return  // 已在记录，继续观察
+        if (!tracker.hasPermission() && !RunSession.current().simulated) {
+            permOverlay.visibility = View.VISIBLE
+            requestPermissions()
+            return
+        }
+        permOverlay.visibility = View.GONE
+        startNewRun(RunSession.current().simulated)
+    }
+
+    private fun startNewRun(simulated: Boolean) {
+        ContextCompat.startForegroundService(
+            this,
+            RunForegroundService.intent(this, RunForegroundService.ACTION_START, simulated)
+        )
+    }
+
+    private fun sendAction(action: String) {
+        ContextCompat.startForegroundService(this, RunForegroundService.intent(this, action))
+    }
+
+    // ---------- 视图 ----------
 
     private fun bindViews() {
         tvStatus = findViewById(R.id.tvStatus)
@@ -111,25 +148,24 @@ class LiveRunActivity : AppCompatActivity() {
         goalFill = findViewById(R.id.goalFill)
         ivPause = findViewById(R.id.ivPause)
         tvPauseLabel = findViewById(R.id.tvPauseLabel)
-
         permOverlay = findViewById(R.id.permOverlay)
         tvPermHint = findViewById(R.id.tvPermHint)
-
         debugPanel = findViewById(R.id.debugPanel)
         tvDebugProvider = findViewById(R.id.tvDebugProvider)
         tvDebugLatLon = findViewById(R.id.tvDebugLatLon)
         tvDebugCounters = findViewById(R.id.tvDebugCounters)
         tvDebugBreakdown = findViewById(R.id.tvDebugBreakdown)
         tvSimToggle = findViewById(R.id.tvSimToggle)
-
-        // 调试面板只在 debug 构建里存在：release 包点 GPS 胶囊不会有任何反应
         if (!isDebuggable) debugPanel.visibility = View.GONE
     }
 
     private fun bindActions() {
         findViewById<View>(R.id.btnBack).setOnClickListener { finish() }
+        findViewById<View>(R.id.btnGrant).setOnClickListener { requestPermissions() }
+        findViewById<View>(R.id.btnSettings).setOnClickListener { openAppSettings() }
+        findViewById<View>(R.id.btnPause).setOnClickListener { togglePause() }
         findViewById<View>(R.id.btnEnd).setOnClickListener {
-            startActivity(Intent(this, ResultActivity::class.java))
+            sendAction(RunForegroundService.ACTION_FINISH)
         }
         findViewById<View>(R.id.gpsChip).setOnClickListener {
             if (!isDebuggable) return@setOnClickListener
@@ -139,32 +175,137 @@ class LiveRunActivity : AppCompatActivity() {
         findViewById<View>(R.id.tvDebugClose).setOnClickListener {
             debugPanel.visibility = View.GONE
         }
-        findViewById<View>(R.id.btnDebugReset).setOnClickListener {
-            filter.reset()
-            smoothedSpeed = 0.0
-            renderMetrics()
-            renderDebug(null)
-        }
+        // 切换数据源：重新开始一次记录（调试用，距离清零）。
+        // 目标值从会话状态取反，界面文案由 render() 统一驱动，本地不留副本。
         tvSimToggle.setOnClickListener {
-            useSimulated = !useSimulated
-            renderSimToggle()
-            restartCollection()
+            navigatedToResult = false
+            startNewRun(!RunSession.current().simulated)
         }
-        findViewById<View>(R.id.btnGrant).setOnClickListener { requestLocationPermission() }
-        findViewById<View>(R.id.btnSettings).setOnClickListener { openAppSettings() }
-        findViewById<View>(R.id.btnPause).setOnClickListener { togglePause() }
-        renderSimToggle()
+        renderSimMode(RunSession.current().simulated)
+    }
+
+    private fun observeState() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                RunSession.state.collect { state -> render(state) }
+            }
+        }
+    }
+
+    private fun render(state: RunUiState) {
+        tvDistance.text = Format.km(state.distanceM)
+        tvTime.text = Format.duration(state.elapsedMs)
+        tvPace.text = Format.pace(state.paceSecPerKm)
+        tvCalories.text = state.calories.toString()
+
+        when (state.state) {
+            RunState.PAUSED -> {
+                tvStatus.text = getString(R.string.live_status_paused)
+                liveDot.setBackgroundResource(R.drawable.bg_dot_orange)
+                stopDotPulse()
+                ivPause.setImageResource(R.drawable.ic_play)
+                tvPauseLabel.text = getString(R.string.live_resume)
+            }
+            RunState.RUNNING -> {
+                tvStatus.text = getString(R.string.live_status_running)
+                liveDot.setBackgroundResource(R.drawable.bg_dot_lime)
+                startDotPulse()
+                ivPause.setImageResource(R.drawable.ic_pause)
+                tvPauseLabel.text = getString(R.string.live_pause)
+            }
+            else -> {
+                tvStatus.text = getString(R.string.live_status_idle)
+                stopDotPulse()
+            }
+        }
+
+        val percent = (state.distanceKm / 5.0 * 100).coerceIn(0.0, 100.0)
+        goalFill.post {
+            val trackWidth = (goalFill.parent as View).width
+            goalFill.layoutParams = goalFill.layoutParams.apply {
+                width = (trackWidth * percent / 100.0).roundToInt()
+            }
+            goalFill.requestLayout()
+        }
+
+        tvSignal.text = when {
+            state.state != RunState.RUNNING && state.state != RunState.PAUSED -> getString(R.string.live_signal_none)
+            state.accuracyM == null -> getString(R.string.live_signal_none)
+            state.accuracyM <= 10f -> getString(R.string.live_signal_strong)
+            state.accuracyM <= 30f -> getString(R.string.live_signal_medium)
+            else -> getString(R.string.live_signal_weak)
+        }
+
+        renderSimMode(state.simulated)
+        renderDebug(state)
+
+        if (state.state == RunState.FINISHED && !navigatedToResult &&
+            (lastState == RunState.RUNNING || lastState == RunState.PAUSED)
+        ) {
+            navigatedToResult = true
+            startActivity(Intent(this, ResultActivity::class.java))
+            finish()
+        }
+        lastState = state.state
+    }
+
+    private fun renderSimMode(simulated: Boolean) {
+        if (tvSimToggle == null) return
+        tvSimToggle.text = getString(
+            if (simulated) R.string.debug_sim_on else R.string.debug_sim_off
+        )
+        tvSimToggle.setTextColor(
+            ContextCompat.getColor(this, if (simulated) R.color.accent_lime else R.color.text_muted)
+        )
+    }
+
+    private fun renderDebug(state: RunUiState) {
+        if (!isDebuggable) return
+        tvDebugProvider.text = String.format(
+            Locale.US,
+            "state %s   provider %s   acc %s",
+            state.state.name,
+            state.provider?.ifEmpty { "-" } ?: "-",
+            state.accuracyM?.let { String.format(Locale.US, "%.1fm", it) } ?: "-"
+        )
+        tvDebugLatLon.text = state.lastPoint?.latLonText() ?: "---.------, ---.------"
+        tvDebugCounters.text = String.format(
+            Locale.US,
+            "pts %d · ok %d · drop %d · %s km",
+            state.pointsAccepted + state.pointsRejected,
+            state.pointsAccepted,
+            state.pointsRejected,
+            Format.km(state.distanceM)
+        )
+        tvDebugBreakdown.text = getString(
+            R.string.debug_breakdown,
+            state.rejectedAccuracy, state.rejectedTimestamp,
+            state.rejectedSpeed, state.rejectedInconsistent
+        )
+    }
+
+    private fun togglePause() {
+        when (RunSession.trackerState()) {
+            RunState.RUNNING -> sendAction(RunForegroundService.ACTION_PAUSE)
+            RunState.PAUSED -> sendAction(RunForegroundService.ACTION_RESUME)
+            else -> {
+                if (!tracker.hasPermission() && !RunSession.current().simulated) requestPermissions()
+                else startNewRun(RunSession.current().simulated)
+            }
+        }
     }
 
     // ---------- 权限 ----------
 
-    private fun requestLocationPermission() {
-        permissionLauncher.launch(
-            arrayOf(
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            )
+    private fun requestPermissions() {
+        val permissions = mutableListOf(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION
         )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            permissions += Manifest.permission.POST_NOTIFICATIONS
+        }
+        permissionLauncher.launch(permissions.toTypedArray())
     }
 
     private fun openAppSettings() {
@@ -176,154 +317,10 @@ class LiveRunActivity : AppCompatActivity() {
         )
     }
 
-    // ---------- 采集 ----------
-
-    private fun startTracking() {
-        tvSimToggle.let { if (useSimulated) renderSimToggle() }
-        launchCollector()
-    }
-
-    private fun restartCollection() {
-        collectJob?.cancel()
-        filter.reset()
-        smoothedSpeed = 0.0
-        renderMetrics()
-        if (tracker.hasPermission()) launchCollector()
-    }
-
-    private fun launchCollector() {
-        collectJob?.cancel()
-        val flow: Flow<TrackPoint> =
-            if (useSimulated) SimulatedTrack.flow()
-            else tracker.locationFlow().let { locationFlow ->
-                kotlinx.coroutines.flow.flow {
-                    locationFlow.collect { emit(it.toTrackPoint()) }
-                }
-            }
-
-        collectJob = lifecycleScope.launch {
-            flow.collect { point ->
-                if (filter.offer(point)) {
-                    smoothSpeed(point)
-                }
-                renderMetrics()
-                renderDebug(point)
-                renderSignal(point)
-            }
-        }
-    }
-
-    private fun smoothSpeed(point: TrackPoint) {
-        val raw = point.speedMps?.toDouble()
-            ?: filter.lastAccepted?.let { prev ->
-                val dt = (point.timeMs - prev.timeMs) / 1000.0
-                if (dt > 0) com.runclub.android.tracking.GeoMath
-                    .distanceMeters(prev.lat, prev.lon, point.lat, point.lon) / dt else null
-            }
-            ?: return
-        if (raw <= 0.2) return
-        smoothedSpeed = if (smoothedSpeed <= 0.0) raw else 0.4 * raw + 0.6 * smoothedSpeed
-    }
-
-    private fun togglePause() {
-        if (!tracker.hasPermission() && !useSimulated) {
-            requestLocationPermission()
-            return
-        }
-        paused = !paused
-        if (paused) {
-            collectJob?.cancel()
-            collectJob = null
-            tvStatus.text = getString(R.string.live_status_paused)
-            liveDot.setBackgroundResource(R.drawable.bg_dot_orange)
-            dotAnimator?.cancel()
-            liveDot.alpha = 1f
-            (ivPause as android.widget.ImageView).setImageResource(R.drawable.ic_play)
-            tvPauseLabel.text = getString(R.string.live_resume)
-        } else {
-            tvStatus.text = getString(R.string.live_status_running)
-            liveDot.setBackgroundResource(R.drawable.bg_dot_lime)
-            startDotPulse()
-            (ivPause as android.widget.ImageView).setImageResource(R.drawable.ic_pause)
-            tvPauseLabel.text = getString(R.string.live_pause)
-            launchCollector()
-        }
-    }
-
-    // ---------- 渲染 ----------
-
-    private fun renderMetrics() {
-        val km = filter.acceptedDistanceM / 1000.0
-        tvDistance.text = String.format(Locale.US, "%.2f", km)
-
-        val paceText = paceFromSpeed(smoothedSpeed)
-        tvPace.text = paceText
-
-        val goalPercent = ((km / 5.0) * 100).coerceIn(0.0, 100.0)
-        goalFill.post {
-            val trackWidth = (goalFill.parent as View).width
-            goalFill.layoutParams = goalFill.layoutParams.apply {
-                width = (trackWidth * goalPercent / 100.0).roundToInt()
-            }
-            goalFill.requestLayout()
-        }
-    }
-
-    private fun paceFromSpeed(speedMps: Double): String {
-        if (speedMps < 0.3) return getString(R.string.placeholder_pace)
-        val secPerKm = (1000.0 / speedMps).coerceIn(150.0, 900.0)
-        val minutes = (secPerKm / 60).toInt()
-        val seconds = (secPerKm % 60).roundToInt()
-        val fixedSeconds = if (seconds == 60) 0 else seconds
-        val fixedMinutes = if (seconds == 60) minutes + 1 else minutes
-        return String.format(Locale.US, "%d'%02d\"", fixedMinutes, fixedSeconds)
-    }
-
-    private fun renderSignal(point: TrackPoint) {
-        val accuracy = point.accuracyM
-        tvSignal.text = when {
-            accuracy == null -> getString(R.string.live_signal_medium)
-            accuracy <= 10f -> getString(R.string.live_signal_strong)
-            accuracy <= 30f -> getString(R.string.live_signal_medium)
-            else -> getString(R.string.live_signal_weak)
-        }
-    }
-
-    private fun renderDebug(point: TrackPoint?) {
-        if (!isDebuggable) return
-        val stats = filter.stats
-
-        tvDebugProvider.text = String.format(
-            Locale.US,
-            "provider  %s    acc  %s",
-            point?.provider?.ifEmpty { "-" } ?: "-",
-            point?.accuracyM?.let { String.format(Locale.US, "%.1fm", it) } ?: "-"
-        )
-        tvDebugLatLon.text = point?.latLonText() ?: "---.------, ---.------"
-        tvDebugCounters.text = String.format(
-            Locale.US,
-            "pts %d · ok %d · drop %d · %.3f km · v %.2f m/s",
-            stats.total, stats.accepted, stats.rejected,
-            filter.acceptedDistanceM / 1000.0, smoothedSpeed
-        )
-        tvDebugBreakdown.text = getString(
-            R.string.debug_breakdown,
-            stats.rejectedAccuracy, stats.rejectedTimestamp,
-            stats.rejectedSpeed, stats.rejectedInconsistent
-        )
-    }
-
-    private fun renderSimToggle() {
-        tvSimToggle.text = getString(
-            if (useSimulated) R.string.debug_sim_on else R.string.debug_sim_off
-        )
-        tvSimToggle.setTextColor(
-            ContextCompat.getColor(this, if (useSimulated) R.color.accent_lime else R.color.text_muted)
-        )
-    }
+    // ---------- 圆点动画 ----------
 
     private fun startDotPulse() {
-        dotAnimator?.cancel()
+        if (dotAnimator?.isStarted == true) return
         dotAnimator = ObjectAnimator.ofFloat(liveDot, "alpha", 1f, 0.25f).apply {
             duration = 1100
             repeatCount = ValueAnimator.INFINITE
@@ -333,22 +330,20 @@ class LiveRunActivity : AppCompatActivity() {
         }
     }
 
-    // ---------- 生命周期 ----------
+    private fun stopDotPulse() {
+        dotAnimator?.cancel()
+        dotAnimator = null
+        liveDot.alpha = 1f
+    }
 
     override fun onDestroy() {
-        collectJob?.cancel()
-        dotAnimator?.cancel()
+        stopDotPulse()
         super.onDestroy()
     }
 
-    private fun Location.toTrackPoint(): TrackPoint = TrackPoint(
-        timeMs = time,
-        lat = latitude,
-        lon = longitude,
-        accuracyM = if (hasAccuracy()) accuracy else null,
-        altitudeM = if (hasAltitude()) altitude else null,
-        speedMps = if (hasSpeed()) speed else null,
-        provider = provider ?: "",
-        simulated = false
-    )
+    companion object {
+        const val EXTRA_RESTORE_ELAPSED = "restore_elapsed_ms"
+        const val EXTRA_RESTORE_DISTANCE = "restore_distance_m"
+        const val EXTRA_RESTORE_SIMULATED = "restore_simulated"
+    }
 }
