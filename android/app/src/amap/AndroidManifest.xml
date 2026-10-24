@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application>
+
+        <!-- 高德 Key：必须选「Android 平台」类型，且申请时填的包名 + 签名 SHA1
+             要与本工程一致（包名 com.runclub.android，debug 签名见 docs/验收报告.md），
+             否则地图白屏或返回 INVALID_USER_SCODE。
+             只存在于 amap 变体（真机用）。 -->
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="0036b199f7ff33895102fd80d8167ec3" />
+
+    </application>
+
+</manifest>
