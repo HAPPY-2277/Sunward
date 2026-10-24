@@ -212,6 +212,14 @@ class RunForegroundService : LifecycleService() {
     private fun finishRun() {
         stopCollector()
         RunSession.finish()
+        // 落库（记录 + 轨迹点，单事务）。这里不用 runCatching 静默吞异常，
+        // 否则出问题时完全无从查证（真实踩过：记录没存进库却没有任何线索）。
+        try {
+            val id = RunSession.persist(com.runclub.android.data.repo.RunRepository.get(this))
+            android.util.Log.i(TAG, "跑步记录已保存 id=$id")
+        } catch (e: Exception) {
+            android.util.Log.e(TAG, "保存跑步记录失败: ${e.message}", e)
+        }
         store.clear()
         ServiceCompat.stopForeground(this, ServiceCompat.STOP_FOREGROUND_REMOVE)
         notificationManager.cancel(NOTIF_ID)
@@ -227,6 +235,7 @@ class RunForegroundService : LifecycleService() {
     companion object {
         const val CHANNEL_ID = "run_tracking"
         const val NOTIF_ID = 1001
+        private const val TAG = "RunForegroundService"
 
         const val ACTION_START = "com.runclub.android.action.START"
         const val ACTION_PAUSE = "com.runclub.android.action.PAUSE"

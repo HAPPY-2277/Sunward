@@ -45,6 +45,42 @@ object RunSession {
     /** 每公里分段成绩 */
     fun splits(): List<RunTracker.Split> = tracker.splits
 
+    /** 本次跑步的开始时间（epoch millis，墙钟时间） */
+    var startWallClockMs: Long = 0L
+        private set
+
+    /** 本次跑步的结束时间（epoch millis，墙钟时间） */
+    var endWallClockMs: Long = 0L
+        private set
+
+    /** 结束一次跑步后落库；返回记录 id */
+    fun persist(repository: com.runclub.android.data.repo.RunRepository): Long {
+        val t = tracker
+        val points = t.track
+        val record = com.runclub.android.data.model.RunRecord(
+            startTimeMs = startWallClockMs,
+            endTimeMs = endWallClockMs,
+            timezone = java.util.TimeZone.getDefault().id,
+            durationMs = t.elapsedMs(nowMs()),
+            distanceM = t.distanceM,
+            avgPaceSecPerKm = t.averagePaceSecPerKm(nowMs()),
+            calories = t.calories,
+            simulated = simulated
+        )
+        val stored = points.mapIndexed { index, p ->
+            com.runclub.android.data.model.StoredTrackPoint(
+                runId = 0L,
+                seq = index,
+                timeMs = p.timeMs,
+                lat = p.lat,
+                lon = p.lon,
+                accuracyM = p.accuracyM,
+                altitudeM = p.altitudeM
+            )
+        }
+        return repository.save(record, stored)
+    }
+
     /** 开始一次新的跑步；数据源变化或上一次已结束时都换一个干净的 tracker */
     fun start(simulated: Boolean): Boolean {
         // 切换数据源必须重建 tracker：否则过滤器里留着上一个数据源的点，
@@ -55,6 +91,8 @@ object RunSession {
         }
         val ok = tracker.start(nowMs())
         this.simulated = simulated
+        startWallClockMs = System.currentTimeMillis()
+        endWallClockMs = startWallClockMs
         publish()
         return ok
     }
@@ -73,6 +111,7 @@ object RunSession {
 
     fun finish(): RunUiState {
         tracker.finish(nowMs())
+        endWallClockMs = System.currentTimeMillis()
         publish()
         return _state.value
     }
