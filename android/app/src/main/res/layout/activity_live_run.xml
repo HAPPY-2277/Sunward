@@ -105,8 +105,15 @@
             android:layout_height="0dp"
             android:layout_weight="1">
 
+            <!-- 降级底图：原型的手绘城市地图。高德底图可用时会被完全遮住 -->
             <com.runclub.android.ui.widget.CityMapView
-                android:id="@+id/mapView"
+                android:id="@+id/cityMap"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <!-- 高德 MapView 的宿主：仅在 ABI 支持且已同意隐私时由代码注入 -->
+            <FrameLayout
+                android:id="@+id/amapHost"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 

@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.provider.Settings
 import android.view.View
 import android.view.animation.LinearInterpolator
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
@@ -20,11 +21,14 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.runclub.android.R
+import com.runclub.android.map.MapLayer
+import com.runclub.android.map.provideMapLayer
 import com.runclub.android.service.RunForegroundService
 import com.runclub.android.session.RunSession
 import com.runclub.android.tracking.LocationTracker
 import com.runclub.android.tracking.RunState
 import com.runclub.android.tracking.RunUiState
+import com.runclub.android.tracking.TrackPoint
 import com.runclub.android.util.Format
 import kotlinx.coroutines.launch
 import java.util.Locale
@@ -70,6 +74,10 @@ class LiveRunActivity : AppCompatActivity() {
 
     private var dotAnimator: ObjectAnimator? = null
 
+    /** 地图层：amap 变体是真高德底图，local 变体是空实现（保留手绘地图） */
+    private lateinit var mapLayer: MapLayer
+    private lateinit var amapHost: FrameLayout
+
     private val isDebuggable: Boolean
         get() = (applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) != 0
 
@@ -90,8 +98,10 @@ class LiveRunActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_live_run)
         tracker = LocationTracker(this)
+        mapLayer = provideMapLayer(this)
         bindViews()
         bindActions()
+        mapLayer.attach(amapHost, savedInstanceState)
         observeState()
         restoreIfRequested(intent)
         ensureRunning()
@@ -156,6 +166,7 @@ class LiveRunActivity : AppCompatActivity() {
         tvDebugCounters = findViewById(R.id.tvDebugCounters)
         tvDebugBreakdown = findViewById(R.id.tvDebugBreakdown)
         tvSimToggle = findViewById(R.id.tvSimToggle)
+        amapHost = findViewById(R.id.amapHost)
         if (!isDebuggable) debugPanel.visibility = View.GONE
     }
 
@@ -238,6 +249,7 @@ class LiveRunActivity : AppCompatActivity() {
 
         renderSimMode(state.simulated)
         renderDebug(state)
+        state.lastPoint?.let { mapLayer.centerOnWgs84(it.lat, it.lon) }
 
         if (state.state == RunState.FINISHED && !navigatedToResult &&
             (lastState == RunState.RUNNING || lastState == RunState.PAUSED)
@@ -263,10 +275,11 @@ class LiveRunActivity : AppCompatActivity() {
         if (!isDebuggable) return
         tvDebugProvider.text = String.format(
             Locale.US,
-            "state %s   provider %s   acc %s",
+            "state %s   provider %s   acc %s\nmap: %s",
             state.state.name,
             state.provider?.ifEmpty { "-" } ?: "-",
-            state.accuracyM?.let { String.format(Locale.US, "%.1fm", it) } ?: "-"
+            state.accuracyM?.let { String.format(Locale.US, "%.1fm", it) } ?: "-",
+            mapLayer.statusText
         )
         tvDebugLatLon.text = state.lastPoint?.latLonText() ?: "---.------, ---.------"
         tvDebugCounters.text = String.format(
@@ -336,8 +349,24 @@ class LiveRunActivity : AppCompatActivity() {
         liveDot.alpha = 1f
     }
 
+    override fun onResume() {
+        super.onResume()
+        mapLayer.onResume()
+    }
+
+    override fun onPause() {
+        mapLayer.onPause()
+        super.onPause()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        mapLayer.onSaveInstanceState(outState)
+    }
+
     override fun onDestroy() {
         stopDotPulse()
+        mapLayer.onDestroy()
         super.onDestroy()
     }
 

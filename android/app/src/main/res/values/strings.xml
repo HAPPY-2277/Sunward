@@ -75,6 +75,12 @@
     <string name="perm_denied">权限被拒绝了。可以再次授权，或到系统设置里手动开启。</string>
     <string name="gps_disabled">GPS 未开启，请到系统设置中打开定位。</string>
 
+    <!-- 隐私（高德 SDK 合规要求） -->
+    <string name="privacy_title">隐私说明</string>
+    <string name="privacy_message">本 App 使用高德地图 SDK 展示跑步轨迹。地图 SDK 在展示地图时会收集设备标识、网络与位置信息，用于地图渲染与定位，详细条款见《隐私政策》。\n\n选择「暂不使用地图」只会显示简版示意图，不影响跑步记录与成绩。</string>
+    <string name="privacy_agree">同意并继续</string>
+    <string name="privacy_decline">暂不使用地图</string>
+
     <!-- 通知（M3 前台服务） -->
     <string name="notif_channel_name">跑步记录</string>
     <string name="notif_channel_desc">跑步时在通知栏显示实时数据，锁屏后也能查看</string>

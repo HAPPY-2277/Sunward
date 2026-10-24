@@ -8,6 +8,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.runclub.android.R
 import com.runclub.android.data.InProgressStore
+import com.runclub.android.map.providePrivacyGate
 import com.runclub.android.util.Format
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -37,7 +38,31 @@ class HomeActivity : AppCompatActivity() {
             // 已在首页
         }
 
-        maybePromptRestore()
+        maybeAskPrivacy()
+    }
+
+    /**
+     * 高德 SDK 合规：必须先征得同意再初始化地图，否则地图白屏。
+     * 隐私弹窗先于「恢复未完成跑步」弹窗，避免两个对话框叠在一起。
+     */
+    private fun maybeAskPrivacy() {
+        val gate = providePrivacyGate()
+        if (gate.isAgreed(this)) {
+            maybePromptRestore()
+            return
+        }
+        AlertDialog.Builder(this)
+            .setTitle(R.string.privacy_title)
+            .setMessage(R.string.privacy_message)
+            .setCancelable(false)
+            .setPositiveButton(R.string.privacy_agree) { _, _ ->
+                gate.agree(this)
+                maybePromptRestore()
+            }
+            .setNegativeButton(R.string.privacy_decline) { _, _ ->
+                maybePromptRestore()
+            }
+            .show()
     }
 
     /**
