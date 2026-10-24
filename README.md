@@ -1,137 +1,149 @@
-# RUN CLUB · 跑步 App
+# 逐日
 
-原生 Android（Kotlin）跑步记录 App。当前进度见 [docs/开发计划.md](docs/开发计划.md) 与 [docs/验收报告.md](docs/验收报告.md)。
+![Kotlin](https://img.shields.io/badge/Kotlin-2.2-7F52FF)
+![Android](https://img.shields.io/badge/Android-minSdk%2026-3DDC84)
+![AGP](https://img.shields.io/badge/AGP-9.4.1-4285F4)
+![Gradle](https://img.shields.io/badge/Gradle-9.8.2-02303A)
 
-- 视觉基线：[design/prototype/](design/prototype/)（4 个 HTML 原型页面）
-- 市场与技术调研：[docs/调研报告.md](docs/调研报告.md)
+跑步记录 App。原生 Android / Kotlin，无账号、无云同步，跑步记录只存在本机。
 
-## 目录结构
+主指标是「本周动了几天」，不是「离 30 km 还差多少」。
 
-```
-D:\a\
-├── android\               Gradle 工程（Kotlin + XML View）
-│   ├── app\src\main\      源码与资源
-│   └── gradlew.bat        构建入口
-├── design\prototype\      原型页面（视觉基线，不参与构建）
-├── docs\                  计划、验收记录、调研报告
-└── tools\                 本机工具链（Android SDK / Gradle / 引导脚本，不入库）
-```
+![首页](docs/screenshots/60-zhuri-home.png)
 
-## 前置环境
+## 想法
 
-| 组件 | 要求 | 本机实测 |
-|---|---|---|
-| JDK | 17+ | Temurin 21.0.7 ✅ |
-| Android SDK | platform 37 + build-tools 36.1.0 | `D:\a\tools\android-sdk` ✅ |
-| Gradle | 由 wrapper 提供 | 9.8.2 |
+频率比强度重要。公里数是结果，不是成绩单。
+
+「还差 29.9 km 达标」是欠账，跑两天看到自己欠一堆账，最可能的选择是干脆不跑了。
+所以这个 App 里没有里程目标、没有配速目标、没有断签提醒，也没有任何红色警示。
+一天动了就是完成，漏掉的日子只是不增加。
+
+完整理念见 [docs/产品理念.md](docs/产品理念.md)。
+
+## 界面
+
+| | |
+|---|---|
+| ![实时](docs/screenshots/63-zhuri-live.png) | ![报告](docs/screenshots/62-zhuri-report.png) |
+| 跑步中：轨迹、距离、时长、当前位置 | 报告：周 / 月 / 年，主数字是动过的天数 |
+| ![记录](docs/screenshots/61-zhuri-record.png) | ![成绩](docs/screenshots/65-zhuri-result.png) |
+| 历史：按天归档，可筛选、可展开 | 成绩：路线图、每公里用时、消耗 |
+
+## 功能
+
+- GPS 轨迹采集，前台服务保活，锁屏继续记录，中途可暂停
+- 距离用增量 EMA 平滑后累加，过滤瞬移与漂移点
+- 轨迹存 WGS-84，渲染时转 GCJ-02 再交给高德
+- SQLite 存记录与轨迹点，删除记录后汇总同步减少
+- 周 / 月 / 年报告：里程柱 + 快慢折线双轴图、运动构成、观察文案
+- 过程被强杀后进入 App 可恢复未完成的跑步
+
+不做：排行榜、社交动态、配速目标、断签提醒。
+
+> 网络权限只用于高德底图的瓦片下载。跑步记录、轨迹点、报告全部存本地 SQLite，不上传。
+
+## 技术选型
+
+| | |
+|---|---|
+| 语言 | Kotlin 2.2 |
+| 界面 | XML View + Material 3，无 Compose |
+| 架构 | Activity 观察 `StateFlow<RunUiState>`，状态在进程级单例 `RunSession` + 前台服务里 |
+| 存储 | 手写 `SQLiteOpenHelper`，两张表，插入走单事务 |
+| 图表 | 自绘 `Canvas`，无图表库 |
+| 地图 | 高德 3D SDK（`amap` 变体）/ 手绘底图（`local` 变体） |
+| minSdk / targetSdk | 26 / 36 |
+| compileSdk | 37（`androidx.core:core:1.19.1` 要求 ≥ 37） |
+| AGP / Gradle | 9.4.1 / 9.8.2 |
+
+AGP 9 起 Kotlin 支持已内置，`build.gradle.kts` 里**不能**再声明 `org.jetbrains.kotlin.android` 插件。
 
 ## 构建
 
 ```powershell
-$env:JAVA_HOME          = 'C:\Users\22205\AppData\Local\Programs\Java\jdk-21.0.7+6'
-$env:ANDROID_HOME       = 'D:\a\tools\android-sdk'
-$env:ANDROID_SDK_ROOT   = 'D:\a\tools\android-sdk'
-$env:ANDROID_USER_HOME  = 'D:\a\tools\android-user'   # 不能同时设 ANDROID_PREFS_ROOT，否则 AGP 报路径冲突
-$env:GRADLE_USER_HOME   = 'D:\a\tools\gradle-home'    # 默认 ~/.gradle 在工作区外，会被文件沙箱拒绝
+$env:JAVA_HOME         = 'C:\path\to\jdk-21'
+$env:ANDROID_HOME      = 'D:\a\tools\android-sdk'
+$env:ANDROID_SDK_ROOT  = 'D:\a\tools\android-sdk'
+$env:ANDROID_USER_HOME = 'D:\a\tools\android-user'
+$env:GRADLE_USER_HOME  = 'D:\a\tools\gradle-home'
 
-cd D:\a\android
-.\gradlew.bat assembleLocalDebug     # 不含高德 SDK，可在 x86_64 模拟器安装（手绘地图）
-.\gradlew.bat assembleAmapDebug      # 含高德底图，装真机（ARM only）
+cd android
+.\gradlew.bat assembleLocalDebug     # 不含高德 SDK，可在 x86_64 模拟器安装
+.\gradlew.bat assembleAmapDebug      # 含高德底图，装真机
+.\gradlew.bat testLocalDebugUnitTest # 59 个单元测试
 ```
+
+`local.properties` 不存在时创建并写入 `sdk.dir=D:/a/tools/android-sdk`。
+
+想先看效果而不真去跑步，可以用内置的模拟轨迹：
+
+```powershell
+adb shell am start -n com.runclub.android/.ui.HomeActivity --ez sim true
+```
+
+模拟轨迹会走一条 2.4 km 的环线，产生一条带「模拟」标记的记录。
+
+### 两个变体
 
 | 变体 | 产物 | 用途 |
 |---|---|---|
-| `local` | `app\build\outputs\apk\local\debug\app-local-debug.apk`（约 7 MB） | 模拟器 / 无 ARM 环境，用手绘地图 |
-| `amap` | `app\build\outputs\apk\amap\debug\app-amap-debug.apk`（约 42 MB） | 真机，真实高德底图 |
+| `local` | `app/build/outputs/apk/local/debug/app-local-debug.apk`（8.5 MB） | 模拟器 / 无 ARM 环境，用手绘底图 |
+| `amap` | `app/build/outputs/apk/amap/debug/app-amap-debug.apk`（43.9 MB） | 真机，高德底图 |
 
-> ⚠️ **为什么拆两个变体**：高德 3D 地图 SDK 只带 `arm64-v8a` / `armeabi-v7a` 的 native 库。
-> 一旦把这个依赖打进主变体，**x86_64 模拟器连安装都会报 `INSTALL_FAILED_NO_MATCHING_ABIS`**，
-> 开发期就没法自测了。两个变体共用同一个 `applicationId`，所以高德 Key 对两者都有效。
+高德 3D SDK 只带 `arm64-v8a` / `armeabi-v7a` 的 native 库。把它打进主变体后，
+x86_64 模拟器连安装都会报 `INSTALL_FAILED_NO_MATCHING_ABIS`，开发期没法自测。
+两个变体共用同一个 `applicationId`，高德 Key 对两者都有效。
 
-若 `local.properties` 不存在，创建它并写入：`sdk.dir=D:/a/tools/android-sdk`
+## 目录
 
-## 安装到手机
+```
+android/app/src/
+├── main/          主源码与资源
+│   ├── java/com/runclub/android/
+│   │   ├── tracking/     轨迹采集、过滤、距离累加、状态机
+│   │   ├── session/      RunSession：跨 Activity 的状态持有者
+│   │   ├── service/      前台服务（location 类型）
+│   │   ├── data/         SQLite、仓库、报告聚合
+│   │   ├── ui/           四个页面 + 自绘控件
+│   │   ├── map/          地图抽象，坐标转换
+│   │   └── util/         格式化
+│   └── res/       布局、图形、颜色、文案
+├── amap/          高德实现（变体）
+├── local/         手绘地图实现（变体）
+└── test/          59 个单元测试
 
-1. 把 `app-debug.apk` 传到手机（数据线 / 微信文件传输 / 网盘）。
-2. 点击安装，允许「未知来源应用」。
-3. 首次启动按提示授予定位权限（本 demo 只需「仅在使用中允许」）。
-
-升级安装若报 `INSTALL_FAILED_UPDATE_INCOMPATIBLE`，先卸载旧版再装（签名不一致）。
-
-## 在模拟器上运行
-
-AVD 已配好：`runclub36`，1080×2400 @420dpi（≈411×914dp），x86_64，AOSP 镜像（**无 GMS**），2 GB RAM。
-硬件加速：WHPX 可用（`emulator -accel-check` 验证）。启动后约 80~140 秒开机完成。
-
-### 一键脚本（推荐）
-
-```bat
-D:\a\tools\emu.cmd start     :: 启动并等到开机完成，成功后打印装包命令
-D:\a\tools\emu.cmd status    :: 查看是否在运行
-D:\a\tools\emu.cmd stop      :: 关闭并清理锁文件
+design/prototype/  HTML 原型，视觉基线，不参与构建
+docs/              计划、验收报告、调研、产品理念
+tools/             本机工具链（SDK、Gradle、模拟器脚本），不入库
 ```
 
-`tools\emu.cmd` / `tools\emu.ps1` 是本机辅助脚本（`tools/` 不入库）。
-`emu.ps1` 必须以 **UTF-8 带 BOM** 保存，否则 PowerShell 5.1 按 GBK 解码会中文乱码；`emu.cmd` 里已 `chcp 65001`。
+## 实现里踩过的坑
 
-### 装 App 并启动
+写在代码注释和 [docs/验收报告.md](docs/验收报告.md) 里，这几条影响后续开发：
 
-```powershell
-$adb = 'D:\a\tools\android-sdk\platform-tools\adb.exe'
-& $adb -s emulator-5554 install -r 'D:\a\android\app\build\outputs\apk\debug\app-debug.apk'
-& $adb -s emulator-5554 shell am start -n com.runclub.android/.ui.HomeActivity
-```
+- **测速用 `SystemClock.elapsedRealtime()`**，不用 `currentTimeMillis`。
+- **距离不能直接累加 GPS 点的直线距离**。要先对位移向量做 EMA 平滑再累加，
+  否则系统性少算约 60%。单段小于 0.6 m 的不记。
+- **数据源切换必须重建 tracker**。会话已在 RUNNING 时切到模拟轨迹，
+  过滤器里残留的旧 GPS 点会让每个新点都变成「几百公里瞬移」而被全部丢弃。
+- **平均配速按总时长 ÷ 总距离**加权，不是各次配速的算术平均。
+- **前台服务用 `location` 类型**，不是 `dataSync`（Android 15 限制 6 小时）。
+- **`fitsSystemWindows="true"` 会覆盖节点自身的 `android:padding`**，
+  根节点要吃 inset 时用「外层无 padding + 内层带 padding」的双层结构。
+- **高德 SDK 8.1.0+ 必须先调 `MapsInitializer.updatePrivacyShow/Agree`**，
+  否则地图白屏且不报错。
 
-### 手动启动（不想用脚本时）
+## 文档
 
-```powershell
-$sdk = 'D:\a\tools\android-sdk'
-$env:ANDROID_HOME      = $sdk
-$env:ANDROID_SDK_ROOT  = $sdk
-$env:ANDROID_USER_HOME = 'D:\a\tools\android-user'
-$env:ANDROID_AVD_HOME  = 'D:\a\tools\android-user\avd'
-& "$sdk\emulator\emulator.exe" -avd runclub36 -no-window -no-audio -no-boot-anim `
-    -no-snapshot -gpu swiftshader_indirect -port 5554 -no-metrics
-```
-
-### 截图与自动化点击
-
-```powershell
-& $adb -s emulator-5554 shell uiautomator dump /sdcard/ui.xml   # 导出控件树拿精确坐标
-& $adb -s emulator-5554 pull /sdcard/ui.xml .\ui.xml
-& $adb -s emulator-5554 shell input tap 540 702                 # 按坐标点击
-& $adb -s emulator-5554 shell screencap -p /sdcard/shot.png
-& $adb -s emulator-5554 pull /sdcard/shot.png .\shot.png
-```
-
-界面截图：[docs/screenshots/](docs/screenshots/)。
-
-> ⚠️ **两个坑**
-> 1. **不要用管道捕获 `emu.cmd start` 的输出**（如 `... | ForEach-Object`）——分离出去的 qemu 会继承 stdout 句柄，
->    管道永远等不到 EOF。要重定向就写到文件：`cmd /c "tools\emu.cmd start > start.log 2>&1"`。
-> 2. `adb emu kill` 在控制台无响应时**会无限阻塞**，脚本里已加 6 秒上限并回退到强制终止。
-
-> ⚠️ **全面屏注意**：`targetSdk ≥ 35` 会强制 edge-to-edge。布局根节点用 `fitsSystemWindows="true"` 吃 inset 时，
-> 该属性会**覆盖**根节点自身的 `android:padding`——必须用「外层吃 inset 无 padding + 内层带 padding」的双层结构，
-> 否则左右内边距会全部丢失（M1 曾踩过）。
-
-## 本机环境约束（做后续里程碑时必须知道）
-
-| 约束 | 说明 |
+| | |
 |---|---|
-| `curl` / `Invoke-WebRequest` 不可用 | Schannel 报 `SEC_E_NO_CREDENTIALS`，一律改用 **Java**（`tools\Fetch.java`）或 **Node** 下载 |
-| `services.gradle.org` / `downloads.gradle.org` 被墙 | Gradle 分发走腾讯云镜像，见 `android\gradle\wrapper\gradle-wrapper.properties` |
-| `developer.android.com` 不可达 | 查文档用 `developer.android.google.cn` 或直接实证 |
-| `%USERPROFILE%\.android` 与 `%USERPROFILE%\.gradle` 不可写 | 全部重定向到 `D:\a\tools\` 下 |
-| debug keystore 在 `tools\android-user\debug.keystore` | **不要删除 `tools\android-user\`**，否则签名 SHA1 变化，已申请的高德 Key 会失效 |
+| [产品理念](docs/产品理念.md) | 名字来源、四条原则、判定方法 |
+| [开发计划](docs/开发计划.md) | M0–M7 的任务拆分与验收标准 |
+| [验收报告](docs/验收报告.md) | 逐里程碑的实测记录与修过的问题 |
+| [调研报告](docs/调研报告.md) | 竞品与技术调研 |
+| [原型](design/prototype/) | 四个 HTML 页面 |
 
-## 关键版本
+## License
 
-| 组件 | 版本 | 备注 |
-|---|---|---|
-| AGP | 9.4.1 | 9.0+ 起 **Kotlin 支持内置**，不得再声明 `org.jetbrains.kotlin.android` 插件 |
-| Gradle | 9.8.2 | |
-| compileSdk | 37 | `androidx.core:core:1.19.1` 强制要求 ≥ 37 |
-| targetSdk / minSdk | 36 / 26 | |
-
-当前 debug 签名：SHA-1 `cfd6bad792fa17aca4d7ea8206c6c48f6bcec59a`
+尚未选定。仓库目前是私有状态，公开前请补上 `LICENSE` 文件。
