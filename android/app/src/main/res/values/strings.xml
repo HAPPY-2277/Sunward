@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">RUN CLUB</string>
+
+    <!-- 首页 -->
+    <string name="home_brand">RUN CLUB</string>
+    <string name="home_greeting">今天，跑出你的节奏。</string>
+    <string name="home_suggestion_label">今日建议</string>
+    <string name="home_suggestion_value">轻松跑 · 5.0 KM</string>
+    <string name="home_go">GO</string>
+    <string name="home_go_hint">开始一次跑步</string>
+
+    <!-- 底部导航 -->
+    <string name="tab_sport">运动</string>
+    <string name="tab_records">记录</string>
+
+    <!-- 实时跑步 -->
+    <string name="live_title">实时跑步</string>
+    <string name="live_status_idle">准备开始</string>
+    <string name="live_distance_placeholder">0.00</string>
+    <string name="live_unit_km">KM</string>
+    <string name="live_end">结束跑步</string>
+    <string name="back">返回</string>
+
+    <!-- 成绩 -->
+    <string name="result_title">本次成绩</string>
+    <string name="result_badge">RUN COMPLETE</string>
+    <string name="result_done">完成，返回首页</string>
+
+    <!-- 记录 -->
+    <string name="records_title">记录</string>
+
+    <!-- 通用 -->
+    <string name="m1_placeholder">骨架屏占位 · 该页面将在后续里程碑接入真实功能</string>
+</resources>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 设计令牌，取自原型 design/prototype/*.html -->
+    <color name="bg_outer">#050705</color>
+    <color name="bg_base">#080B08</color>
+    <color name="bg_card">#111611</color>
+    <color name="bg_card_alt">#121712</color>
+    <color name="bg_chip">#151B15</color>
+
+    <color name="accent_lime">#D9FF43</color>
+    <color name="accent_orange">#FF5C35</color>
+
+    <color name="text_primary">#FFFFFF</color>
+    <color name="text_muted">#8C978C</color>
+    <color name="text_dim">#6F7A6F</color>
+
+    <color name="stroke_subtle">#1E261E</color>
+    <color name="divider">#1A211A</color>
+
+    <color name="lime_08">#14D9FF43</color>
+    <color name="lime_16">#29D9FF43</color>
+    <color name="orange_16">#29FF5C35</color>
+</resources>

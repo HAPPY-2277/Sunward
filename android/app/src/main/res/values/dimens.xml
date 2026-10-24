@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="page_padding">24dp</dimen>
+    <dimen name="card_padding">22dp</dimen>
+    <dimen name="radius_card">28dp</dimen>
+    <dimen name="radius_sheet">30dp</dimen>
+    <dimen name="gap_xs">6dp</dimen>
+    <dimen name="gap_sm">10dp</dimen>
+    <dimen name="gap_md">16dp</dimen>
+    <dimen name="gap_lg">24dp</dimen>
+    <dimen name="gap_xl">32dp</dimen>
+</resources>

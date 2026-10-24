@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 占位图标：荧光绿定位环 + 中心点（呼应跑步定位主题） -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <path
+        android:pathData="M54,36 A18,18 0 1,1 54,72 A18,18 0 1,1 54,36"
+        android:strokeColor="#D9FF43"
+        android:strokeWidth="5"
+        android:fillColor="#00000000" />
+
+    <path
+        android:pathData="M54,47.5 A6.5,6.5 0 1,1 54,60.5 A6.5,6.5 0 1,1 54,47.5"
+        android:fillColor="#D9FF43" />
+
+</vector>
