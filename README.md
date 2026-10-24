@@ -50,35 +50,58 @@ cd D:\a\android
 
 升级安装若报 `INSTALL_FAILED_UPDATE_INCOMPATIBLE`，先卸载旧版再装（签名不一致）。
 
-## 在模拟器上运行（本机已配好）
+## 在模拟器上运行
+
+AVD 已配好：`runclub36`，1080×2400 @420dpi（≈411×914dp），x86_64，AOSP 镜像（**无 GMS**），2 GB RAM。
+硬件加速：WHPX 可用（`emulator -accel-check` 验证）。启动后约 80~140 秒开机完成。
+
+### 一键脚本（推荐）
+
+```bat
+D:\a\tools\emu.cmd start     :: 启动并等到开机完成，成功后打印装包命令
+D:\a\tools\emu.cmd status    :: 查看是否在运行
+D:\a\tools\emu.cmd stop      :: 关闭并清理锁文件
+```
+
+`tools\emu.cmd` / `tools\emu.ps1` 是本机辅助脚本（`tools/` 不入库）。
+`emu.ps1` 必须以 **UTF-8 带 BOM** 保存，否则 PowerShell 5.1 按 GBK 解码会中文乱码；`emu.cmd` 里已 `chcp 65001`。
+
+### 装 App 并启动
+
+```powershell
+$adb = 'D:\a\tools\android-sdk\platform-tools\adb.exe'
+& $adb -s emulator-5554 install -r 'D:\a\android\app\build\outputs\apk\debug\app-debug.apk'
+& $adb -s emulator-5554 shell am start -n com.runclub.android/.ui.HomeActivity
+```
+
+### 手动启动（不想用脚本时）
 
 ```powershell
 $sdk = 'D:\a\tools\android-sdk'
-$env:ANDROID_HOME = $sdk
+$env:ANDROID_HOME      = $sdk
+$env:ANDROID_SDK_ROOT  = $sdk
 $env:ANDROID_USER_HOME = 'D:\a\tools\android-user'
-$env:ANDROID_AVD_HOME = 'D:\a\tools\android-user\avd'
-
-# 启动（无窗口，冷启动约 135 秒）
+$env:ANDROID_AVD_HOME  = 'D:\a\tools\android-user\avd'
 & "$sdk\emulator\emulator.exe" -avd runclub36 -no-window -no-audio -no-boot-anim `
-    -no-snapshot -gpu swiftshader_indirect -port 5554
-
-# 等待启动完成
-& "$sdk\platform-tools\adb.exe" -s emulator-5554 shell getprop sys.boot_completed
-
-# 安装并启动
-& "$sdk\platform-tools\adb.exe" -s emulator-5554 install -r `
-    'D:\a\android\app\build\outputs\apk\debug\app-debug.apk'
-& "$sdk\platform-tools\adb.exe" -s emulator-5554 shell am start `
-    -n com.runclub.android/.ui.HomeActivity
-
-# 截图
-& "$sdk\platform-tools\adb.exe" -s emulator-5554 shell screencap -p /sdcard/shot.png
-& "$sdk\platform-tools\adb.exe" -s emulator-5554 pull /sdcard/shot.png .\shot.png
+    -no-snapshot -gpu swiftshader_indirect -port 5554 -no-metrics
 ```
 
-AVD 配置：`runclub36`，1080×2400 @420dpi（≈411×914dp），x86_64，AOSP 镜像（**无 GMS**），2 GB RAM。
-硬件加速：WHPX 可用（`emulator -accel-check` 验证）。
+### 截图与自动化点击
+
+```powershell
+& $adb -s emulator-5554 shell uiautomator dump /sdcard/ui.xml   # 导出控件树拿精确坐标
+& $adb -s emulator-5554 pull /sdcard/ui.xml .\ui.xml
+& $adb -s emulator-5554 shell input tap 540 702                 # 按坐标点击
+& $adb -s emulator-5554 shell screencap -p /sdcard/shot.png
+& $adb -s emulator-5554 pull /sdcard/shot.png .\shot.png
+```
+
 界面截图：[docs/screenshots/](docs/screenshots/)。
+
+> ⚠️ **两个坑**
+> 1. **不要用管道捕获 `emu.cmd start` 的输出**（如 `... | ForEach-Object`）——分离出去的 qemu 会继承 stdout 句柄，
+>    管道永远等不到 EOF。要重定向就写到文件：`cmd /c "tools\emu.cmd start > start.log 2>&1"`。
+> 2. `adb emu kill` 在控制台无响应时**会无限阻塞**，脚本里已加 6 秒上限并回退到强制终止。
 
 > ⚠️ **全面屏注意**：`targetSdk ≥ 35` 会强制 edge-to-edge。布局根节点用 `fitsSystemWindows="true"` 吃 inset 时，
 > 该属性会**覆盖**根节点自身的 `android:padding`——必须用「外层吃 inset 无 padding + 内层带 padding」的双层结构，
