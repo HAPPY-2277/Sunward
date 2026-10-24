@@ -1,0 +1,36 @@
+# ===== 构建产物 =====
+android/.gradle/
+android/build/
+android/app/build/
+android/app/release/
+android/captures/
+*.apk
+*.aab
+*.ap_
+*.dex
+
+# ===== 本地配置（含本机 SDK 路径，因机器而异，不入库）=====
+local.properties
+android/local.properties
+
+# ===== Android SDK 与引导工具（体积大，不入库）=====
+tools/
+
+# ===== IDE =====
+.idea/
+*.iml
+.vscode/
+.kotlin/
+
+# ===== 系统文件 =====
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ===== 原型压缩包（内容与 design/prototype/ 重复）=====
+*.zip
+
+# ===== 日志与临时文件 =====
+*.log
+tmp/
+.probe/
