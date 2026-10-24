@@ -3,8 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_base"
-    android:orientation="vertical"
-    android:padding="@dimen/page_padding">
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="@dimen/page_padding">
 
     <!-- 顶栏 -->
     <LinearLayout
@@ -90,6 +96,8 @@
             android:textColor="@color/accent_lime"
             android:textSize="13sp"
             android:textStyle="bold" />
+    </LinearLayout>
+
     </LinearLayout>
 
 </LinearLayout>
