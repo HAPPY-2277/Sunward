@@ -86,4 +86,44 @@
         <item name="android:padding">22dp</item>
     </style>
 
+    <!-- 首页专用 -->
+    <style name="Text.Eyebrow">
+        <item name="android:textColor">@color/text_dim</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:letterSpacing">0.18</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Text.SectionTitle">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:letterSpacing">-0.02</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Text.WeeklyLabel">
+        <item name="android:textColor">@color/text_dim</item>
+        <item name="android:textSize">9sp</item>
+        <item name="android:letterSpacing">0.12</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Text.WeeklyValue">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:letterSpacing">-0.04</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Text.WeeklyUnit">
+        <item name="android:textColor">@color/text_muted</item>
+        <item name="android:textSize">9sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Text.WeeklyFooter">
+        <item name="android:textColor">@color/text_dim</item>
+        <item name="android:textSize">10sp</item>
+    </style>
+
 </resources>

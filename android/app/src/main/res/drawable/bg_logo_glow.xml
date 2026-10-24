@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- logo 辉光：荧光绿圆角方块外扩一圈半透明光晕（对应原型的 shadow-[0_0_24px_rgba(217,255,67,0.18)]） -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/lime_16" />
+            <corners android:radius="20dp" />
+        </shape>
+    </item>
+    <item
+        android:left="4dp"
+        android:top="4dp"
+        android:right="4dp"
+        android:bottom="4dp">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/accent_lime" />
+            <corners android:radius="14dp" />
+        </shape>
+    </item>
+</layer-list>
