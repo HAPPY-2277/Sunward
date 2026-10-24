@@ -50,6 +50,40 @@ cd D:\a\android
 
 升级安装若报 `INSTALL_FAILED_UPDATE_INCOMPATIBLE`，先卸载旧版再装（签名不一致）。
 
+## 在模拟器上运行（本机已配好）
+
+```powershell
+$sdk = 'D:\a\tools\android-sdk'
+$env:ANDROID_HOME = $sdk
+$env:ANDROID_USER_HOME = 'D:\a\tools\android-user'
+$env:ANDROID_AVD_HOME = 'D:\a\tools\android-user\avd'
+
+# 启动（无窗口，冷启动约 135 秒）
+& "$sdk\emulator\emulator.exe" -avd runclub36 -no-window -no-audio -no-boot-anim `
+    -no-snapshot -gpu swiftshader_indirect -port 5554
+
+# 等待启动完成
+& "$sdk\platform-tools\adb.exe" -s emulator-5554 shell getprop sys.boot_completed
+
+# 安装并启动
+& "$sdk\platform-tools\adb.exe" -s emulator-5554 install -r `
+    'D:\a\android\app\build\outputs\apk\debug\app-debug.apk'
+& "$sdk\platform-tools\adb.exe" -s emulator-5554 shell am start `
+    -n com.runclub.android/.ui.HomeActivity
+
+# 截图
+& "$sdk\platform-tools\adb.exe" -s emulator-5554 shell screencap -p /sdcard/shot.png
+& "$sdk\platform-tools\adb.exe" -s emulator-5554 pull /sdcard/shot.png .\shot.png
+```
+
+AVD 配置：`runclub36`，1080×2400 @420dpi（≈411×914dp），x86_64，AOSP 镜像（**无 GMS**），2 GB RAM。
+硬件加速：WHPX 可用（`emulator -accel-check` 验证）。
+界面截图：[docs/screenshots/](docs/screenshots/)。
+
+> ⚠️ **全面屏注意**：`targetSdk ≥ 35` 会强制 edge-to-edge。布局根节点用 `fitsSystemWindows="true"` 吃 inset 时，
+> 该属性会**覆盖**根节点自身的 `android:padding`——必须用「外层吃 inset 无 padding + 内层带 padding」的双层结构，
+> 否则左右内边距会全部丢失（M1 曾踩过）。
+
 ## 本机环境约束（做后续里程碑时必须知道）
 
 | 约束 | 说明 |
