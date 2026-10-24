@@ -2,6 +2,8 @@ package com.runclub.android.data.repo
 
 import android.content.Context
 import com.runclub.android.data.local.RunDatabase
+import com.runclub.android.data.model.ReportData
+import com.runclub.android.data.model.ReportPeriod
 import com.runclub.android.data.model.RunRecord
 import com.runclub.android.data.model.StoredTrackPoint
 import com.runclub.android.data.model.WeeklyStats
@@ -85,6 +87,33 @@ class RunRepository private constructor(context: Context) {
             .mapNotNull { it.avgPaceSecPerKm }
             .any { it < pace - 0.5 }   // 0.5 秒内视为同一水平
         return !better && all().size > 1
+    }
+
+    /** 报告页数据（周 / 月 / 年） */
+    fun report(
+        period: ReportPeriod,
+        zone: ZoneId = ZoneId.systemDefault(),
+        today: LocalDate = LocalDate.now(zone)
+    ): ReportData = ReportBuilder.build(all(), period, zone, today)
+
+    /**
+     * 连续运动天数：从今天（或昨天，避免「今天还没跑」就断）往前数。
+     * 一天内多次跑步只算一天。
+     */
+    fun streakDays(zone: ZoneId = ZoneId.systemDefault(), today: LocalDate = LocalDate.now(zone)): Int {
+        val days = all()
+            .map { LocalDate.ofInstant(Instant.ofEpochMilli(it.startTimeMs), zone) }
+            .toSet()
+        if (days.isEmpty()) return 0
+        // 今天没跑不算断，从昨天开始数
+        var cursor = if (days.contains(today)) today else today.minusDays(1)
+        if (!days.contains(cursor)) return 0
+        var count = 0
+        while (days.contains(cursor)) {
+            count++
+            cursor = cursor.minusDays(1)
+        }
+        return count
     }
 
     companion object {
