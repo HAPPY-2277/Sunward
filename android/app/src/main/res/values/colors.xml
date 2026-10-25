@@ -105,4 +105,9 @@
     <color name="footer_bg">#0A0E0A</color>
     <color name="text_dce4dc">#DCE4DC</color>
     <color name="text_717c71">#717C71</color>
+
+    <!-- sunward 朝阳金品牌色（源：design/icon/sunward-icon.svg）
+         启动图标与首页品牌 logo 共用；界面其余部分仍是荧光绿 #D9FF43，后续替换 -->
+    <color name="sunward_ink">#1C1310</color>
+    <color name="sunward_halo_16">#29FF8A3C</color>
 </resources>

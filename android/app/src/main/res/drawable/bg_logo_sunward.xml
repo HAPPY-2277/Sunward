@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 品牌 logo 底板：sunward「朝阳金」
+     对应 design/icon/sunward-icon.svg 的暖棕黑底 + 暖色光晕。
+     结构与原 bg_logo_glow 一致：外层 40dp 光晕，内层 32dp 实心圆角方块。
+     光晕取 halo 渐变的 16% 档（#FF8A3C @ 0x29），替代原来的荧光绿 lime_16。 -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/sunward_halo_16" />
+            <corners android:radius="20dp" />
+        </shape>
+    </item>
+    <item
+        android:left="4dp"
+        android:top="4dp"
+        android:right="4dp"
+        android:bottom="4dp">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/sunward_ink" />
+            <corners android:radius="14dp" />
+        </shape>
+    </item>
+</layer-list>
