@@ -153,4 +153,4 @@ tools/             本机工具链（SDK、Gradle、模拟器脚本），不入�
 
 ## License
 
-尚未选定。仓库目前是私有状态，公开前请补上 `LICENSE` 文件。
+[MIT](LICENSE)。
