@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 启动图标单色层（Android 13+ 主题图标）：轨迹 + 定位针的纯色剪影。
+     几何与 ic_launcher_foreground.xml 完全一致，系统会自动着色。 -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="1024"
+    android:viewportHeight="1024">
+
+    <group
+        android:pivotX="496"
+        android:pivotY="531.5"
+        android:scaleX="0.86"
+        android:scaleY="0.86"
+        android:translateX="16"
+        android:translateY="-19.5">
+
+        <path
+            android:pathData="M512,370 C668,370 800,470 812,596 C824,722 716,816 572,820 C428,824 296,770 232,670 C168,570 222,446 340,394 C384,374 446,370 512,370 Z"
+            android:strokeColor="#FFFFFFFF"
+            android:strokeWidth="62"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round" />
+
+        <path
+            android:pathData="M512,382 L458,312 A66,66 0 1,1 566,312 Z"
+            android:fillColor="#FFFFFFFF" />
+    </group>
+</vector>

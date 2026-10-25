@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <!-- 方案三 · 变体 A「朝阳金」
+       跑出来的闭环路线，起点是定位针。配暖色后：轨迹是晨光金渐变，
+       针是落日红，底色是暖棕黑。 -->
+  <defs>
+    <linearGradient id="track" gradientUnits="userSpaceOnUse" x1="190" y1="370" x2="820" y2="830">
+      <stop offset="0%" stop-color="#FFE49A"/>
+      <stop offset="52%" stop-color="#FFB65C"/>
+      <stop offset="100%" stop-color="#F0802C"/>
+    </linearGradient>
+    <radialGradient id="halo" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FF9E45" stop-opacity="0.26"/>
+      <stop offset="60%" stop-color="#FF8A3C" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#FF8A3C" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1024" height="1024" fill="#1C1310"/>
+  <circle cx="512" cy="512" r="470" fill="url(#halo)"/>
+
+  <!-- 轨迹闭环 -->
+  <path d="M 512 370
+           C 668 370 800 470 812 596
+           C 824 722 716 816 572 820
+           C 428 824 296 770 232 670
+           C 168 570 222 446 340 394
+           C 384 374 446 370 512 370 Z"
+        fill="none" stroke="url(#track)" stroke-width="62"
+        stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- 起点定位针 -->
+  <path d="M 512 382 L 458 312 A 66 66 0 1 1 566 312 Z" fill="#E8502F"/>
+  <circle cx="512" cy="274" r="24" fill="#1C1310"/>
+</svg>

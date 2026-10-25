@@ -1,5 +1,7 @@
 # 逐日 · SUNWARD
 
+<img src="design/icon/sunward-icon.png" alt="SUNWARD 图标" width="112"/>
+
 ![Kotlin](https://img.shields.io/badge/Kotlin-2.2-7F52FF)
 ![Android](https://img.shields.io/badge/Android-minSdk%2026-3DDC84)
 ![AGP](https://img.shields.io/badge/AGP-9.4.1-4285F4)
@@ -24,6 +26,15 @@ App 启动器上显示「逐日」，面向家里人的日常使用；SUNWARD �
 包名 `com.runclub.android` 是早期名。改动会让已申请的高德地图 Key 失效
 （Key 绑定包名 + 签名 SHA-1），因此保持原样。
 
+## 图标
+
+启动图标 **sunward · 朝阳金**：一条跑出来的闭环轨迹 + 起点定位针。
+暖棕黑底 `#1C1310`，晨光金渐变轨迹 `#FFE49A → #F0802C`，落日红定位针 `#E8502F`。
+
+- 源文件 [design/icon/sunward-icon.svg](design/icon/sunward-icon.svg)（1024 viewBox），位图 [design/icon/sunward-icon.png](design/icon/sunward-icon.png)（1024px，商店大图可直接用）
+- 自适应图标前景为矢量重绘（`ic_launcher_foreground.xml`，内容已缩进 66dp 安全区），另带 `monochrome` 主题图标层
+- 图标用的暖金色是品牌色的演进方向；App 界面当前仍是荧光绿 `#D9FF43`，后续替换
+
 ## 想法
 
 频率比强度重要。公里数是结果，不是成绩单。
@@ -31,8 +42,6 @@ App 启动器上显示「逐日」，面向家里人的日常使用；SUNWARD �
 「还差 29.9 km 达标」是欠账，跑两天看到自己欠一堆账，最可能的选择是干脆不跑了。
 所以这个 App 里没有里程目标、没有配速目标、没有断签提醒，也没有任何红色警示。
 一天动了就是完成，漏掉的日子只是不增加。
-
-完整理念见 [docs/产品理念.md](docs/产品理念.md)。
 
 ## 界面
 
@@ -127,6 +136,7 @@ android/app/src/
 └── test/          59 个单元测试
 
 design/prototype/  HTML 原型，视觉基线，不参与构建
+design/icon/       启动图标 sunward（SVG 源 + 1024 PNG）
 docs/              计划、验收报告、调研、产品理念
 tools/             本机工具链（SDK、Gradle、模拟器脚本），不入库
 ```
@@ -135,11 +145,11 @@ tools/             本机工具链（SDK、Gradle、模拟器脚本），不入�
 
 | | |
 |---|---|
-| [产品理念](docs/产品理念.md) | 名字来源、四条原则、判定方法 |
 | [开发计划](docs/开发计划.md) | M0–M7 的任务拆分与验收标准 |
 | [验收报告](docs/验收报告.md) | 逐里程碑的实测记录与修过的问题 |
 | [调研报告](docs/调研报告.md) | 竞品与技术调研 |
-| [原型](design/prototype/) | 四个 HTML 页面 |
+| [原型](design/prototype/) | 四个 HTML 页面 |  
+| [图标](design/icon/) | sunward-icon SVG 源文件与 1024 位图 |
 
 ## License
 
