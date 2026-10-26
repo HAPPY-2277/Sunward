@@ -254,6 +254,10 @@ class HomeActivity : AppCompatActivity() {
                         putExtra(LiveRunActivity.EXTRA_RESTORE_ELAPSED, snapshot.elapsedMs)
                         putExtra(LiveRunActivity.EXTRA_RESTORE_DISTANCE, snapshot.distanceM)
                         putExtra(LiveRunActivity.EXTRA_RESTORE_SIMULATED, snapshot.simulated)
+                        putExtra(
+                            LiveRunActivity.EXTRA_RESTORE_START_MS,
+                            snapshot.resolvedStartWallClockMs
+                        )
                     }
                 )
             }

@@ -139,7 +139,8 @@ class LiveRunActivity : AppCompatActivity() {
         if (elapsed < 0) return
         val simulated = intent?.getBooleanExtra(EXTRA_RESTORE_SIMULATED, false) ?: false
         val distance = intent?.getDoubleExtra(EXTRA_RESTORE_DISTANCE, 0.0) ?: 0.0
-        RunSession.restore(elapsed, distance, simulated)
+        val startWallClockMs = intent?.getLongExtra(EXTRA_RESTORE_START_MS, 0L) ?: 0L
+        RunSession.restore(elapsed, distance, simulated, startWallClockMs)
         ContextCompat.startForegroundService(
             this,
             RunForegroundService.intent(this, RunForegroundService.ACTION_RESUME)
@@ -543,6 +544,9 @@ class LiveRunActivity : AppCompatActivity() {
         const val EXTRA_RESTORE_ELAPSED = "restore_elapsed_ms"
         const val EXTRA_RESTORE_DISTANCE = "restore_distance_m"
         const val EXTRA_RESTORE_SIMULATED = "restore_simulated"
+
+        /** 崩溃前那次跑步的开始墙钟时间；缺了它恢复出来的记录会写成 1970 年 */
+        const val EXTRA_RESTORE_START_MS = "restore_start_wall_ms"
 
         /** 调试用：true 表示直接用内置模拟轨迹开跑（自动化验收用） */
         const val EXTRA_SIMULATED = "sim"

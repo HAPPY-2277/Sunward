@@ -21,17 +21,29 @@ class InProgressStore(context: Context) {
         val elapsedMs: Long,
         val distanceM: Double,
         val simulated: Boolean,
-        val savedAtMs: Long
+        val savedAtMs: Long,
+        /** 这次跑步真正的开始墙钟时间；本次修复之前写的旧快照里没有这一项，读出来是 0 */
+        val startWallClockMs: Long = 0L
     ) {
         /** 超过 12 小时的快照视为过期，不再提示 */
         fun isFresh(nowMs: Long): Boolean = nowMs - savedAtMs <= MAX_AGE_MS
+
+        /**
+         * 恢复时应当写进记录的开始时间。
+         *
+         * 优先用快照里的真实开始时间；旧快照没有这一项时退回「保存时刻 − 已跑时长」，
+         * 误差只剩暂停过的那段时间。**不能**用「恢复时刻 − 已跑时长」：快照 12 小时内都算新鲜，
+         * 用户隔天再打开就会把这条记录算到错误的一天（报告是按开始时间归属周期的）。
+         */
+        val resolvedStartWallClockMs: Long
+            get() = if (startWallClockMs > 0L) startWallClockMs else savedAtMs - elapsedMs
 
         companion object {
             const val MAX_AGE_MS = 12L * 60 * 60 * 1000
         }
     }
 
-    fun save(state: RunUiState) {
+    fun save(state: RunUiState, startWallClockMs: Long = 0L) {
         if (!state.isActive) return
         val json = JSONObject().apply {
             put("state", state.state.name)
@@ -39,6 +51,7 @@ class InProgressStore(context: Context) {
             put("distanceM", state.distanceM)
             put("simulated", state.simulated)
             put("savedAtMs", System.currentTimeMillis())
+            put("startWallClockMs", startWallClockMs)
         }
         prefs.edit().putString(KEY_SNAPSHOT, json.toString()).apply()
     }
@@ -52,7 +65,8 @@ class InProgressStore(context: Context) {
                 elapsedMs = json.getLong("elapsedMs"),
                 distanceM = json.getDouble("distanceM"),
                 simulated = json.optBoolean("simulated", false),
-                savedAtMs = json.getLong("savedAtMs")
+                savedAtMs = json.getLong("savedAtMs"),
+                startWallClockMs = json.optLong("startWallClockMs", 0L)
             )
         }.getOrNull()
     }

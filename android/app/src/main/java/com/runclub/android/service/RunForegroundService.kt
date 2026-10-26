@@ -204,7 +204,7 @@ class RunForegroundService : LifecycleService() {
                 RunSession.tick()
                 seconds++
                 // 每 5 秒落一次「进行中」快照，供强杀后恢复
-                if (seconds % 5 == 0) store.save(RunSession.current())
+                if (seconds % 5 == 0) store.save(RunSession.current(), RunSession.startWallClockMs)
             }
         }
     }
