@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 返回：当前页面向右滑出（与 slide_in_right 对称） -->
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:interpolator="@android:anim/decelerate_interpolator">
+    <translate
+        android:duration="@integer/nav_anim_duration_ms"
+        android:fromXDelta="0"
+        android:toXDelta="100%p" />
+</set>

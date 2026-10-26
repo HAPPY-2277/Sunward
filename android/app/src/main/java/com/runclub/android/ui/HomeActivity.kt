@@ -162,18 +162,18 @@ class HomeActivity : AppCompatActivity() {
             provideMapLayer(this).prewarm()
             startActivity(Intent(this, LiveRunActivity::class.java))
         }
-        findViewById<View>(R.id.tabRecords).setOnClickListener {
-            startActivity(Intent(this, RecordsActivity::class.java))
-        }
+        findViewById<View>(R.id.tabRecords).setOnClickListener { openRecords() }
         findViewById<View>(R.id.tabSport).setOnClickListener {
             // 已在首页
         }
-        findViewById<View>(R.id.btnAllRecords).setOnClickListener {
-            startActivity(Intent(this, RecordsActivity::class.java))
-        }
-        findViewById<View>(R.id.lastRunCard).setOnClickListener {
-            startActivity(Intent(this, RecordsActivity::class.java))
-        }
+        findViewById<View>(R.id.btnAllRecords).setOnClickListener { openRecords() }
+        findViewById<View>(R.id.lastRunCard).setOnClickListener { openRecords() }
+    }
+
+    /** 往前翻一页到记录页：三个入口共用，切页动画也要一致 */
+    private fun openRecords() {
+        startActivity(Intent(this, RecordsActivity::class.java))
+        NavTransition.forward(this)
     }
 
     /**

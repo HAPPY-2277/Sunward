@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 正向切页：旧页面往左让开 1/4 屏，被新页面盖住，形成翻页的视差感。
+     不加 alpha 渐隐：窗口背后是黑色任务背景，淡出会闪一下黑。 -->
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:interpolator="@android:anim/decelerate_interpolator">
+    <translate
+        android:duration="@integer/nav_anim_duration_ms"
+        android:fromXDelta="0"
+        android:toXDelta="-25%p" />
+</set>

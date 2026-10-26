@@ -3,10 +3,12 @@ package com.runclub.android.ui
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -41,6 +43,9 @@ class RecordsActivity : AppCompatActivity() {
     private lateinit var listView: RecyclerView
     private lateinit var trendChart: TrendChartView
 
+    /** 右滑返回：记录页总是压在首页上面，往右拖就翻回去 */
+    private lateinit var swipeBack: SwipeBackHelper
+
     private val ioExecutor = Executors.newSingleThreadExecutor()
     private val mainHandler = android.os.Handler(android.os.Looper.getMainLooper())
 
@@ -70,6 +75,11 @@ class RecordsActivity : AppCompatActivity() {
         bindPeriods()
         showTab(report = false)
         refreshAll()
+
+        swipeBack = SwipeBackHelper(this)
+        swipeBack.attach(::dispatchToChildren)
+        // 系统返回键与返回手势走同一套滑出动画，和右滑返回表现一致
+        onBackPressedDispatcher.addCallback(this) { closeBackward() }
     }
 
     override fun onResume() {
@@ -80,6 +90,21 @@ class RecordsActivity : AppCompatActivity() {
     override fun onDestroy() {
         ioExecutor.shutdownNow()
         super.onDestroy()
+    }
+
+    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
+        // 右滑返回优先：手势吃掉事件后就不再往子 View 传
+        if (swipeBack.onTouchEvent(ev)) return true
+        return super.dispatchTouchEvent(ev)
+    }
+
+    /** Kotlin 的 lambda 里不能写 super，抢手势时补发 CANCEL 要走这个方法 */
+    private fun dispatchToChildren(ev: MotionEvent): Boolean = super.dispatchTouchEvent(ev)
+
+    /** 往回翻一页：关闭自己并播放滑出动画 */
+    private fun closeBackward() {
+        finish()
+        NavTransition.backward(this)
     }
 
     // ---------------- 交互 ----------------
@@ -100,6 +125,7 @@ class RecordsActivity : AppCompatActivity() {
                 }
             )
             finish()
+            NavTransition.backward(this)
         }
     }
 

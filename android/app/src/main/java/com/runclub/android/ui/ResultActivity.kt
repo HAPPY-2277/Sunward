@@ -208,6 +208,8 @@ class ResultActivity : AppCompatActivity() {
 
         findViewById<View>(R.id.btnViewRecords).setOnClickListener {
             startActivity(Intent(this, RecordsActivity::class.java))
+            // 与首页进入记录页用同一套切页动画，两个入口的手感要一致
+            NavTransition.forward(this)
         }
 
         val toast = findViewById<View>(R.id.toast)
