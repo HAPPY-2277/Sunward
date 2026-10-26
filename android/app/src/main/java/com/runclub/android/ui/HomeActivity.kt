@@ -1,11 +1,10 @@
 package com.runclub.android.ui
 
-import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.view.animation.LinearInterpolator
+import android.view.animation.PathInterpolator
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -33,7 +32,7 @@ import kotlin.math.roundToInt
 class HomeActivity : AppCompatActivity() {
 
     private lateinit var repo: RunRepository
-    private var goPingAnimator: ObjectAnimator? = null
+    private var goPingAnimator: ValueAnimator? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -173,19 +172,27 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
-    /** GO 按钮外圈的 ping 动画（对应原型 animate-ping，2.4s 一轮） */
+    /**
+     * GO 按钮外圈的涟漪动画，对应原型 activity.html 的 `animate-ping`（2.4s 一轮）：
+     * 一圈细描边从按钮边缘放大到 2 倍，同时淡出，一轮接一轮向外扩散。
+     *
+     * 旧实现是 REVERSE 来回呼吸（1.0↔1.16）且透明度始终不低于 0.55，
+     * 配上当时实心的 [R.drawable.bg_go_ping] 就是一圈甩不掉的黑边，与原型不符。
+     */
     private fun startGoPing() {
         val ping = findViewById<View>(R.id.goPing)
-        // 用 scale 同时缩放 X/Y，让圆形保持圆形（只缩放一个轴会变成椭圆/方块）
-        goPingAnimator = ObjectAnimator.ofFloat(ping, View.SCALE_X, 1f, 1.16f).apply {
-            duration = 2400
+        goPingAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
+            duration = GO_PING_DURATION_MS
             repeatCount = ValueAnimator.INFINITE
-            repeatMode = ValueAnimator.REVERSE
-            interpolator = LinearInterpolator()
+            // Tailwind animate-ping 的缓动 cubic-bezier(0, 0, 0.2, 1)：起步快、尾段慢
+            interpolator = PathInterpolator(0f, 0f, 0.2f, 1f)
             addUpdateListener {
-                val v = it.animatedValue as Float
-                ping.scaleY = v
-                ping.alpha = 0.55f + 0.45f * (2f - v) / 1.16f
+                val progress = it.animatedValue as Float
+                val scale = 1f + progress
+                // 两轴必须同缩，只缩一个轴圆会变成椭圆
+                ping.scaleX = scale
+                ping.scaleY = scale
+                ping.alpha = 1f - progress
             }
             start()
         }
@@ -253,5 +260,10 @@ class HomeActivity : AppCompatActivity() {
     override fun onDestroy() {
         goPingAnimator?.cancel()
         super.onDestroy()
+    }
+
+    private companion object {
+        /** 涟漪一轮的时长，对应原型 `[animation-duration:2.4s]` */
+        const val GO_PING_DURATION_MS = 2400L
     }
 }

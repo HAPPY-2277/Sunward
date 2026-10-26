@@ -188,9 +188,12 @@
                             android:textSize="11sp"
                             android:textStyle="bold" />
 
+                        <!-- clipChildren=false：GO 涟漪要能画出按钮与文字行之外，
+                             最终由本卡片（默认裁剪）收口，等同原型的 overflow-hidden -->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:clipChildren="false"
                             android:orientation="vertical">
 
                             <!-- Ready to move 徽章 -->
@@ -239,6 +242,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="20dp"
                                 android:baselineAligned="false"
+                                android:clipChildren="false"
                                 android:gravity="bottom"
                                 android:orientation="horizontal">
 
@@ -291,26 +295,30 @@
                                     </LinearLayout>
                                 </LinearLayout>
 
-                                <!-- GO 按钮：双层 ping 动画 -->
+                                <!-- GO 按钮：深色圆盘本体 + 一圈向外扩散淡出的涟漪环
+                                     （原型 112×112、shadow 0 14px 30px、active:scale-95） -->
                                 <FrameLayout
                                     android:id="@+id/btnGo"
-                                    android:layout_width="104dp"
-                                    android:layout_height="104dp"
+                                    android:layout_width="112dp"
+                                    android:layout_height="112dp"
                                     android:layout_marginStart="12dp"
+                                    android:background="@drawable/bg_go_disc"
                                     android:clickable="true"
+                                    android:clipChildren="false"
+                                    android:elevation="10dp"
                                     android:focusable="true">
 
-                                    <!-- ping 外圈 -->
+                                    <!-- 涟漪环：从按钮边缘扩散到 2 倍并淡出 -->
                                     <View
                                         android:id="@+id/goPing"
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
                                         android:background="@drawable/bg_go_ping" />
 
-                                    <!-- 内圈描边 -->
+                                    <!-- 内圈描边（原型 inset-[7px]，112-7×2=98） -->
                                     <View
-                                        android:layout_width="90dp"
-                                        android:layout_height="90dp"
+                                        android:layout_width="98dp"
+                                        android:layout_height="98dp"
                                         android:layout_gravity="center"
                                         android:background="@drawable/bg_go_inner_ring" />
 
@@ -327,7 +335,7 @@
                                             android:text="@string/home_go"
                                             android:textColor="@color/accent_lime"
                                             android:textSize="32sp"
-                                            android:textStyle="bold" />
+                                            android:textStyle="bold|italic" />
 
                                         <LinearLayout
                                             android:layout_width="wrap_content"
