@@ -849,7 +849,7 @@
         android:id="@+id/endModal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#B3050705"
+        android:background="@color/scrim_modal"
         android:clickable="true"
         android:focusable="true"
         android:gravity="center"

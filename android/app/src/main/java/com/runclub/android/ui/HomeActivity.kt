@@ -6,13 +6,13 @@ import android.os.Bundle
 import android.view.View
 import android.view.animation.PathInterpolator
 import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.runclub.android.R
 import com.runclub.android.data.model.RunRecord
 import com.runclub.android.data.repo.RunRepository
 import com.runclub.android.map.providePrivacyGate
+import com.runclub.android.ui.widget.SunwardDialog
 import com.runclub.android.ui.widget.TrackThumbView
 import com.runclub.android.ui.widget.WeekBarsView
 import com.runclub.android.util.Format
@@ -208,15 +208,16 @@ class HomeActivity : AppCompatActivity() {
             maybePromptRestore()
             return
         }
-        AlertDialog.Builder(this)
-            .setTitle(R.string.privacy_title)
-            .setMessage(R.string.privacy_message)
-            .setCancelable(false)
-            .setPositiveButton(R.string.privacy_agree) { _, _ ->
+        SunwardDialog.Builder(this)
+            .icon(R.drawable.ic_satellite, onLime = true)
+            .title(R.string.privacy_title)
+            .message(R.string.privacy_message)
+            .cancelable(false)
+            .positive(R.string.privacy_agree) {
                 gate.agree(this)
                 maybePromptRestore()
             }
-            .setNegativeButton(R.string.privacy_decline) { _, _ ->
+            .negative(R.string.privacy_decline) {
                 maybePromptRestore()
             }
             .show()
@@ -231,9 +232,10 @@ class HomeActivity : AppCompatActivity() {
         val snapshot = store.loadRestorable() ?: return
 
         val timeText = SimpleDateFormat("HH:mm", Locale.CHINA).format(Date(snapshot.savedAtMs))
-        AlertDialog.Builder(this)
-            .setTitle(R.string.restore_title)
-            .setMessage(
+        SunwardDialog.Builder(this)
+            .icon(R.drawable.ic_history)
+            .title(R.string.restore_title)
+            .message(
                 getString(
                     R.string.restore_message,
                     timeText,
@@ -241,8 +243,8 @@ class HomeActivity : AppCompatActivity() {
                     Format.duration(snapshot.elapsedMs)
                 )
             )
-            .setCancelable(false)
-            .setPositiveButton(R.string.restore_yes) { _, _ ->
+            .cancelable(false)
+            .positive(R.string.restore_yes) {
                 startActivity(
                     Intent(this, LiveRunActivity::class.java).apply {
                         putExtra(LiveRunActivity.EXTRA_RESTORE_ELAPSED, snapshot.elapsedMs)
@@ -251,7 +253,7 @@ class HomeActivity : AppCompatActivity() {
                     }
                 )
             }
-            .setNegativeButton(R.string.restore_no) { _, _ ->
+            .negative(R.string.restore_no) {
                 store.clear()
             }
             .show()

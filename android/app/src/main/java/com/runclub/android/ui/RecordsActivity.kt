@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,6 +17,7 @@ import com.runclub.android.data.model.ReportData
 import com.runclub.android.data.model.ReportPeriod
 import com.runclub.android.data.model.RunRecord
 import com.runclub.android.data.repo.RunRepository
+import com.runclub.android.ui.widget.SunwardDialog
 import com.runclub.android.ui.widget.TrackThumbView
 import com.runclub.android.ui.widget.TrendChartView
 import com.runclub.android.util.Format
@@ -359,16 +359,17 @@ class RecordsActivity : AppCompatActivity() {
     }
 
     private fun confirmDelete(record: RunRecord) {
-        AlertDialog.Builder(this)
-            .setTitle(R.string.records_delete)
-            .setMessage(R.string.records_delete_confirm)
-            .setNegativeButton(android.R.string.cancel, null)
-            .setPositiveButton(R.string.records_delete) { _, _ ->
+        SunwardDialog.Builder(this)
+            .icon(R.drawable.ic_x)
+            .title(R.string.records_delete)
+            .message(R.string.records_delete_confirm)
+            .positive(R.string.records_delete) {
                 ioExecutor.execute {
                     repo.delete(record.id)
                     mainHandler.post { refreshAll() }
                 }
             }
+            .negative(R.string.common_cancel)
             .show()
     }
 }
