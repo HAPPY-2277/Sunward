@@ -109,7 +109,7 @@ $env:GRADLE_USER_HOME  = 'D:\Sunward\tools\gradle-home'
 cd android
 .\gradlew.bat assembleLocalDebug     # 不含高德 SDK，可在 x86_64 模拟器安装
 .\gradlew.bat assembleAmapDebug      # 含高德底图，装真机
-.\gradlew.bat testLocalDebugUnitTest # 70 个单元测试
+.\gradlew.bat testLocalDebugUnitTest # 72 个单元测试
 ```
 
 ### 3. 模拟轨迹先看效果
