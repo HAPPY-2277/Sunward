@@ -238,6 +238,8 @@ class LiveRunActivity : AppCompatActivity() {
     }
 
     private fun showCountdownText(label: String, hint: Boolean) {
+        // 每个数字留一条 debug 日志：排查「倒计时与计时起点不同步」时可直接对齐 logcat 时间戳
+        Log.d(TAG, "倒计时：$label")
         tvCountdown.text = label
         tvCountdownHint.visibility = if (hint) View.VISIBLE else View.GONE
         tvCountdown.alpha = 0f
@@ -252,6 +254,7 @@ class LiveRunActivity : AppCompatActivity() {
     }
 
     private fun startNewRun(simulated: Boolean) {
+        Log.i(TAG, "启动计时：simulated=$simulated")
         // 计时开始后位置由前台服务的采集流驱动，预热流必须停掉，避免两路重复请求定位
         warmUpJob?.cancel()
         warmUpJob = null
