@@ -45,6 +45,14 @@ class RunTracker(
     var distanceM: Double = 0.0
         private set
 
+    /**
+     * 恢复出来的「已跑距离」基线。
+     *
+     * 过滤器只累加本进程内采纳的点，强杀恢复后它是从 0 开始的；
+     * 不把崩溃前的距离当基线加上的话，第一个新点就会把 distanceM 覆盖成几米（真实踩过）。
+     */
+    private var distanceOffsetM: Double = 0.0
+
     var lastPoint: TrackPoint? = null
         private set
 
@@ -69,6 +77,7 @@ class RunTracker(
         if (!RunStateMachine.canTransition(state, RunState.RUNNING)) return false
         filter.reset()
         distanceM = 0.0
+        distanceOffsetM = 0.0
         smoothedSpeedMps = 0.0
         lastPoint = null
         accumulatedMs = 0L
@@ -106,10 +115,16 @@ class RunTracker(
         return true
     }
 
-    /** 从「异常退出前的快照」恢复为进行中状态。历史轨迹与分段无法还原，从这里重新开始记。 */
+    /**
+     * 从「异常退出前的快照」恢复为进行中状态。
+     *
+     * 时长与距离都接着算（距离通过 [distanceOffsetM] 当基线），
+     * 但历史轨迹点与分段无法还原，这两样从这里重新开始记。
+     */
     fun restore(elapsedMs: Long, distanceM: Double, nowMs: Long) {
         accumulatedMs = elapsedMs.coerceAtLeast(0L)
-        this.distanceM = distanceM.coerceAtLeast(0.0)
+        distanceOffsetM = distanceM.coerceAtLeast(0.0)
+        this.distanceM = distanceOffsetM
         segmentStartMs = nowMs
         state = RunState.RUNNING
         splitAnchorDistanceM = this.distanceM
@@ -162,7 +177,7 @@ class RunTracker(
         val accepted = filter.offer(point)
         lastPoint = point
         if (accepted) {
-            distanceM = filter.acceptedDistanceM
+            distanceM = distanceOffsetM + filter.acceptedDistanceM
             trackPoints.add(point)
             smoothSpeed(point)
             if (!splitAnchorSet) {
@@ -180,6 +195,7 @@ class RunTracker(
         trackPoints.clear()
         splitList.clear()
         distanceM = 0.0
+        distanceOffsetM = 0.0  // 换源是「重新记一段」，恢复出来的基线也不再适用
         smoothedSpeedMps = 0.0
         lastPoint = null
         splitAnchorDistanceM = 0.0
