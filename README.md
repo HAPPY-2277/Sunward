@@ -48,13 +48,14 @@
 
 | 能力 | 你可以做什么 |
 |---|---|
-| **轨迹采集** | GPS 轨迹采集，前台服务保活，锁屏继续记录，中途可暂停。 |
+| **轨迹采集** | GPS 轨迹采集，前台服务保活，锁屏继续记录，中途可暂停。点起跑后先走 3-2-1 倒计时，`GO` 出现一秒后才开始计时。 |
 | **距离计算** | 距离用增量 EMA 平滑后累加，过滤瞬移与漂移点。 |
-| **地图渲染** | 轨迹存 WGS-84，渲染时转 GCJ-02 再交给高德；`local` 变体用手绘底图。 |
+| **地图渲染** | 轨迹存 WGS-84，渲染时转 GCJ-02 再交给高德；跑步中镜头跟到街道级并随跑者移动，定位标按 GPS 方位角转向（没有方位角时用罗盘兜底）；成绩页的路线图叠在真实底图上。`local` 变体用手绘底图。 |
 | **本地存储** | SQLite 存记录与轨迹点，删除记录后汇总同步减少。 |
 | **周 / 月 / 年报告** | 里程柱 + 快慢折线双轴图、运动构成、观察文案，主数字是动过的天数。 |
-| **历史与成绩** | 记录按天归档，可筛选、可展开；成绩页看路线图、每公里用时、消耗。 |
+| **历史与成绩** | 记录按天归档，可筛选、可展开；成绩页看路线图、每公里用时、消耗。首页与记录页之间滑动切页，记录页支持左边缘右滑返回。 |
 | **中断恢复** | 过程被强杀后进入 App 可恢复未完成的跑步。 |
+| **提示卡片** | 隐私说明、中断恢复、删除确认都是自绘卡片（`SunwardDialog`），和实时页的结束确认同一套视觉，不用系统弹窗。 |
 
 不做：排行榜、社交动态、配速目标、断签提醒。
 
@@ -68,6 +69,8 @@
 | 跑步中：轨迹、距离、时长、当前位置 | 报告：周 / 月 / 年，主数字是动过的天数 |
 | <img src="docs/screenshots/61-zhuri-record.png" alt="历史" width="240"> | <img src="docs/screenshots/65-zhuri-result.png" alt="成绩" width="240"> |
 | 历史：按天归档，可筛选、可展开 | 成绩：路线图、每公里用时、消耗 |
+| <img src="docs/screenshots/66-zhuri-countdown.png" alt="起跑倒计时" width="240"> | <img src="docs/screenshots/67-zhuri-card.png" alt="提示卡片" width="240"> |
+| 起跑前 3-2-1 倒计时，`GO` 满一秒才开始计时 | 自绘提示卡片：中断恢复 / 隐私说明 / 删除确认 |
 
 ## 工作原理
 
@@ -106,7 +109,7 @@ $env:GRADLE_USER_HOME  = 'D:\Sunward\tools\gradle-home'
 cd android
 .\gradlew.bat assembleLocalDebug     # 不含高德 SDK，可在 x86_64 模拟器安装
 .\gradlew.bat assembleAmapDebug      # 含高德底图，装真机
-.\gradlew.bat testLocalDebugUnitTest # 59 个单元测试
+.\gradlew.bat testLocalDebugUnitTest # 65 个单元测试
 ```
 
 ### 3. 模拟轨迹先看效果
@@ -116,6 +119,13 @@ adb shell am start -n com.runclub.android/.ui.HomeActivity --ez sim true
 ```
 
 模拟轨迹会走一条 2.4 km 的环线，产生一条带「模拟」标记的记录。
+
+> 点 GO 后先走 3-2-1 倒计时，`GO` 出现满一秒才开始计时，自动化脚本要多等约 4 秒。
+>
+> 全新安装或 `adb shell pm clear` 之后，先执行一次
+> `adb shell pm grant com.runclub.android android.permission.ACCESS_FINE_LOCATION`：
+> 模拟轨迹同样跑在 `location` 类型的前台服务里，系统要求启动该服务时已持有定位权限，
+> 否则服务起不来（界面上点 GO 走的是权限申请流程，不受影响）。
 
 ### 两个变体
 
