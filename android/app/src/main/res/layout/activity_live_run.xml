@@ -2,9 +2,10 @@
 <!--
     实时跑步页 · 1:1 复刻 design/prototype/live-run.html
     结构：64dp 头部 → 弹性地图区（含四角浮层）→ 指标区 → 58dp 按钮区
-    额外两个覆盖层（不属于原型）：定位权限卡片、debug 构建专用的定位调试面板
+    额外三个覆盖层（不属于原型）：定位权限卡片、debug 构建专用的定位调试面板、起跑倒计时
 -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_base"
@@ -1020,6 +1021,41 @@
                     android:textStyle="bold" />
             </LinearLayout>
         </LinearLayout>
+    </LinearLayout>
+
+    <!-- ===== 覆盖层 4：起跑倒计时 3-2-1-GO =====
+         这段时间还没开始计时（前台服务尚未启动），正好用来等地图瓦片和第一个定位点。
+         clickable/focusable 吞掉触摸：倒计时中点按钮没有意义，容易误触。 -->
+    <LinearLayout
+        android:id="@+id/countdownOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/scrim_dark"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tvCountdown"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:letterSpacing="-0.06"
+            android:textColor="@color/accent_lime"
+            android:textSize="120sp"
+            android:textStyle="bold"
+            tools:text="3" />
+
+        <TextView
+            android:id="@+id/tvCountdownHint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:letterSpacing="0.16"
+            android:text="@string/live_countdown_hint"
+            android:textColor="@color/text_muted"
+            android:textSize="12sp" />
     </LinearLayout>
 
 </FrameLayout>

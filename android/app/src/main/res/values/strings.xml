@@ -256,4 +256,7 @@
 
     <!-- 通用按钮 -->
     <string name="common_cancel">取消</string>
+
+    <!-- 起跑倒计时：3-2-1 静默计数，走完出现 GO，1 秒后才真正开始计时 -->
+    <string name="live_countdown_hint">准备起跑</string>
 </resources>
