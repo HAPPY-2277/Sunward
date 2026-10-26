@@ -1,6 +1,7 @@
 package com.runclub.android.tracking
 
 import kotlin.math.asin
+import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.min
 import kotlin.math.pow
@@ -51,5 +52,40 @@ object GeoMath {
         val cosLat = cos(Math.toRadians((lat1 + lat2) / 2.0)).coerceAtLeast(1e-6)
         val east = (lon2 - lon1) * 111_195.0 * cosLat
         return Pair(east, north)
+    }
+
+    /** 把任意角度归一化到 [0, 360) */
+    fun normalizeDegrees(degrees: Double): Float {
+        val normalized = (degrees % 360.0 + 360.0) % 360.0
+        return normalized.toFloat()
+    }
+
+    /**
+     * 两点间的前进方向（方位角，度，正北为 0、顺时针 0~360）。
+     *
+     * 用途：GPS 点的 bearing 在网络定位、模拟轨迹、静止时常常缺失，
+     * 地图上的跑者标记需要一个朝向，这时按前后两点的几何方向推算。
+     * 用平面近似（[deltaMeters]）而非大圆公式：跑步尺度下两者的差别
+     * 远小于 GPS 本身的误差，代码也更好读。
+     */
+    fun bearingDegrees(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Float {
+        val (east, north) = deltaMeters(lat1, lon1, lat2, lon2)
+        return normalizeDegrees(Math.toDegrees(atan2(east, north)))
+    }
+
+    /**
+     * 方位角的指数平滑（EMA）。
+     *
+     * 罗盘读数抖动明显，直接拿去转地图上的箭头会左右乱摆，所以先平滑一次。
+     * 角度是环形量：跨 0°/360° 时必须走**最短弧**，
+     * 否则从 359° 转到 1° 会反向绕 358°，而不是前进 2°。
+     *
+     * @param alpha 新值的权重（0~1），越大越跟手、越小越平稳
+     */
+    fun smoothBearing(previousDeg: Float, currentDeg: Float, alpha: Float = 0.35f): Float {
+        var delta = (currentDeg - previousDeg) % 360f
+        if (delta > 180f) delta -= 360f
+        if (delta < -180f) delta += 360f
+        return ((previousDeg + alpha * delta) % 360f + 360f) % 360f
     }
 }

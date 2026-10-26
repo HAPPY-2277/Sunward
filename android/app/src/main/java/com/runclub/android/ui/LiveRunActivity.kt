@@ -5,10 +5,12 @@ import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.content.Intent
 import android.content.pm.ApplicationInfo
+import android.location.Location
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.view.View
 import android.view.animation.LinearInterpolator
 import android.widget.FrameLayout
@@ -21,6 +23,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.runclub.android.R
+import com.runclub.android.map.HeadingProvider
 import com.runclub.android.map.MapLayer
 import com.runclub.android.map.provideMapLayer
 import com.runclub.android.service.RunForegroundService
@@ -31,6 +34,8 @@ import com.runclub.android.tracking.RunUiState
 import com.runclub.android.tracking.TrackPoint
 import com.runclub.android.ui.widget.TrackCanvasView
 import com.runclub.android.util.Format
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import java.util.Locale
 import kotlin.math.roundToInt
@@ -85,6 +90,11 @@ class LiveRunActivity : AppCompatActivity() {
     private lateinit var amapHost: FrameLayout
     private lateinit var trackOverlay: TrackCanvasView
 
+    /** 罗盘：GPS 点没有 bearing 时给地图上的跑者箭头兜底 */
+    private lateinit var headingProvider: HeadingProvider
+
+    private var warmUpJob: Job? = null
+
     private val isDebuggable: Boolean
         get() = (applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) != 0
 
@@ -94,6 +104,7 @@ class LiveRunActivity : AppCompatActivity() {
                 result[Manifest.permission.ACCESS_COARSE_LOCATION] == true
             if (granted) {
                 permOverlay.visibility = View.GONE
+                startWarmUp(RunSession.current().simulated)
                 startNewRun(RunSession.current().simulated)
             } else {
                 tvPermHint.visibility = View.VISIBLE
@@ -106,6 +117,7 @@ class LiveRunActivity : AppCompatActivity() {
         setContentView(R.layout.activity_live_run)
         tracker = LocationTracker(this)
         mapLayer = provideMapLayer(this)
+        headingProvider = HeadingProvider(this)
         bindViews()
         bindActions()
         mapLayer.attach(amapHost, savedInstanceState)
@@ -145,10 +157,49 @@ class LiveRunActivity : AppCompatActivity() {
             return
         }
         permOverlay.visibility = View.GONE
+        startWarmUp(wantSimulated)
         startNewRun(wantSimulated)
     }
 
+    /**
+     * 开跑前的定位预热。
+     *
+     * 进页面就 attach 了地图（瓦片开始下载），但第一个 GPS 点可能要好几秒，
+     * 这段时间先用系统缓存的位置把镜头挪到脚下，再开一条 1Hz 定位流持续纠正，
+     * 避免「已经在计时了，地图还停在兜底城市」。
+     * 预热点不会污染记录：RunTracker.onPoint 只接受 RUNNING 状态的点。
+     */
+    private fun startWarmUp(simulated: Boolean) {
+        // 模拟轨迹的起点就是地图兜底位置（上海滨江），预热没有意义
+        if (simulated) return
+        if (!tracker.hasPermission()) return  // 权限还没给，交给 permissionLauncher 走完再预热
+        val state = RunSession.trackerState()
+        if (state == RunState.RUNNING || state == RunState.PAUSED) return  // 恢复的记录已在采集
+
+        tracker.lastKnownLocation()?.let { location -> applyRunnerPosition(location) }
+        warmUpJob?.cancel()
+        warmUpJob = lifecycleScope.launch {
+            tracker.locationFlow()
+                // 定位服务没开时这条流会直接 close，开跑后由前台服务的采集流再暴露问题
+                .catch { Log.i(TAG, "预热定位不可用：${it.message}") }
+                .collect { location -> applyRunnerPosition(location) }
+        }
+    }
+
+    /** 系统定位 → 地图层入参（朝向缺失时留空，跑步中由罗盘兜底） */
+    private fun applyRunnerPosition(location: Location) {
+        mapLayer.updateRunnerPosition(
+            location.latitude,
+            location.longitude,
+            if (location.hasBearing()) location.bearing else null,
+            if (location.hasAccuracy()) location.accuracy else null
+        )
+    }
+
     private fun startNewRun(simulated: Boolean) {
+        // 计时开始后位置由前台服务的采集流驱动，预热流必须停掉，避免两路重复请求定位
+        warmUpJob?.cancel()
+        warmUpJob = null
         ContextCompat.startForegroundService(
             this,
             RunForegroundService.intent(this, RunForegroundService.ACTION_START, simulated)
@@ -276,11 +327,19 @@ class LiveRunActivity : AppCompatActivity() {
         renderDebug(state)
 
         // 轨迹：把已采纳的点交给地图层（amap 画在地图上，local 画在叠加层上）
+        // 跑步中不传 endpoints=true：终点就是跑者当前位置，交给下面的定位标表示
         mapLayer.setTrack(RunSession.track())
         // 记录中让当前位置脉冲（对应原型 animate-pulse），暂停/结束时停掉
         if (state.state == RunState.RUNNING) trackOverlay.startPulse() else trackOverlay.stopPulse()
-        // 首个点到达后把镜头移过去一次；amap 实现内部会自行判定只做一次
-        state.lastPoint?.let { mapLayer.centerOnWgs84(it.lat, it.lon) }
+        // 跑者位置：优先用 GPS 的多普勒朝向，缺失（网络定位、静止）时用罗盘兜底
+        state.lastPoint?.let { point ->
+            mapLayer.updateRunnerPosition(
+                point.lat,
+                point.lon,
+                point.bearingDeg ?: headingProvider.lastHeadingDeg,
+                state.accuracyM
+            )
+        }
 
         if (state.state == RunState.FINISHED && !navigatedToResult &&
             (lastState == RunState.RUNNING || lastState == RunState.PAUSED)
@@ -392,9 +451,12 @@ class LiveRunActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         mapLayer.onResume()
+        // 罗盘只在实时页可见期间开着：传感器常开会明显耗电
+        headingProvider.start()
     }
 
     override fun onPause() {
+        headingProvider.stop()
         mapLayer.onPause()
         super.onPause()
     }
@@ -405,6 +467,7 @@ class LiveRunActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
+        warmUpJob?.cancel()
         stopDotPulse()
         trackOverlay.stopPulse()
         mapLayer.onDestroy()
@@ -412,6 +475,8 @@ class LiveRunActivity : AppCompatActivity() {
     }
 
     companion object {
+        private const val TAG = "LiveRunActivity"
+
         const val EXTRA_RESTORE_ELAPSED = "restore_elapsed_ms"
         const val EXTRA_RESTORE_DISTANCE = "restore_distance_m"
         const val EXTRA_RESTORE_SIMULATED = "restore_simulated"

@@ -1,6 +1,7 @@
 package com.runclub.android.tracking
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
@@ -84,6 +85,29 @@ class LocationTracker(private val context: Context) {
         }
 
         awaitClose { runCatching { manager.removeUpdates(listener) } }
+    }
+
+    /**
+     * 预热用的「最后一已知位置」：GPS / 网络 / 被动三个 provider 里取时间最新的一个。
+     *
+     * 为什么需要它：点 GO 到真正开始计时之间有 3-2-1 倒计时，冷启动的第一个 GPS 点
+     * 往往要好几秒，这段时间先用系统缓存的位置把地图挪到跑者脚下，
+     * 就不会出现「已经在计时了，地图还停在兜底城市」的情况。
+     * 无权限 / 无缓存 / 无 provider 时返回 null，调用方按「还没有位置」处理。
+     */
+    @SuppressLint("MissingPermission")  // 入口已判 hasPermission()
+    fun lastKnownLocation(): Location? {
+        if (!hasPermission()) return null
+        val manager = locationManager ?: return null
+        return listOf(
+            LocationManager.GPS_PROVIDER,
+            LocationManager.NETWORK_PROVIDER,
+            LocationManager.PASSIVE_PROVIDER
+        )
+            .mapNotNull { provider ->
+                runCatching { manager.getLastKnownLocation(provider) }.getOrNull()
+            }
+            .maxByOrNull { it.time }
     }
 
     companion object {

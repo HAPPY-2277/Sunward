@@ -24,17 +24,31 @@ class LocalMapLayer : MapLayer {
     override val isActive: Boolean = false
     override val statusText: String = "local 变体未集成高德地图，使用手绘地图"
 
+    override fun prewarm() = Unit
+
     override fun attach(host: ViewGroup, savedInstanceState: Bundle?) = Unit
 
     override fun attachOverlay(overlay: TrackCanvasView) {
         this.overlay = overlay
     }
 
-    override fun setTrack(points: List<TrackPoint>) {
+    override fun setTrack(points: List<TrackPoint>, endpoints: Boolean) {
         overlay?.setTrack(points)
     }
 
-    override fun centerOnWgs84(lat: Double, lon: Double) = Unit
+    /** 手绘地图没有镜头，跑者位置由叠加层上的脉冲点表示 */
+    override fun updateRunnerPosition(
+        lat: Double,
+        lon: Double,
+        bearingDeg: Float?,
+        accuracyM: Float?
+    ) = Unit
+
+    /** 叠加层自己会把整条轨迹归一化到视野内，不需要取景 */
+    override fun fitTrack(points: List<TrackPoint>) = Unit
+
+    override fun setGesturesEnabled(enabled: Boolean) = Unit
+
     override fun onResume() = Unit
     override fun onPause() = Unit
     override fun onDestroy() { overlay = null }

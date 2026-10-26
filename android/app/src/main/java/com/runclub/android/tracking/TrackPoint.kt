@@ -17,6 +17,12 @@ data class TrackPoint(
     val altitudeM: Double? = null,
     /** 传感器上报的瞬时速度（m/s，通常来自 Doppler） */
     val speedMps: Float? = null,
+    /**
+     * 方位角（度，正北为 0、顺时针 0~360），系统未提供时为 null。
+     * 只用于地图上跑者标记的朝向，不参与距离/配速计算；
+     * 为 null 时界面用罗盘兜底（见 map.HeadingProvider）。
+     */
+    val bearingDeg: Float? = null,
     /** 定位来源：gps / network / passive / simulated */
     val provider: String = "",
     /** 是否来自内置模拟轨迹（调试用，不得写入真实记录） */

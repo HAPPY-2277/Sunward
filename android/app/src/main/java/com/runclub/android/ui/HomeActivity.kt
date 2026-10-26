@@ -11,6 +11,7 @@ import androidx.core.content.ContextCompat
 import com.runclub.android.R
 import com.runclub.android.data.model.RunRecord
 import com.runclub.android.data.repo.RunRepository
+import com.runclub.android.map.provideMapLayer
 import com.runclub.android.map.providePrivacyGate
 import com.runclub.android.ui.widget.SunwardDialog
 import com.runclub.android.ui.widget.TrackThumbView
@@ -156,6 +157,9 @@ class HomeActivity : AppCompatActivity() {
 
     private fun bindActions() {
         findViewById<View>(R.id.btnGo).setOnClickListener {
+            // 按下 GO 就先做不依赖 View 的地图准备（合规状态 + SDK 类加载），
+            // 底图请求在实时页 attach 的那一刻立刻发出，不用等转场动画走完
+            provideMapLayer(this).prewarm()
             startActivity(Intent(this, LiveRunActivity::class.java))
         }
         findViewById<View>(R.id.tabRecords).setOnClickListener {
