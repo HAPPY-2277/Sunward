@@ -80,7 +80,7 @@ $adb = 'D:\Sunward\tools\android-sdk\platform-tools\adb.exe'
 - 新逻辑优先放进纯 Kotlin 层（`tracking/`、`data/repo/`、`util/`），不依赖 Android 框架，保证能在 JVM 上直接单测；修复算法或流程问题时优先补能复现问题的用例。
 - 注释与 KDoc 用简短中文，优先解释「为什么」，可引用调研报告章节号或记录真实踩过的坑（现有注释即此风格）；不逐行复述实现。
 - 界面文案遵守 `docs/产品理念.md` 原则三「说人话」：配速→「每公里约」、分段配速→「每公里用时」、训练构成→「运动构成」、轻松跑/节奏跑/长距离→「慢走/常跑/远足」、连续运动→「累计运动」。全站字号下限 11sp，不新增更小的标签。
-- 色值、圆角、字号使用 `colors.xml` / `dimens.xml` / `themes.xml` 中的设计令牌（深色底 `#080B08`、荧光绿 `#D9FF43`、橙 `#FF5C35`）；视觉以 `design/prototype/` 对应页面为基线，差异需说明原因。
+- 色值、圆角、字号使用 `colors.xml` / `dimens.xml` / `themes.xml` 中的设计令牌（浅色暖底 `#F1EFE8`、蜜琥珀 `#EF9F27`、深琥珀 `#854F0B`，墨色 `#2C2C2A`；周节奏七色 `week_day_1..7`）；视觉以 `design/prototype/` 对应页面为基线，差异需说明原因。
 - 新建文件夹 / 文件的命名与分类（全仓通用）：
   - 目录与文件名默认小写英文 kebab-case（如 `live-run.html`、`gpx-export/`），不用空格、大写字母或拼音；`android/` 源码与资源遵循既有包结构和 Kotlin / Android 命名规范，不另造风格。
   - `docs/` 是唯一的中文命名例外：顶层文档用中文名，验收报告与截图的序号分配按 `docs/NAMING.md`。
