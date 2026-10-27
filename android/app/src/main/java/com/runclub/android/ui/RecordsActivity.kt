@@ -43,8 +43,8 @@ class RecordsActivity : AppCompatActivity() {
     private lateinit var listView: RecyclerView
     private lateinit var trendChart: TrendChartView
 
-    /** 右滑返回：记录页总是压在首页上面，往右拖就翻回去 */
-    private lateinit var swipeBack: SwipeBackHelper
+    /** 左右滑切页：记录页在首页右边，往右拖就翻回首页 */
+    private lateinit var pageSwipe: PageSwipeHelper
 
     private val ioExecutor = Executors.newSingleThreadExecutor()
     private val mainHandler = android.os.Handler(android.os.Looper.getMainLooper())
@@ -76,9 +76,13 @@ class RecordsActivity : AppCompatActivity() {
         showTab(report = false)
         refreshAll()
 
-        swipeBack = SwipeBackHelper(this)
-        swipeBack.attach(::dispatchToChildren)
-        // 系统返回键与返回手势走同一套滑出动画，和右滑返回表现一致
+        pageSwipe = PageSwipeHelper(
+            activity = this,
+            direction = PageSwipeRule.DIRECTION_RIGHT,
+            onSwipe = { closeBackward() },
+        )
+        pageSwipe.attach(::dispatchToChildren)
+        // 系统返回键与右滑手势走同一套滑出动画，表现一致
         onBackPressedDispatcher.addCallback(this) { closeBackward() }
     }
 
@@ -93,8 +97,8 @@ class RecordsActivity : AppCompatActivity() {
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
-        // 右滑返回优先：手势吃掉事件后就不再往子 View 传
-        if (swipeBack.onTouchEvent(ev)) return true
+        // 切页手势优先：手势吃掉事件后就不再往子 View 传
+        if (pageSwipe.onTouchEvent(ev)) return true
         return super.dispatchTouchEvent(ev)
     }
 

@@ -3,6 +3,7 @@ package com.runclub.android.ui
 import android.animation.ValueAnimator
 import android.content.Intent
 import android.os.Bundle
+import android.view.MotionEvent
 import android.view.View
 import android.view.animation.PathInterpolator
 import android.widget.TextView
@@ -35,6 +36,9 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var repo: RunRepository
     private var goPingAnimator: ValueAnimator? = null
 
+    /** 左右滑切页：首页在记录页左边，往左拖就翻到记录页 */
+    private lateinit var pageSwipe: PageSwipeHelper
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
@@ -45,6 +49,13 @@ class HomeActivity : AppCompatActivity() {
 
         bindActions()
         startGoPing()
+
+        pageSwipe = PageSwipeHelper(
+            activity = this,
+            direction = PageSwipeRule.DIRECTION_LEFT,
+            onSwipe = { openRecords() },
+        )
+        pageSwipe.attach(::dispatchToChildren)
 
         maybeAskPrivacy()
 
@@ -61,6 +72,15 @@ class HomeActivity : AppCompatActivity() {
         super.onResume()
         refresh()
     }
+
+    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
+        // 切页手势优先：手势吃掉事件后就不再往子 View 传
+        if (pageSwipe.onTouchEvent(ev)) return true
+        return super.dispatchTouchEvent(ev)
+    }
+
+    /** Kotlin 的 lambda 里不能写 super，抢手势时补发 CANCEL 要走这个方法 */
+    private fun dispatchToChildren(ev: MotionEvent): Boolean = super.dispatchTouchEvent(ev)
 
     // ---------- 数据渲染 ----------
 

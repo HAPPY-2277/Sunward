@@ -53,7 +53,7 @@
 | **地图渲染** | 轨迹存 WGS-84，渲染时转 GCJ-02 再交给高德；跑步中镜头跟到街道级并随跑者移动，定位标按 GPS 方位角转向（没有方位角时用罗盘兜底）；成绩页的路线图叠在真实底图上。`local` 变体用手绘底图。 |
 | **本地存储** | SQLite 存记录与轨迹点，删除记录后汇总同步减少。 |
 | **周 / 月 / 年报告** | 里程柱 + 快慢折线双轴图、运动构成、观察文案，主数字是动过的天数。 |
-| **历史与成绩** | 记录按天归档，可筛选、可展开；成绩页看路线图、每公里用时、消耗。首页与记录页之间滑动切页，记录页支持左边缘右滑返回。 |
+| **历史与成绩** | 记录按天归档，可筛选、可展开；成绩页看路线图、每公里用时、消耗。首页与记录页之间像手机桌面一样整屏平移切页：首页左滑去记录页，记录页右滑回首页，点底部导航是同一套动画。 |
 | **中断恢复** | 过程被强杀后进入 App 可恢复未完成的跑步。 |
 | **提示卡片** | 隐私说明、中断恢复、删除确认都是自绘卡片（`SunwardDialog`），和实时页的结束确认同一套视觉，不用系统弹窗。 |
 
@@ -109,7 +109,7 @@ $env:GRADLE_USER_HOME  = 'D:\Sunward\tools\gradle-home'
 cd android
 .\gradlew.bat assembleLocalDebug     # 不含高德 SDK，可在 x86_64 模拟器安装
 .\gradlew.bat assembleAmapDebug      # 含高德底图，装真机
-.\gradlew.bat testLocalDebugUnitTest # 72 个单元测试
+.\gradlew.bat testLocalDebugUnitTest # 85 个单元测试
 ```
 
 ### 3. 模拟轨迹先看效果
@@ -195,7 +195,7 @@ android/app/src/
 │   └── res/       布局、图形、颜色、文案
 ├── amap/          高德实现（变体）
 ├── local/         手绘地图实现（变体）
-└── test/          59 个单元测试
+└── test/          85 个单元测试
 
 design/prototype/  HTML 原型，视觉基线，不参与构建
 design/icon/       启动图标 sunward（SVG 源 + 1024 PNG）
