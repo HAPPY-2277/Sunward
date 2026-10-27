@@ -116,11 +116,26 @@ object RunSession {
         return _state.value
     }
 
-    /** 从崩溃前的快照恢复 */
-    fun restore(elapsedMs: Long, distanceM: Double, simulated: Boolean) {
+    /**
+     * 从崩溃前的快照恢复。
+     *
+     * [startWallClockMs] 是崩溃前那次跑步的真实开始时间（快照里存着），必须一并带回来：
+     * 少了它，persist() 会写出 startTimeMs = 0 —— 记录页显示「1月1日 00:00」，
+     * 而报告是按开始时间归属周期的，这条记录会被算到 1970 年。
+     * 传 0 表示快照里没有（本次修复之前写的旧快照），退回用当前墙钟倒推已跑时长。
+     */
+    fun restore(
+        elapsedMs: Long,
+        distanceM: Double,
+        simulated: Boolean,
+        startWallClockMs: Long = 0L
+    ) {
         tracker = RunTracker()
         tracker.restore(elapsedMs, distanceM, nowMs())
         this.simulated = simulated
+        this.startWallClockMs =
+            if (startWallClockMs > 0L) startWallClockMs else System.currentTimeMillis() - elapsedMs
+        endWallClockMs = this.startWallClockMs
         publish()
     }
 

@@ -372,15 +372,30 @@
                     </LinearLayout>
                 </LinearLayout>
 
-                <!-- 路线图：浅色纸张 + 归一化轨迹 -->
+                <!-- 路线图：真实底图（amap）或手绘底图（local）+ 轨迹
+                     clipToOutline 让底图跟着 bg_map_paper 的 18dp 圆角裁切，否则 MapView 是方的 -->
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="220dp"
                     android:layout_marginStart="14dp"
                     android:layout_marginTop="12dp"
                     android:layout_marginEnd="14dp"
-                    android:background="@drawable/bg_map_paper">
+                    android:background="@drawable/bg_map_paper"
+                    android:clipToOutline="true">
 
+                    <!-- 手绘底图：amap 变体下真实底图可用时由代码隐藏 -->
+                    <com.runclub.android.ui.widget.CityMapView
+                        android:id="@+id/resultCityMap"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+
+                    <!-- amap 变体把 MapView 注入这个宿主；主源码集不能引用高德类 -->
+                    <FrameLayout
+                        android:id="@+id/resultMapHost"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+
+                    <!-- 归一化轨迹叠加层：真实底图可用时隐藏，折线由高德按经纬度画 -->
                     <com.runclub.android.ui.widget.TrackCanvasView
                         android:id="@+id/trackResult"
                         android:layout_width="match_parent"

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- GO 按钮本体：深色实心圆盘（原型 `rounded-full bg-[#080B08]`）。
+     圆盘和涟漪环分成两个 drawable，环才能独立放大淡出而不带着圆盘一起变形。 -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <solid android:color="@color/bg_base" />
+</shape>

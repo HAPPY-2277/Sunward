@@ -87,6 +87,33 @@ class RunTrackerTest {
     }
 
     @Test
+    fun `restore 后继续跑不会把已跑距离清零`() {
+        val tracker = RunTracker()
+        tracker.restore(elapsedMs = 123_000, distanceM = 456.0, nowMs = 0)
+
+        // 恢复后的第一个点：过滤器是从 0 开始累加的，距离必须保住恢复出来的基线
+        tracker.onPoint(point(1_000))
+        assertEquals("新点不该把恢复出来的距离覆盖掉", 456.0, tracker.distanceM, 1e-9)
+
+        // 再往前走 3 米，距离应在基线上继续增长
+        tracker.onPoint(point(2_000, lat = baseLat + 3.0 / 111_195.0, speed = 3f))
+        assertTrue("距离应在基线上继续累加，实际 ${tracker.distanceM}", tracker.distanceM > 456.0)
+        assertTrue("只走了 3 米，实际 ${tracker.distanceM}", tracker.distanceM < 466.0)
+    }
+
+    @Test
+    fun `restore 后切换数据源会连同基线一起重新记`() {
+        val tracker = RunTracker()
+        tracker.restore(elapsedMs = 60_000, distanceM = 500.0, nowMs = 0)
+        tracker.onPoint(point(1_000))
+        assertEquals(500.0, tracker.distanceM, 1e-9)
+
+        // 跨数据源防御会就地重来（生产里切模拟/切真实是重建 tracker，这里是兜底路径）
+        tracker.onPoint(point(2_000, lat = baseLat + 3.0 / 111_195.0, speed = 3f).copy(simulated = true))
+        assertEquals("换源后距离应重新起算", 0.0, tracker.distanceM, 1e-9)
+    }
+
+    @Test
     fun `距离不足 50 米时不给平均配速`() {
         val tracker = RunTracker()
         tracker.start(0)

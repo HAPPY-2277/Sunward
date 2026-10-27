@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 返回：下面的页面从左边整整一屏处滑回来（与 slide_out_left 对称）。
+     同样要整屏 + 同时长 + 同插值器，返回时才是桌面式的「上一页滑回来」。 -->
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:interpolator="@android:anim/decelerate_interpolator">
+    <translate
+        android:duration="@integer/nav_anim_duration_ms"
+        android:fromXDelta="-100%p"
+        android:toXDelta="0" />
+</set>

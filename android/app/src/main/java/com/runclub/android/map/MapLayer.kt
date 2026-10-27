@@ -25,6 +25,13 @@ interface MapLayer {
     /** 给调试面板显示的一句话状态 */
     val statusText: String
 
+    /**
+     * 预热：点 GO 时立刻调用。
+     * 只做合规状态与 SDK 的类加载这类「不依赖 View」的准备，
+     * 让底图瓦片的下载尽量提前到 [attach] 那一刻，而不是等计时开始。
+     */
+    fun prewarm()
+
     fun attach(host: ViewGroup, savedInstanceState: Bundle?)
 
     /**
@@ -33,11 +40,25 @@ interface MapLayer {
      */
     fun attachOverlay(overlay: TrackCanvasView)
 
-    /** 更新轨迹；坐标为 WGS-84，实现者负责按需转换 */
-    fun setTrack(points: List<TrackPoint>)
+    /**
+     * 更新轨迹；坐标为 WGS-84，实现者负责按需转换。
+     * @param endpoints true = 同时画起点与终点标记（成绩页的完整路线）；
+     *   跑步中传 false —— 终点就是跑者当前的位置，由 [updateRunnerPosition] 的标记表示。
+     */
+    fun setTrack(points: List<TrackPoint>, endpoints: Boolean = false)
 
-    /** 传入 **WGS-84** 坐标，实现者负责转 GCJ-02 */
-    fun centerOnWgs84(lat: Double, lon: Double)
+    /**
+     * 更新跑者位置与朝向，并把镜头推到道路级跟随。
+     * 入参是 **WGS-84**，实现者负责转 GCJ-02。
+     * @param bearingDeg 正北 0°、顺时针；为 null 时实现者应保持上一次朝向。
+     */
+    fun updateRunnerPosition(lat: Double, lon: Double, bearingDeg: Float?, accuracyM: Float?)
+
+    /** 把整条轨迹装进视野（成绩页用）。跑步中不要调，会打断跟随。 */
+    fun fitTrack(points: List<TrackPoint>)
+
+    /** 是否允许手势平移/缩放。成绩页要关掉，免得地图和页面滚动抢手势。 */
+    fun setGesturesEnabled(enabled: Boolean)
 
     fun onResume()
     fun onPause()

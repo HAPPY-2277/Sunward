@@ -204,7 +204,7 @@ class RunForegroundService : LifecycleService() {
                 RunSession.tick()
                 seconds++
                 // 每 5 秒落一次「进行中」快照，供强杀后恢复
-                if (seconds % 5 == 0) store.save(RunSession.current())
+                if (seconds % 5 == 0) store.save(RunSession.current(), RunSession.startWallClockMs)
             }
         }
     }
@@ -259,6 +259,8 @@ private fun android.location.Location.toTrackPoint(): TrackPoint = TrackPoint(
     accuracyM = if (hasAccuracy()) accuracy else null,
     altitudeM = if (hasAltitude()) altitude else null,
     speedMps = if (hasSpeed()) speed else null,
+    // 朝向：GPS 有多普勒时才有 bearing，网络定位通常没有 → 界面上用罗盘兜底
+    bearingDeg = if (hasBearing()) bearing else null,
     provider = provider ?: "",
     simulated = false
 )

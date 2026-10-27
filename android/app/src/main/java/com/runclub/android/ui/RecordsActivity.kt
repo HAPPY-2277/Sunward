@@ -3,11 +3,12 @@ package com.runclub.android.ui
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
+import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,6 +19,7 @@ import com.runclub.android.data.model.ReportData
 import com.runclub.android.data.model.ReportPeriod
 import com.runclub.android.data.model.RunRecord
 import com.runclub.android.data.repo.RunRepository
+import com.runclub.android.ui.widget.SunwardDialog
 import com.runclub.android.ui.widget.TrackThumbView
 import com.runclub.android.ui.widget.TrendChartView
 import com.runclub.android.util.Format
@@ -40,6 +42,9 @@ class RecordsActivity : AppCompatActivity() {
     private lateinit var emptyView: View
     private lateinit var listView: RecyclerView
     private lateinit var trendChart: TrendChartView
+
+    /** 左右滑切页：记录页在首页右边，往右拖就翻回首页 */
+    private lateinit var pageSwipe: PageSwipeHelper
 
     private val ioExecutor = Executors.newSingleThreadExecutor()
     private val mainHandler = android.os.Handler(android.os.Looper.getMainLooper())
@@ -70,6 +75,15 @@ class RecordsActivity : AppCompatActivity() {
         bindPeriods()
         showTab(report = false)
         refreshAll()
+
+        pageSwipe = PageSwipeHelper(
+            activity = this,
+            direction = PageSwipeRule.DIRECTION_RIGHT,
+            onSwipe = { closeBackward() },
+        )
+        pageSwipe.attach(::dispatchToChildren)
+        // 系统返回键与右滑手势走同一套滑出动画，表现一致
+        onBackPressedDispatcher.addCallback(this) { closeBackward() }
     }
 
     override fun onResume() {
@@ -80,6 +94,21 @@ class RecordsActivity : AppCompatActivity() {
     override fun onDestroy() {
         ioExecutor.shutdownNow()
         super.onDestroy()
+    }
+
+    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
+        // 切页手势优先：手势吃掉事件后就不再往子 View 传
+        if (pageSwipe.onTouchEvent(ev)) return true
+        return super.dispatchTouchEvent(ev)
+    }
+
+    /** Kotlin 的 lambda 里不能写 super，抢手势时补发 CANCEL 要走这个方法 */
+    private fun dispatchToChildren(ev: MotionEvent): Boolean = super.dispatchTouchEvent(ev)
+
+    /** 往回翻一页：关闭自己并播放滑出动画 */
+    private fun closeBackward() {
+        finish()
+        NavTransition.backward(this)
     }
 
     // ---------------- 交互 ----------------
@@ -100,6 +129,7 @@ class RecordsActivity : AppCompatActivity() {
                 }
             )
             finish()
+            NavTransition.backward(this)
         }
     }
 
@@ -359,16 +389,17 @@ class RecordsActivity : AppCompatActivity() {
     }
 
     private fun confirmDelete(record: RunRecord) {
-        AlertDialog.Builder(this)
-            .setTitle(R.string.records_delete)
-            .setMessage(R.string.records_delete_confirm)
-            .setNegativeButton(android.R.string.cancel, null)
-            .setPositiveButton(R.string.records_delete) { _, _ ->
+        SunwardDialog.Builder(this)
+            .icon(R.drawable.ic_x)
+            .title(R.string.records_delete)
+            .message(R.string.records_delete_confirm)
+            .positive(R.string.records_delete) {
                 ioExecutor.execute {
                     repo.delete(record.id)
                     mainHandler.post { refreshAll() }
                 }
             }
+            .negative(R.string.common_cancel)
             .show()
     }
 }

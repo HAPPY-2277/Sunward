@@ -5,10 +5,12 @@ import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.content.Intent
 import android.content.pm.ApplicationInfo
+import android.location.Location
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.view.View
 import android.view.animation.LinearInterpolator
 import android.widget.FrameLayout
@@ -21,6 +23,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.runclub.android.R
+import com.runclub.android.map.HeadingProvider
 import com.runclub.android.map.MapLayer
 import com.runclub.android.map.provideMapLayer
 import com.runclub.android.service.RunForegroundService
@@ -31,6 +34,9 @@ import com.runclub.android.tracking.RunUiState
 import com.runclub.android.tracking.TrackPoint
 import com.runclub.android.ui.widget.TrackCanvasView
 import com.runclub.android.util.Format
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import java.util.Locale
 import kotlin.math.roundToInt
@@ -85,6 +91,16 @@ class LiveRunActivity : AppCompatActivity() {
     private lateinit var amapHost: FrameLayout
     private lateinit var trackOverlay: TrackCanvasView
 
+    /** 罗盘：GPS 点没有 bearing 时给地图上的跑者箭头兜底 */
+    private lateinit var headingProvider: HeadingProvider
+
+    private lateinit var countdownOverlay: View
+    private lateinit var tvCountdown: TextView
+    private lateinit var tvCountdownHint: TextView
+
+    private var countdownJob: Job? = null
+    private var warmUpJob: Job? = null
+
     private val isDebuggable: Boolean
         get() = (applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) != 0
 
@@ -94,7 +110,7 @@ class LiveRunActivity : AppCompatActivity() {
                 result[Manifest.permission.ACCESS_COARSE_LOCATION] == true
             if (granted) {
                 permOverlay.visibility = View.GONE
-                startNewRun(RunSession.current().simulated)
+                beginRunSequence(RunSession.current().simulated)
             } else {
                 tvPermHint.visibility = View.VISIBLE
                 permOverlay.visibility = View.VISIBLE
@@ -106,6 +122,7 @@ class LiveRunActivity : AppCompatActivity() {
         setContentView(R.layout.activity_live_run)
         tracker = LocationTracker(this)
         mapLayer = provideMapLayer(this)
+        headingProvider = HeadingProvider(this)
         bindViews()
         bindActions()
         mapLayer.attach(amapHost, savedInstanceState)
@@ -122,7 +139,8 @@ class LiveRunActivity : AppCompatActivity() {
         if (elapsed < 0) return
         val simulated = intent?.getBooleanExtra(EXTRA_RESTORE_SIMULATED, false) ?: false
         val distance = intent?.getDoubleExtra(EXTRA_RESTORE_DISTANCE, 0.0) ?: 0.0
-        RunSession.restore(elapsed, distance, simulated)
+        val startWallClockMs = intent?.getLongExtra(EXTRA_RESTORE_START_MS, 0L) ?: 0L
+        RunSession.restore(elapsed, distance, simulated, startWallClockMs)
         ContextCompat.startForegroundService(
             this,
             RunForegroundService.intent(this, RunForegroundService.ACTION_RESUME)
@@ -145,10 +163,102 @@ class LiveRunActivity : AppCompatActivity() {
             return
         }
         permOverlay.visibility = View.GONE
-        startNewRun(wantSimulated)
+        beginRunSequence(wantSimulated)
+    }
+
+    /** 从「点 GO」到「开始计时」的完整序列：预热定位 → 3-2-1-GO 倒计时 → 启动前台服务 */
+    private fun beginRunSequence(simulated: Boolean) {
+        startWarmUp(simulated)
+        startCountdown(simulated)
+    }
+
+    /**
+     * 倒计时期间的定位预热。
+     *
+     * 进页面就 attach 了地图（瓦片开始下载），但第一个 GPS 点可能要好几秒，
+     * 这段时间先用系统缓存的位置把镜头挪到脚下，再开一条 1Hz 定位流持续纠正；
+     * 等 3-2-1 走完、真正开始计时时，地图已经停在正确的位置和缩放级别上了。
+     * 预热点不会污染记录：RunTracker.onPoint 只接受 RUNNING 状态的点，而此时前台服务还没启动。
+     */
+    private fun startWarmUp(simulated: Boolean) {
+        // 模拟轨迹的起点就是地图兜底位置（上海滨江），预热没有意义
+        if (simulated) return
+        if (!tracker.hasPermission()) return  // 权限还没给，交给 permissionLauncher 走完再预热
+        val state = RunSession.trackerState()
+        if (state == RunState.RUNNING || state == RunState.PAUSED) return  // 恢复的记录已在采集
+
+        tracker.lastKnownLocation()?.let { location -> applyRunnerPosition(location) }
+        warmUpJob?.cancel()
+        warmUpJob = lifecycleScope.launch {
+            tracker.locationFlow()
+                // 定位服务没开时这条流会直接 close，倒计时照常走完，开跑后由前台服务再暴露问题
+                .catch { Log.i(TAG, "倒计时预热定位不可用：${it.message}") }
+                .collect { location -> applyRunnerPosition(location) }
+        }
+    }
+
+    /** 系统定位 → 地图层入参（朝向缺失时留空，跑步中由罗盘兜底） */
+    private fun applyRunnerPosition(location: Location) {
+        mapLayer.updateRunnerPosition(
+            location.latitude,
+            location.longitude,
+            if (location.hasBearing()) location.bearing else null,
+            if (location.hasAccuracy()) location.accuracy else null
+        )
+    }
+
+    /**
+     * 3-2-1-GO 倒计时，全部在 Activity 内完成，不占用前台服务。
+     * 每个数字淡入放大 → 停留 → 淡出；GO 出现满 1 秒才开始计时（淡出与启动并行，不额外拖时间）。
+     */
+    private fun startCountdown(simulated: Boolean) {
+        countdownJob?.cancel()
+        countdownOverlay.visibility = View.VISIBLE
+        countdownJob = lifecycleScope.launch {
+            for (label in COUNTDOWN_LABELS) pulseDigit(label)
+            showCountdownText(getString(R.string.home_go), hint = false)
+            delay(COUNTDOWN_GO_TOTAL_MS)
+            startNewRun(simulated)
+            countdownOverlay.animate()
+                .alpha(0f)
+                .setDuration(COUNTDOWN_OVERLAY_FADE_MS)
+                .withEndAction {
+                    countdownOverlay.visibility = View.GONE
+                    countdownOverlay.alpha = 1f
+                }
+                .start()
+        }
+    }
+
+    /** 一个数字的完整生命周期：淡入放大 → 停留 → 淡出 */
+    private suspend fun pulseDigit(label: String) {
+        showCountdownText(label, hint = true)
+        delay(COUNTDOWN_DIGIT_TOTAL_MS - COUNTDOWN_FADE_OUT_MS)
+        tvCountdown.animate().alpha(0f).setDuration(COUNTDOWN_FADE_OUT_MS).start()
+        delay(COUNTDOWN_FADE_OUT_MS)
+    }
+
+    private fun showCountdownText(label: String, hint: Boolean) {
+        // 每个数字留一条 debug 日志：排查「倒计时与计时起点不同步」时可直接对齐 logcat 时间戳
+        Log.d(TAG, "倒计时：$label")
+        tvCountdown.text = label
+        tvCountdownHint.visibility = if (hint) View.VISIBLE else View.GONE
+        tvCountdown.alpha = 0f
+        tvCountdown.scaleX = COUNTDOWN_SCALE_FROM
+        tvCountdown.scaleY = COUNTDOWN_SCALE_FROM
+        tvCountdown.animate()
+            .alpha(1f)
+            .scaleX(1f)
+            .scaleY(1f)
+            .setDuration(COUNTDOWN_FADE_IN_MS)
+            .start()
     }
 
     private fun startNewRun(simulated: Boolean) {
+        Log.i(TAG, "启动计时：simulated=$simulated")
+        // 计时开始后位置由前台服务的采集流驱动，预热流必须停掉，避免两路重复请求定位
+        warmUpJob?.cancel()
+        warmUpJob = null
         ContextCompat.startForegroundService(
             this,
             RunForegroundService.intent(this, RunForegroundService.ACTION_START, simulated)
@@ -182,6 +292,10 @@ class LiveRunActivity : AppCompatActivity() {
         tvSimToggle = findViewById(R.id.tvSimToggle)
         amapHost = findViewById(R.id.amapHost)
         trackOverlay = findViewById(R.id.trackOverlay)
+
+        countdownOverlay = findViewById(R.id.countdownOverlay)
+        tvCountdown = findViewById(R.id.tvCountdown)
+        tvCountdownHint = findViewById(R.id.tvCountdownHint)
 
         endModal = findViewById(R.id.endModal)
         modalDistance = findViewById(R.id.modalDistance)
@@ -276,11 +390,19 @@ class LiveRunActivity : AppCompatActivity() {
         renderDebug(state)
 
         // 轨迹：把已采纳的点交给地图层（amap 画在地图上，local 画在叠加层上）
+        // 跑步中不传 endpoints=true：终点就是跑者当前位置，交给下面的定位标表示
         mapLayer.setTrack(RunSession.track())
         // 记录中让当前位置脉冲（对应原型 animate-pulse），暂停/结束时停掉
         if (state.state == RunState.RUNNING) trackOverlay.startPulse() else trackOverlay.stopPulse()
-        // 首个点到达后把镜头移过去一次；amap 实现内部会自行判定只做一次
-        state.lastPoint?.let { mapLayer.centerOnWgs84(it.lat, it.lon) }
+        // 跑者位置：优先用 GPS 的多普勒朝向，缺失（网络定位、静止）时用罗盘兜底
+        state.lastPoint?.let { point ->
+            mapLayer.updateRunnerPosition(
+                point.lat,
+                point.lon,
+                point.bearingDeg ?: headingProvider.lastHeadingDeg,
+                state.accuracyM
+            )
+        }
 
         if (state.state == RunState.FINISHED && !navigatedToResult &&
             (lastState == RunState.RUNNING || lastState == RunState.PAUSED)
@@ -392,9 +514,12 @@ class LiveRunActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         mapLayer.onResume()
+        // 罗盘只在实时页可见期间开着：传感器常开会明显耗电
+        headingProvider.start()
     }
 
     override fun onPause() {
+        headingProvider.stop()
         mapLayer.onPause()
         super.onPause()
     }
@@ -405,6 +530,8 @@ class LiveRunActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
+        countdownJob?.cancel()
+        warmUpJob?.cancel()
         stopDotPulse()
         trackOverlay.stopPulse()
         mapLayer.onDestroy()
@@ -412,11 +539,32 @@ class LiveRunActivity : AppCompatActivity() {
     }
 
     companion object {
+        private const val TAG = "LiveRunActivity"
+
         const val EXTRA_RESTORE_ELAPSED = "restore_elapsed_ms"
         const val EXTRA_RESTORE_DISTANCE = "restore_distance_m"
         const val EXTRA_RESTORE_SIMULATED = "restore_simulated"
 
+        /** 崩溃前那次跑步的开始墙钟时间；缺了它恢复出来的记录会写成 1970 年 */
+        const val EXTRA_RESTORE_START_MS = "restore_start_wall_ms"
+
         /** 调试用：true 表示直接用内置模拟轨迹开跑（自动化验收用） */
         const val EXTRA_SIMULATED = "sim"
+
+        // ---------- 起跑倒计时 ----------
+
+        private val COUNTDOWN_LABELS = listOf("3", "2", "1")
+
+        /** 一个数字的总时长：淡入 160ms → 停留 540ms → 淡出 300ms */
+        private const val COUNTDOWN_DIGIT_TOTAL_MS = 1000L
+        private const val COUNTDOWN_FADE_IN_MS = 160L
+        private const val COUNTDOWN_FADE_OUT_MS = 300L
+
+        /** GO 出现满 1 秒才开始计时（用户明确要求「再次出现 GO，1 秒后开始计时」） */
+        private const val COUNTDOWN_GO_TOTAL_MS = 1000L
+        private const val COUNTDOWN_OVERLAY_FADE_MS = 250L
+
+        /** 数字进场时略微放大，避免生硬地「啪」一下出现 */
+        private const val COUNTDOWN_SCALE_FROM = 0.82f
     }
 }

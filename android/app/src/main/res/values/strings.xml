@@ -253,4 +253,10 @@
     <string name="records_month_active_days_label">本月动过</string>
     <string name="records_month_km_placeholder">累计 0.0 KM</string>
     <string name="records_month_km_value">累计 %1$.1f KM</string>
+
+    <!-- 通用按钮 -->
+    <string name="common_cancel">取消</string>
+
+    <!-- 起跑倒计时：3-2-1 静默计数，走完出现 GO，1 秒后才真正开始计时 -->
+    <string name="live_countdown_hint">准备起跑</string>
 </resources>

@@ -126,4 +126,23 @@
         <item name="android:textSize">10sp</item>
     </style>
 
+    <!--
+        统一提示卡片（ui/widget/SunwardDialog.kt + layout/dialog_sunward.xml）。
+        系统 AlertDialog 是浅色 Material 风格，和本项目的深色荧光绿视觉不搭，
+        所以卡片外观全部画在自己的布局里，这里只负责「透明窗口 + 居中 + 遮罩 + 淡入淡出」。
+    -->
+    <style name="Theme.RunClub.Dialog" parent="Theme.Material3.Dark.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowAnimationStyle">@style/Animation.RunClub.Dialog</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:backgroundDimAmount">0.7</item>
+    </style>
+
+    <style name="Animation.RunClub.Dialog" parent="@android:style/Animation.Dialog">
+        <item name="android:windowEnterAnimation">@android:anim/fade_in</item>
+        <item name="android:windowExitAnimation">@android:anim/fade_out</item>
+    </style>
+
 </resources>

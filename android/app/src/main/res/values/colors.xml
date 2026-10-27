@@ -98,6 +98,8 @@
     <color name="map_river_text">#7193A1</color>
 
     <color name="scrim_dark">#E60B0F0B</color>
+    <!-- 覆盖层遮罩：实时页的结束确认卡等自绘弹层共用（原型 rgba(5,7,5,0.7)） -->
+    <color name="scrim_modal">#B3050705</color>
     <color name="debug_panel_bg">#0F1410</color>
     <color name="modal_bg">#151B15</color>
 

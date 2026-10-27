@@ -1,19 +1,20 @@
 package com.runclub.android.ui
 
-import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.content.Intent
 import android.os.Bundle
+import android.view.MotionEvent
 import android.view.View
-import android.view.animation.LinearInterpolator
+import android.view.animation.PathInterpolator
 import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.runclub.android.R
 import com.runclub.android.data.model.RunRecord
 import com.runclub.android.data.repo.RunRepository
+import com.runclub.android.map.provideMapLayer
 import com.runclub.android.map.providePrivacyGate
+import com.runclub.android.ui.widget.SunwardDialog
 import com.runclub.android.ui.widget.TrackThumbView
 import com.runclub.android.ui.widget.WeekBarsView
 import com.runclub.android.util.Format
@@ -33,7 +34,10 @@ import kotlin.math.roundToInt
 class HomeActivity : AppCompatActivity() {
 
     private lateinit var repo: RunRepository
-    private var goPingAnimator: ObjectAnimator? = null
+    private var goPingAnimator: ValueAnimator? = null
+
+    /** 左右滑切页：首页在记录页左边，往左拖就翻到记录页 */
+    private lateinit var pageSwipe: PageSwipeHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,6 +49,13 @@ class HomeActivity : AppCompatActivity() {
 
         bindActions()
         startGoPing()
+
+        pageSwipe = PageSwipeHelper(
+            activity = this,
+            direction = PageSwipeRule.DIRECTION_LEFT,
+            onSwipe = { openRecords() },
+        )
+        pageSwipe.attach(::dispatchToChildren)
 
         maybeAskPrivacy()
 
@@ -61,6 +72,15 @@ class HomeActivity : AppCompatActivity() {
         super.onResume()
         refresh()
     }
+
+    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
+        // 切页手势优先：手势吃掉事件后就不再往子 View 传
+        if (pageSwipe.onTouchEvent(ev)) return true
+        return super.dispatchTouchEvent(ev)
+    }
+
+    /** Kotlin 的 lambda 里不能写 super，抢手势时补发 CANCEL 要走这个方法 */
+    private fun dispatchToChildren(ev: MotionEvent): Boolean = super.dispatchTouchEvent(ev)
 
     // ---------- 数据渲染 ----------
 
@@ -157,35 +177,46 @@ class HomeActivity : AppCompatActivity() {
 
     private fun bindActions() {
         findViewById<View>(R.id.btnGo).setOnClickListener {
+            // 按下 GO 就先做不依赖 View 的地图准备（合规状态 + SDK 类加载），
+            // 底图请求在实时页 attach 的那一刻立刻发出，不用等转场动画走完
+            provideMapLayer(this).prewarm()
             startActivity(Intent(this, LiveRunActivity::class.java))
         }
-        findViewById<View>(R.id.tabRecords).setOnClickListener {
-            startActivity(Intent(this, RecordsActivity::class.java))
-        }
+        findViewById<View>(R.id.tabRecords).setOnClickListener { openRecords() }
         findViewById<View>(R.id.tabSport).setOnClickListener {
             // 已在首页
         }
-        findViewById<View>(R.id.btnAllRecords).setOnClickListener {
-            startActivity(Intent(this, RecordsActivity::class.java))
-        }
-        findViewById<View>(R.id.lastRunCard).setOnClickListener {
-            startActivity(Intent(this, RecordsActivity::class.java))
-        }
+        findViewById<View>(R.id.btnAllRecords).setOnClickListener { openRecords() }
+        findViewById<View>(R.id.lastRunCard).setOnClickListener { openRecords() }
     }
 
-    /** GO 按钮外圈的 ping 动画（对应原型 animate-ping，2.4s 一轮） */
+    /** 往前翻一页到记录页：三个入口共用，切页动画也要一致 */
+    private fun openRecords() {
+        startActivity(Intent(this, RecordsActivity::class.java))
+        NavTransition.forward(this)
+    }
+
+    /**
+     * GO 按钮外圈的涟漪动画，对应原型 activity.html 的 `animate-ping`（2.4s 一轮）：
+     * 一圈细描边从按钮边缘放大到 2 倍，同时淡出，一轮接一轮向外扩散。
+     *
+     * 旧实现是 REVERSE 来回呼吸（1.0↔1.16）且透明度始终不低于 0.55，
+     * 配上当时实心的 [R.drawable.bg_go_ping] 就是一圈甩不掉的黑边，与原型不符。
+     */
     private fun startGoPing() {
         val ping = findViewById<View>(R.id.goPing)
-        // 用 scale 同时缩放 X/Y，让圆形保持圆形（只缩放一个轴会变成椭圆/方块）
-        goPingAnimator = ObjectAnimator.ofFloat(ping, View.SCALE_X, 1f, 1.16f).apply {
-            duration = 2400
+        goPingAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
+            duration = GO_PING_DURATION_MS
             repeatCount = ValueAnimator.INFINITE
-            repeatMode = ValueAnimator.REVERSE
-            interpolator = LinearInterpolator()
+            // Tailwind animate-ping 的缓动 cubic-bezier(0, 0, 0.2, 1)：起步快、尾段慢
+            interpolator = PathInterpolator(0f, 0f, 0.2f, 1f)
             addUpdateListener {
-                val v = it.animatedValue as Float
-                ping.scaleY = v
-                ping.alpha = 0.55f + 0.45f * (2f - v) / 1.16f
+                val progress = it.animatedValue as Float
+                val scale = 1f + progress
+                // 两轴必须同缩，只缩一个轴圆会变成椭圆
+                ping.scaleX = scale
+                ping.scaleY = scale
+                ping.alpha = 1f - progress
             }
             start()
         }
@@ -201,15 +232,16 @@ class HomeActivity : AppCompatActivity() {
             maybePromptRestore()
             return
         }
-        AlertDialog.Builder(this)
-            .setTitle(R.string.privacy_title)
-            .setMessage(R.string.privacy_message)
-            .setCancelable(false)
-            .setPositiveButton(R.string.privacy_agree) { _, _ ->
+        SunwardDialog.Builder(this)
+            .icon(R.drawable.ic_satellite, onLime = true)
+            .title(R.string.privacy_title)
+            .message(R.string.privacy_message)
+            .cancelable(false)
+            .positive(R.string.privacy_agree) {
                 gate.agree(this)
                 maybePromptRestore()
             }
-            .setNegativeButton(R.string.privacy_decline) { _, _ ->
+            .negative(R.string.privacy_decline) {
                 maybePromptRestore()
             }
             .show()
@@ -224,9 +256,10 @@ class HomeActivity : AppCompatActivity() {
         val snapshot = store.loadRestorable() ?: return
 
         val timeText = SimpleDateFormat("HH:mm", Locale.CHINA).format(Date(snapshot.savedAtMs))
-        AlertDialog.Builder(this)
-            .setTitle(R.string.restore_title)
-            .setMessage(
+        SunwardDialog.Builder(this)
+            .icon(R.drawable.ic_history)
+            .title(R.string.restore_title)
+            .message(
                 getString(
                     R.string.restore_message,
                     timeText,
@@ -234,17 +267,21 @@ class HomeActivity : AppCompatActivity() {
                     Format.duration(snapshot.elapsedMs)
                 )
             )
-            .setCancelable(false)
-            .setPositiveButton(R.string.restore_yes) { _, _ ->
+            .cancelable(false)
+            .positive(R.string.restore_yes) {
                 startActivity(
                     Intent(this, LiveRunActivity::class.java).apply {
                         putExtra(LiveRunActivity.EXTRA_RESTORE_ELAPSED, snapshot.elapsedMs)
                         putExtra(LiveRunActivity.EXTRA_RESTORE_DISTANCE, snapshot.distanceM)
                         putExtra(LiveRunActivity.EXTRA_RESTORE_SIMULATED, snapshot.simulated)
+                        putExtra(
+                            LiveRunActivity.EXTRA_RESTORE_START_MS,
+                            snapshot.resolvedStartWallClockMs
+                        )
                     }
                 )
             }
-            .setNegativeButton(R.string.restore_no) { _, _ ->
+            .negative(R.string.restore_no) {
                 store.clear()
             }
             .show()
@@ -253,5 +290,10 @@ class HomeActivity : AppCompatActivity() {
     override fun onDestroy() {
         goPingAnimator?.cancel()
         super.onDestroy()
+    }
+
+    private companion object {
+        /** 涟漪一轮的时长，对应原型 `[animation-duration:2.4s]` */
+        const val GO_PING_DURATION_MS = 2400L
     }
 }

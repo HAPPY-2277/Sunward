@@ -44,4 +44,18 @@ class SimulatedTrackTest {
             assertTrue(points[i].timeMs > points[i - 1].timeMs)
         }
     }
+
+    @Test
+    fun `模拟点带按环线切线算出的方位角`() {
+        val points = SimulatedTrack.buildLoop(withNoise = true)
+        assertTrue("每个点都应有朝向，否则地图箭头无法旋转", points.all { it.bearingDeg != null })
+
+        // 起点在圆心正东，逆时针跑 → 一开始朝正北（浮点误差可能落在 359.x）
+        val first = points.first().bearingDeg!!
+        assertTrue("起点应朝正北，实际 $first", first < 1f || first > 359f)
+
+        // 四分之一圈后跑到圆心正北，前进方向应为正西
+        val quarter = points[points.size / 4].bearingDeg!!
+        assertEquals(270f, quarter, 3f)
+    }
 }

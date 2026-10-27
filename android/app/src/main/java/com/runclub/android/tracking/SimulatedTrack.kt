@@ -55,7 +55,8 @@ object SimulatedTrack {
         var theta = 0.0
 
         for (i in 0 until count) {
-            var (lat, lon) = pointAt(theta)
+            val ideal = pointAt(theta)
+            var (lat, lon) = ideal
             if (withNoise) {
                 // 横向抖动：让过滤链有东西可滤，也让轨迹看起来不是完美圆。
                 // 幅度刻意取小（±1 m）：位移向量平滑后噪声会被抵消，不会显著虚增总距离。
@@ -65,6 +66,10 @@ object SimulatedTrack {
                 lat = moved.first
                 lon = moved.second
             }
+            // 朝向取环线的切线方向，且用**不含抖动**的理想位置算：
+            // 真机 GPS 的 bearing 来自多普勒，同样是平滑值；
+            // 若按抖动后的点推算，地图上的跑者箭头会左右乱摆。
+            val ahead = pointAt(theta + stepRadians)
             result += TrackPoint(
                 timeMs = start + i * 1000L,
                 lat = lat,
@@ -72,6 +77,7 @@ object SimulatedTrack {
                 accuracyM = if (withNoise) 4f + random.nextFloat() * 4f else 3f,
                 altitudeM = 8.0 + random.nextDouble() * 2.0,
                 speedMps = (SPEED_MPS + (random.nextDouble() - 0.5) * 0.4).toFloat(),
+                bearingDeg = GeoMath.bearingDegrees(ideal.first, ideal.second, ahead.first, ahead.second),
                 provider = "simulated",
                 simulated = true
             )

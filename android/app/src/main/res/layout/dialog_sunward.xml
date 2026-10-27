@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    统一提示卡片（配合 ui/widget/SunwardDialog.kt 使用）。
+
+    项目里原本三处提示用的是系统 AlertDialog（浅色 Material 风格），和深色荧光绿的
+    界面完全不搭；这张卡片把视觉统一到实时页「结束本次跑步」那张自绘卡
+    （activity_live_run.xml 的 endModal）：同样的深色圆角卡、图标方块、胶囊按钮。
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_modal_sheet"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <FrameLayout
+        android:id="@+id/dialogIconBox"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="@drawable/bg_square_orange">
+
+        <ImageView
+            android:id="@+id/dialogIcon"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_gravity="center"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_flag"
+            android:tint="@color/text_primary" />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/dialogTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:letterSpacing="-0.03"
+        android:textColor="@color/text_primary"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/dialogMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:lineSpacingExtra="3dp"
+        android:textColor="@color/text_gray"
+        android:textSize="11sp" />
+
+    <LinearLayout
+        android:id="@+id/dialogButtons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/dialogNegative"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="6dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_pill_dark"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:textColor="@color/text_primary"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/dialogPositive"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="6dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_pill_lime"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:textColor="@color/bg_base"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 正向切页：旧页面整屏往左让位，与新页面同步同速平移，像手机桌面翻页。
+     必须是整屏 -100%p 而不是让开一部分：留缝的话两页之间会露出底色，看着像两层纸叠着滑。
+     时长与插值器要和 slide_in_right 完全一致，两个窗口才会严丝合缝地贴在一起。
+     不加 alpha 渐隐：窗口背后是黑色任务背景，淡出会闪一下黑。 -->
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:interpolator="@android:anim/decelerate_interpolator">
+    <translate
+        android:duration="@integer/nav_anim_duration_ms"
+        android:fromXDelta="0"
+        android:toXDelta="-100%p" />
+</set>
