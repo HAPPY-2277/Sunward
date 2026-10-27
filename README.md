@@ -30,7 +30,7 @@
 装上 APK 就能跑，不需要注册或登录。想先看效果而不真去跑步，可以用内置的[模拟轨迹](#3-模拟轨迹先看效果)走一条 2.4 km 环线。
 
 <p align="center">
-  <img src="docs/screenshots/60-zhuri-home.png" alt="逐日首页：本周动了几天" width="300">
+  <img src="docs/screenshots/100-zhuri-home.png" alt="逐日首页：本周动了几天" width="300">
 </p>
 <p align="center"><em>首页的主数字是「本周动了几天」，不是还差多少公里。</em></p>
 
@@ -65,11 +65,11 @@
 
 | | |
 |---|---|
-| <img src="docs/screenshots/63-zhuri-live.png" alt="跑步中" width="240"> | <img src="docs/screenshots/62-zhuri-report.png" alt="报告" width="240"> |
+| <img src="docs/screenshots/103-zhuri-live.png" alt="跑步中" width="240"> | <img src="docs/screenshots/102-zhuri-report.png" alt="报告" width="240"> |
 | 跑步中：轨迹、距离、时长、当前位置 | 报告：周 / 月 / 年，主数字是动过的天数 |
-| <img src="docs/screenshots/61-zhuri-record.png" alt="历史" width="240"> | <img src="docs/screenshots/65-zhuri-result.png" alt="成绩" width="240"> |
+| <img src="docs/screenshots/101-zhuri-record.png" alt="历史" width="240"> | <img src="docs/screenshots/105-zhuri-result.png" alt="成绩" width="240"> |
 | 历史：按天归档，可筛选、可展开 | 成绩：路线图、每公里用时、消耗 |
-| <img src="docs/screenshots/66-zhuri-countdown.png" alt="起跑倒计时" width="240"> | <img src="docs/screenshots/67-zhuri-card.png" alt="提示卡片" width="240"> |
+| <img src="docs/screenshots/110-zhuri-countdown.png" alt="起跑倒计时" width="240"> | <img src="docs/screenshots/111-zhuri-card.png" alt="提示卡片" width="240"> |
 | 起跑前 3-2-1 倒计时，`GO` 满一秒才开始计时 | 自绘提示卡片：中断恢复 / 隐私说明 / 删除确认 |
 
 ## 工作原理
