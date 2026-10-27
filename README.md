@@ -199,6 +199,7 @@ android/app/src/
 
 design/prototype/  HTML 原型，视觉基线，不参与构建
 design/icon/       启动图标 sunward（SVG 源 + 1024 PNG）
+design/explore/    探索性设计样稿（配色 / 组件多方案对比），非视觉基线
 docs/              计划、验收报告 acceptance-reports/、调研、产品理念、命名规则 NAMING.md
 tools/             本机工具链（SDK、Gradle、模拟器脚本），不入库
 ```
@@ -212,6 +213,7 @@ tools/             本机工具链（SDK、Gradle、模拟器脚本），不入�
 | 查逐里程碑的实测记录与修过的问题 | [验收报告](docs/acceptance-reports/README.md) |
 | 查竞品与技术调研 | [调研报告](docs/调研报告.md) |
 | 对视觉基线 | [原型](design/prototype/)：四个 HTML 页面 |
+| 看未定稿的设计探索 | [探索样稿](design/explore/)：配色 / 组件多方案对比 |
 | 取图标源文件 | [图标](design/icon/)：SVG 源 + 1024 位图 |
 
 ## License

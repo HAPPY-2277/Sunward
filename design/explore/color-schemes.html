@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>逐日 SUNWARD · 暖色主题五案（配色重设计探索）</title>
+<style>
+:root{
+  --page:#F5F0E6; --page-ink:#2B2318; --page-muted:#6E5F4B; --page-line:#E3DAC6;
+  --ok:#2E7D46; --warn:#B45510;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--page); color:var(--page-ink);
+  font-family:-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei","Noto Sans SC",sans-serif;
+  line-height:1.55; -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 20px 80px}
+
+/* ---------- 页头 ---------- */
+.page-head{border:1px solid var(--page-line);background:#FBF8EF;border-radius:20px;padding:26px 28px}
+.page-head h1{font-size:24px;font-weight:900;letter-spacing:-.02em}
+.page-head .sub{margin-top:6px;color:var(--page-muted);font-size:13.5px}
+.meta-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.meta-chip{font-size:11.5px;font-weight:700;border:1px solid var(--page-line);border-radius:999px;padding:3px 10px;color:var(--page-muted);background:#fff}
+.notice{margin-top:14px;font-size:12.5px;color:var(--page-muted);border-left:3px solid #C9A15C;padding-left:10px}
+
+/* 现状基线 */
+.baseline{margin-top:18px;border:1px dashed var(--page-line);border-radius:14px;padding:14px 16px;background:#F0EBDD}
+.baseline h3{font-size:13px;font-weight:900;letter-spacing:.08em;color:var(--page-muted)}
+.baseline .row{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.bl-chip{display:flex;align-items:center;gap:7px;background:#080B08;border:1px solid #1E261E;border-radius:999px;padding:4px 12px 4px 5px;font-size:11.5px;font-weight:700;color:#C5CEC5}
+.bl-chip i{width:18px;height:18px;border-radius:50%;display:inline-block;border:1px solid rgba(255,255,255,.25)}
+.baseline p{margin-top:10px;font-size:12px;color:var(--page-muted)}
+
+/* 速览导航 */
+.toc{position:sticky;top:0;z-index:50;display:flex;gap:8px;flex-wrap:wrap;padding:10px 0;margin:22px 0 6px;background:linear-gradient(var(--page) 82%,transparent)}
+.toc a{display:flex;align-items:center;gap:7px;text-decoration:none;font-size:12.5px;font-weight:800;border:1px solid var(--page-line);background:#FBF8EF;border-radius:999px;padding:5px 12px 5px 6px;color:var(--page-ink)}
+.toc a i{width:20px;height:20px;border-radius:7px;display:inline-block}
+.toc a.dim{color:var(--page-muted);padding:5px 12px}
+
+/* ---------- 方案区 ---------- */
+.scheme{margin-top:34px;border-radius:22px;border:1px solid var(--page-line);overflow:hidden;background:#FBF8EF}
+.scheme-head{padding:22px 26px 18px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;border-bottom:1px solid var(--page-line)}
+.scheme-head .t h2{font-size:20px;font-weight:900;letter-spacing:-.01em}
+.scheme-head .t h2 small{font-size:12px;font-weight:800;color:var(--page-muted);letter-spacing:.14em;margin-left:8px}
+.scheme-head .t .pos{margin-top:5px;font-size:13px;color:var(--page-muted);max-width:560px}
+.scheme-head .src{font-size:12px;color:var(--page-muted);max-width:360px;text-align:right}
+.scheme-head .src a{color:var(--page-ink);font-weight:700}
+.scheme-body{padding:22px 26px 26px;display:grid;grid-template-columns:360px 1fr;gap:24px}
+@media (max-width:900px){.scheme-body{grid-template-columns:1fr}}
+
+/* 色板条 */
+.swatches{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:18px}
+.sw{width:74px;border-radius:10px;border:1px solid var(--page-line);overflow:hidden;background:#fff}
+.sw i{display:block;height:44px}
+.sw b{display:block;font-size:10.5px;font-weight:800;padding:5px 6px 1px;color:var(--page-ink)}
+.sw span{display:block;font-size:9.5px;font-weight:600;padding:0 6px 6px;color:var(--page-muted);font-family:ui-monospace,Consolas,monospace}
+
+/* 手机预览 */
+.phone{width:340px;border-radius:38px;border:9px solid #17130E;background:var(--base);overflow:hidden;box-shadow:0 18px 40px rgba(43,27,10,.14);margin:0 auto;color:var(--text)}
+.phone .notch{height:22px;background:var(--base);display:flex;justify-content:center;align-items:flex-end}
+.phone .notch i{width:110px;height:14px;border-radius:0 0 10px 10px;background:#17130E;display:block}
+.p-pad{padding:0 16px 18px}
+.p-head{display:flex;align-items:center;justify-content:space-between;padding:6px 0 12px}
+.p-head .brand{display:flex;align-items:center;gap:10px}
+.logo-tile{width:38px;height:38px;border-radius:12px;background:var(--primary);display:flex;align-items:center;justify-content:center}
+.logo-tile svg{width:22px;height:22px}
+.p-head .brand .eyebrow{font-size:9px;font-weight:800;letter-spacing:.24em;color:var(--muted);text-transform:uppercase}
+.p-head .brand .date{font-size:12.5px;font-weight:700;color:var(--text);margin-top:2px}
+.p-head .right{display:flex;align-items:center;gap:8px}
+.wx{display:flex;align-items:center;gap:5px;border:1px solid var(--stroke);background:var(--card);border-radius:999px;padding:5px 10px;font-size:11px;font-weight:700;color:var(--muted)}
+.avatar{width:36px;height:36px;border-radius:50%;background:var(--secondary);color:var(--avatar-ink);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;position:relative}
+.avatar i{position:absolute;right:-1px;top:-1px;width:9px;height:9px;border-radius:50%;background:var(--primary);border:2px solid var(--base)}
+
+.hero{position:relative;border-radius:26px;background:var(--primary);color:var(--on-accent);padding:18px;overflow:hidden}
+.hero .ring1{position:absolute;right:-58px;top:-70px;width:170px;height:170px;border-radius:50%;border:22px solid var(--hero-ring)}
+.hero .ring2{position:absolute;right:70px;bottom:-52px;width:100px;height:100px;border-radius:50%;border:11px solid var(--hero-ring2)}
+.hero .hero-tag{position:absolute;right:14px;top:16px;transform:rotate(90deg);transform-origin:right top;font-size:8.5px;font-weight:900;letter-spacing:.3em;text-transform:uppercase;color:var(--hero-dim-text)}
+.hero .inner{position:relative}
+.pill-tag{display:inline-flex;align-items:center;gap:7px;background:var(--tag-bg);color:var(--tag-fg);border-radius:999px;padding:5px 11px;font-size:9.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
+.pill-tag i{width:6px;height:6px;border-radius:50%;background:var(--primary);display:inline-block}
+.hero h1{margin-top:13px;font-size:30px;font-weight:900;letter-spacing:-.05em;line-height:1.02;max-width:210px}
+.hero h1 em{font-style:normal;color:var(--hero-end)}
+.hero .bottom{display:flex;align-items:flex-end;justify-content:space-between;margin-top:16px}
+.hero .suggest .k{font-size:9.5px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--hero-sub)}
+.hero .suggest .v{font-size:16px;font-weight:800;margin-top:3px}
+.hero .suggest .d{font-size:10.5px;font-weight:600;color:var(--hero-sub);margin-top:3px;display:flex;gap:5px;align-items:center}
+.go-btn{width:104px;height:104px;border-radius:50%;background:var(--go-bg);color:var(--go-fg);display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 12px 26px var(--go-shadow)}
+.go-btn .go{font-size:30px;font-weight:900;font-style:italic;letter-spacing:-.06em;line-height:1}
+.go-btn .lbl{margin-top:5px;font-size:9px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;opacity:.75}
+
+.stats3{display:grid;grid-template-columns:1fr 1fr 1fr;border:1px solid var(--stroke);background:var(--card);border-radius:20px;margin-top:12px;padding:13px 4px}
+.stats3 .cell{padding:0 10px;text-align:center}
+.stats3 .cell + .cell{border-left:1px solid var(--divider)}
+.stats3 .k{font-size:9px;font-weight:800;letter-spacing:.12em;color:var(--dim);text-transform:uppercase}
+.stats3 .v{margin-top:3px;font-size:19px;font-weight:900;letter-spacing:-.03em;color:var(--text)}
+.stats3 .u{font-size:9.5px;font-weight:800;color:var(--muted);margin-left:2px}
+
+.card{border:1px solid var(--stroke);background:var(--card);border-radius:22px;padding:16px;margin-top:12px}
+.card .head{display:flex;justify-content:space-between;align-items:flex-start}
+.card .head .k{font-size:9.5px;font-weight:800;letter-spacing:.16em;color:var(--dim);text-transform:uppercase}
+.card .head h3{font-size:16px;font-weight:900;letter-spacing:-.01em;color:var(--text);margin-top:2px}
+.chip-accent{border-radius:999px;background:var(--chip-accent-bg);color:var(--chip-accent-fg);font-size:10.5px;font-weight:800;padding:4px 11px}
+.bars{display:flex;align-items:flex-end;justify-content:space-between;gap:6px;height:74px;margin-top:14px}
+.bars .b{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px}
+.bars .b i{width:100%;max-width:24px;border-radius:999px;display:block}
+.bars .b.off i{background:var(--bar-off)}
+.bars .b.on i{background:var(--primary)}
+.bars .b span{font-size:9.5px;font-weight:700;color:var(--muted)}
+.progress{height:6px;border-radius:999px;background:var(--bar-off);overflow:hidden;margin-top:12px}
+.progress i{display:block;height:100%;width:71%;border-radius:999px;background:var(--deep)}
+.prog-note{display:flex;justify-content:space-between;font-size:10.5px;font-weight:600;color:var(--muted);margin-top:8px}
+
+.lastrun{display:flex;gap:12px;align-items:center}
+.track-thumb{width:72px;height:72px;border-radius:16px;background:var(--paper);flex-shrink:0;overflow:hidden}
+.track-thumb svg{width:100%;height:100%;display:block}
+.lastrun .info{min-width:0}
+.lastrun .t{display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:800;color:var(--text)}
+.tag{border-radius:999px;background:var(--chip);border:1px solid var(--stroke);color:var(--deep);font-size:9.5px;font-weight:800;padding:2px 8px}
+.lastrun .m{font-size:10.5px;font-weight:600;color:var(--muted);margin-top:5px}
+.link{display:flex;align-items:center;gap:3px;font-size:11px;font-weight:800;color:var(--deep);text-decoration:none}
+
+.btn-row{display:flex;gap:10px;margin-top:12px}
+.btn{flex:1;text-align:center;border-radius:999px;padding:14px 0;font-size:13.5px;font-weight:800}
+.btn.primary{background:var(--primary);color:var(--on-accent)}
+.btn.ghost{border:1.5px solid var(--stroke);color:var(--text);background:var(--card)}
+
+.dialog-demo{margin-top:12px;border-radius:22px;background:var(--scrim);padding:18px 12px}
+.dialog-card{border-radius:18px;background:var(--card);border:1px solid var(--stroke);padding:16px}
+.dialog-card .t{font-size:14px;font-weight:900;color:var(--text)}
+.dialog-card .b{font-size:11.5px;color:var(--muted);margin-top:6px;line-height:1.5}
+.dialog-card .btns{display:flex;gap:9px;margin-top:13px}
+.dialog-card .btn{flex:1;padding:10px 0;font-size:12px}
+.p-note{margin-top:10px;font-size:10px;color:var(--muted);text-align:center;opacity:.85}
+
+/* 表格 */
+.tbl-title{font-size:13px;font-weight:900;margin:20px 0 8px;color:var(--page-ink)}
+table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--page-line);border-radius:12px;overflow:hidden;font-size:12px}
+th{background:#F2ECDD;text-align:left;font-weight:800;padding:8px 10px;color:var(--page-muted);font-size:11px;letter-spacing:.04em}
+td{padding:7px 10px;border-top:1px solid #EFE8D8;vertical-align:top}
+td code,td .hex{font-family:ui-monospace,Consolas,monospace;font-size:11px;white-space:nowrap}
+td .swatch{display:inline-block;width:13px;height:13px;border-radius:4px;border:1px solid rgba(0,0,0,.15);vertical-align:-2px;margin-right:6px}
+.old{color:#9A8C74}
+.new{font-weight:800}
+.pill{display:inline-block;font-size:10px;font-weight:800;border-radius:999px;padding:1px 8px}
+.pill.aa{background:#E2F0E5;color:var(--ok)}
+.pill.big{background:#FBEEDC;color:var(--warn)}
+.pill.no{background:#F9E3DC;color:#B23A17}
+
+.fit{margin-top:14px;background:#fff;border:1px solid var(--page-line);border-radius:12px;padding:12px 14px}
+.fit h4{font-size:12px;font-weight:900;letter-spacing:.06em;color:var(--page-muted);margin-bottom:6px}
+.fit li{font-size:12px;color:var(--page-ink);margin-left:16px;margin-top:4px}
+
+/* 附录 */
+.appendix{margin-top:40px;border-radius:22px;border:1px solid var(--page-line);background:#FBF8EF;padding:24px 26px}
+.appendix h2{font-size:18px;font-weight:900}
+.appendix .lead{font-size:13px;color:var(--page-muted);margin-top:5px}
+.appendix h3{font-size:14px;font-weight:900;margin:18px 0 8px}
+.appendix p,.appendix li{font-size:12.5px;color:var(--page-ink)}
+.appendix ul,.appendix ol{margin-left:18px}
+.appendix li{margin-top:5px}
+.appendix code{font-family:ui-monospace,Consolas,monospace;font-size:11px;background:#F2ECDD;border-radius:5px;padding:1px 5px}
+
+.dark-scope{--base:#1C1310;--card:#262019;--text:#FFF6E8;--muted:#C9B49A;--primary:#FFB65C;--secondary:#F0802C;--on-accent:#1C1310;--stroke:#3A3128;--divider:#332B22;--deep:#FFB65C;--bar-off:rgba(255,246,232,.12);--chip-accent-bg:rgba(255,182,92,.16);--chip-accent-fg:#FFB65C;--go-bg:#FFB65C;--go-fg:#1C1310;--go-shadow:rgba(0,0,0,.4);--paper:#2A2118;--track:#F0802C;--tag-bg:#FFF6E8;--tag-fg:#1C1310;--hero-ring:rgba(28,19,16,.10);--hero-ring2:rgba(28,19,16,.08);--hero-dim-text:rgba(255,246,232,.45);--hero-end:#E8502F;--hero-sub:rgba(255,246,232,.62);--avatar-ink:#1C1310;--scrim:rgba(12,8,5,.55)}
+.dark-strip{display:flex;gap:26px;align-items:flex-start;flex-wrap:wrap}
+.dark-strip .phone{width:300px}
+
+footer{margin-top:46px;font-size:11.5px;color:var(--page-muted);border-top:1px solid var(--page-line);padding-top:14px;line-height:1.7}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- ============ 页头 ============ -->
+<div class="page-head">
+  <h1>逐日 · SUNWARD 暖色主题五案</h1>
+  <div class="sub">浅色暖底 · 配色重设计探索稿 —— 面向家人日常使用，全部方案遵守产品理念：只问今天、不制造欠账、说人话、不做裁判。</div>
+  <div class="meta-row">
+    <span class="meta-chip">基调：浅色暖底（5/5）</span>
+    <span class="meta-chip">附录附暖色深底对照</span>
+    <span class="meta-chip">参考：开源运动 App 实测色值为主</span>
+    <span class="meta-chip">对比度：WCAG 2.x 相对亮度公式实测</span>
+  </div>
+  <div class="notice">本文件是<b>设计探索交付物</b>：只新增此文件，未改动任何代码、资源与文档。各方案「落地映射表」里的令牌名即现有 <code>colors.xml</code> 名称，方案确认后可一次性替换。</div>
+
+  <div class="baseline">
+    <h3>现状基线（将被替换）</h3>
+    <div class="row">
+      <span class="bl-chip"><i style="background:#080B08"></i>bg_base #080B08</span>
+      <span class="bl-chip"><i style="background:#111611"></i>bg_card #111611</span>
+      <span class="bl-chip"><i style="background:#D9FF43"></i>accent_lime #D9FF43</span>
+      <span class="bl-chip"><i style="background:#FF5C35"></i>accent_orange #FF5C35</span>
+      <span class="bl-chip"><i style="background:#8C978C"></i>text_muted #8C978C</span>
+    </div>
+    <p>当前视觉：深色底 + 荧光绿 + 橙。启动图标与首页 logo 已先一步换成「朝阳金」暖色（#FFE49A → #F0802C，暖棕黑底 #1C1310），界面配色是本轮要补上的另一半。产品理念 §六「视觉基调」将随落地同步更新。</p>
+  </div>
+</div>
+
+<!-- 速览 -->
+<nav class="toc">
+  <a href="#s1"><i style="background:#F0802C"></i>一 · 晨光</a>
+  <a href="#s2"><i style="background:#FB8C00"></i>二 · 橙意</a>
+  <a href="#s3"><i style="background:#EF9F27"></i>三 · 蜜琥珀</a>
+  <a href="#s4"><i style="background:#F26845"></i>四 · 珊瑚</a>
+  <a href="#s5"><i style="background:#B4552D"></i>五 · 陶土</a>
+  <a class="dim" href="#dark-appendix">附录A · 暖深底</a>
+  <a class="dim" href="#impact">附录B · 落地影响评估</a>
+</nav>
+
+<!-- ============ 方案一 · 晨光 ============ -->
+<section class="scheme" id="s1" style="--outer:#F1EADC;--base:#FBF7EF;--card:#FFFFFF;--card2:#FDFAF3;--chip:#F4EDDE;--primary:#F0802C;--deep:#B45510;--secondary:#E8502F;--secondary-soft:#FF8A65;--on-accent:#241207;--text:#2B1B10;--muted:#6E5D4B;--dim:#8A7866;--soft:#554636;--stroke:#E8DECB;--divider:#EFE6D4;--go-bg:#241207;--go-fg:#FFB65C;--go-shadow:rgba(43,27,16,.28);--paper:#F6F0E1;--track:#E8502F;--bar-off:rgba(43,27,16,.10);--chip-accent-bg:rgba(240,128,44,.13);--chip-accent-fg:#B45510;--tag-bg:#241207;--tag-fg:#FFB65C;--hero-ring:rgba(36,18,7,.09);--hero-ring2:rgba(36,18,7,.07);--hero-dim-text:rgba(36,18,7,.42);--hero-end:#E8502F;--hero-sub:rgba(36,18,7,.58);--avatar-ink:#241207;--scrim:rgba(36,18,7,.42)">
+  <div class="scheme-head">
+    <div class="t">
+      <h2>方案一 · 晨光 <small>MORNING GOLD</small></h2>
+      <div class="pos">最贴近品牌现状的直达方案：直接把图标的「朝阳金渐变」落到界面上。晨光金主色 + 落日红点缀，暖米白纸底。想和图标一套的选它。</div>
+    </div>
+    <div class="src">取色来源：本项目 <code>design/icon/sunward-icon.svg</code>（#F0802C / #FFB65C / #E8502F / #1C1310）；主色层级结构参考 <a href="https://codeberg.org/jannis/FitoTrack/blame/commit/0ed68f487bdc2fa750051c8d5b48e7d7e3a9acf5/app/src/main/res/values/colors.xml" target="_blank">FitoTrack colors.xml</a>（主橙 + 加深橙两档）。</div>
+  </div>
+  <div class="scheme-body">
+    <div>
+      <div class="swatches">
+        <div class="sw"><i style="background:#F1EADC"></i><b>bg_outer</b><span>#F1EADC</span></div>
+        <div class="sw"><i style="background:#FBF7EF"></i><b>bg_base</b><span>#FBF7EF</span></div>
+        <div class="sw"><i style="background:#FFFFFF;border-bottom:1px solid #E8DECB"></i><b>bg_card</b><span>#FFFFFF</span></div>
+        <div class="sw"><i style="background:#F4EDDE"></i><b>bg_chip</b><span>#F4EDDE</span></div>
+        <div class="sw"><i style="background:#F0802C"></i><b>primary</b><span>#F0802C</span></div>
+        <div class="sw"><i style="background:#B45510"></i><b>deep</b><span>#B45510</span></div>
+        <div class="sw"><i style="background:#E8502F"></i><b>secondary</b><span>#E8502F</span></div>
+        <div class="sw"><i style="background:#241207"></i><b>on_accent</b><span>#241207</span></div>
+        <div class="sw"><i style="background:#2B1B10"></i><b>text</b><span>#2B1B10</span></div>
+        <div class="sw"><i style="background:#6E5D4B"></i><b>muted</b><span>#6E5D4B</span></div>
+        <div class="sw"><i style="background:#8A7866"></i><b>dim</b><span>#8A7866</span></div>
+        <div class="sw"><i style="background:#E8DECB"></i><b>stroke</b><span>#E8DECB</span></div>
+      </div>
+
+      <!-- 手机预览 -->
+      <div class="phone">
+        <div class="notch"><i></i></div>
+        <div class="p-pad">
+          <div class="p-head">
+            <div class="brand">
+              <div class="logo-tile"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="#241207" stroke-width="2.4"/><path d="M12 8.5 L12 3.5" stroke="#241207" stroke-width="2.2" stroke-linecap="round"/></svg></div>
+              <div><div class="eyebrow">Run Club</div><div class="date">10月27日 · 周二</div></div>
+            </div>
+            <div class="right">
+              <div class="wx">☀ 18°C</div>
+              <div class="avatar">K<i></i></div>
+            </div>
+          </div>
+
+          <div class="hero">
+            <i class="ring1"></i><i class="ring2"></i>
+            <div class="hero-tag">Morning Run</div>
+            <div class="inner">
+              <span class="pill-tag"><i></i>Ready to move</span>
+              <h1>今天，跑出<br/>你的节奏<em>。</em></h1>
+              <div class="bottom">
+                <div class="suggest">
+                  <div class="k">今日建议</div>
+                  <div class="v">出门走走 · 3.0 公里</div>
+                  <div class="d">◷ 预计 30 分钟</div>
+                </div>
+                <div class="go-btn"><span class="go">GO</span><span class="lbl">起跑</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="stats3">
+            <div class="cell"><div class="k">本周动了</div><div class="v">5<span class="u">天 / 7</span></div></div>
+            <div class="cell"><div class="k">里程</div><div class="v">23.6<span class="u">公里</span></div></div>
+            <div class="cell"><div class="k">时长</div><div class="v">2<span class="u">时</span>18<span class="u">分</span></div></div>
+          </div>
+
+          <div class="card">
+            <div class="head">
+              <div><div class="k">This Week</div><h3>本周节奏</h3></div>
+              <span class="chip-accent">已动 5 / 7 天</span>
+            </div>
+            <div class="bars">
+              <div class="b on"><i style="height:26px"></i><span>一</span></div>
+              <div class="b on"><i style="height:46px"></i><span>二</span></div>
+              <div class="b on"><i style="height:34px"></i><span>三</span></div>
+              <div class="b on"><i style="height:62px"></i><span>四</span></div>
+              <div class="b on"><i style="height:44px"></i><span>五</span></div>
+              <div class="b off"><i style="height:10px"></i><span>六</span></div>
+              <div class="b off"><i style="height:16px"></i><span>日</span></div>
+            </div>
+            <div class="progress"><i></i></div>
+            <div class="prog-note"><span>已动 5 天，共 7 天</span><span>每次完成就是满分</span></div>
+          </div>
+
+          <div class="card">
+            <div class="head"><div><div class="k">Last Run</div><h3>上次跑步</h3></div><a class="link" href="#">全部记录 ›</a></div>
+            <div class="lastrun" style="margin-top:10px">
+              <div class="track-thumb"><svg viewBox="0 0 76 76"><rect width="76" height="76" fill="#F6F0E1"/><path d="M-4 20 L82 14" stroke="#FFFFFF" stroke-width="8"/><path d="M-4 61 L82 48" stroke="#E4DCC8" stroke-width="5"/><path d="M18 -4 L25 82" stroke="#FFFFFF" stroke-width="7"/><path d="M56 -4 L48 82" stroke="#FFFFFF" stroke-width="6"/><path d="M7 65 C18 51 19 35 31 32 C43 28 48 19 65 18" fill="none" stroke="#E8502F" stroke-linecap="round" stroke-width="4"/><circle cx="7" cy="65" fill="#F0802C" r="4" stroke="#FBF7EF" stroke-width="2"/></svg></div>
+              <div class="info">
+                <div class="t">晨跑 · 滨江绿道 <span class="tag">常跑</span></div>
+                <div class="m">4.2 公里 · 每公里约 6 分 12 秒</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="btn-row"><div class="btn primary">开始跑步</div><div class="btn ghost">查看记录</div></div>
+
+          <div class="dialog-demo">
+            <div class="dialog-card">
+              <div class="t">删除这条记录？</div>
+              <div class="b">记录删除后无法找回，轨迹也会一起删除。</div>
+              <div class="btns"><div class="btn ghost">取消</div><div class="btn primary">删除</div></div>
+            </div>
+          </div>
+          <div class="p-note">提示卡：浅底下遮罩改为暖黑 42%，卡片换白底</div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="tbl-title">落地映射表（令牌名 = 现有 colors.xml）</div>
+      <table>
+        <tr><th>令牌（现名）</th><th>现值</th><th>新值</th><th>说明</th></tr>
+        <tr><td>bg_outer</td><td class="old"><span class="swatch" style="background:#050705"></span><span class="hex">#050705</span></td><td class="new"><span class="swatch" style="background:#F1EADC"></span><span class="hex">#F1EADC</span></td><td>页面最底 / 状态栏</td></tr>
+        <tr><td>bg_base</td><td class="old"><span class="swatch" style="background:#080B08"></span><span class="hex">#080B08</span></td><td class="new"><span class="swatch" style="background:#FBF7EF"></span><span class="hex">#FBF7EF</span></td><td>全局底色（暖米白）</td></tr>
+        <tr><td>bg_card / bg_card_alt</td><td class="old"><span class="hex">#111611 / #121712</span></td><td class="new"><span class="hex">#FFFFFF / #FDFAF3</span></td><td>卡片</td></tr>
+        <tr><td>bg_chip · modal_bg</td><td class="old"><span class="hex">#151B15</span></td><td class="new"><span class="hex">#F4EDDE · 弹层卡改 #FFFFFF</span></td><td>chip 底 / 提示卡底</td></tr>
+        <tr><td>accent_lime</td><td class="old"><span class="swatch" style="background:#D9FF43"></span><span class="hex">#D9FF43</span></td><td class="new"><span class="swatch" style="background:#F0802C"></span><span class="hex">#F0802C</span></td><td>主色：hero / 主按钮（朝阳金渐变末端）</td></tr>
+        <tr><td>accent_orange</td><td class="old"><span class="swatch" style="background:#FF5C35"></span><span class="hex">#FF5C35</span></td><td class="new"><span class="swatch" style="background:#E8502F"></span><span class="hex">#E8502F</span></td><td>次色：头像 / 轨迹 / 点缀（图标落日红）</td></tr>
+        <tr><td><b>新增</b> accent_deep</td><td class="old">—</td><td class="new"><span class="swatch" style="background:#B45510"></span><span class="hex">#B45510</span></td><td>链接 / 进度条 / 图表强调（≥4.5:1）</td></tr>
+        <tr><td>orange_light / orange_soft</td><td class="old"><span class="hex">#FF8465 / #FF7E5C</span></td><td class="new"><span class="hex">#FF8A65 / #FFA45C</span></td><td>次色亮阶 / 图表选中柱</td></tr>
+        <tr><td>text_primary</td><td class="old"><span class="hex">#FFFFFF</span></td><td class="new"><span class="swatch" style="background:#2B1B10"></span><span class="hex">#2B1B10</span></td><td>暖深棕黑正文</td></tr>
+        <tr><td>text_muted</td><td class="old"><span class="hex">#8C978C</span></td><td class="new"><span class="swatch" style="background:#6E5D4B"></span><span class="hex">#6E5D4B</span></td><td>次要文字</td></tr>
+        <tr><td>text_dim / dim2</td><td class="old"><span class="hex">#6F7A6F / #737E73</span></td><td class="new"><span class="hex">#8A7866 / #93826E</span></td><td>眉题标签（11sp 加粗 ≥3:1）</td></tr>
+        <tr><td>text_soft / soft2</td><td class="old"><span class="hex">#C5CEC5 / #AAB4AA</span></td><td class="new"><span class="hex">#554636 / #61513D</span></td><td>深底亮灰 → 浅底深灰反转</td></tr>
+        <tr><td>stroke_subtle / divider</td><td class="old"><span class="hex">#1E261E / #1A211A</span></td><td class="new"><span class="hex">#E8DECB / #EFE6D4</span></td><td>描边 / 分隔线</td></tr>
+        <tr><td>white_04…95（11 档）</td><td class="old"><span class="hex">白色透明度阶梯</span></td><td class="new"><span class="hex">#2B1B10 @ 4…60%</span></td><td>整体反转为暖墨透明度阶梯</td></tr>
+        <tr><td>lime_06…30 / orange_15…20</td><td class="old"><span class="hex">主/次色透明度</span></td><td class="new"><span class="hex">#F0802C / #E8502F 同透明度</span></td><td>tint 底、chip、进度轨道</td></tr>
+        <tr><td>ink_06…60 · ink_orange</td><td class="old"><span class="hex">#080B08 透明度</span></td><td class="new"><span class="hex">#241207 透明度</span></td><td>主色块上的深墨文字（GO、hero）</td></tr>
+        <tr><td>scrim_dark / scrim_modal</td><td class="old"><span class="hex">#E60B0F0B / #B3050705</span></td><td class="new"><span class="hex">#6B241207 / #B3241207</span></td><td>遮罩换暖黑</td></tr>
+        <tr><td>report_hero_bg · footer_bg</td><td class="old"><span class="hex">#141A14 / #0A0E0A</span></td><td class="new"><span class="hex">#F6F0E4 / #F3ECDF</span></td><td>报告主卡 / 成绩页底栏</td></tr>
+        <tr><td>bg_card_month · ink_month 系</td><td class="old"><span class="hex">#1A1410 + 深墨字</span></td><td class="new"><span class="hex">#FDE7D2（primary 12% tint）+ #241207 字</span></td><td>橙色月度卡 → 金橙浅卡</td></tr>
+        <tr><td>legend_gray · text_olive 系</td><td class="old"><span class="hex">#5B675B / #94A163 等</span></td><td class="new"><span class="hex">#8A7866 / #A8742F 等</span></td><td>绿调灰 → 暖调灰、暖金</td></tr>
+        <tr><td>map_road_text 等地图文字</td><td class="old"><span class="hex">#7D897A / #668259 / #7193A1</span></td><td class="new"><span class="hex">#8A7866 / #7C8455 / #6F94A6</span></td><td>手绘地图注记（CityMapView 常量）</td></tr>
+        <tr><td>sunward_ink / sunward_halo</td><td class="old"><span class="hex">#1C1310 / #29FF8A3C</span></td><td class="new"><span class="hex">保留不变</span></td><td>品牌 logo/图标色，浅底上反而更突出</td></tr>
+      </table>
+
+      <div class="tbl-title">对比度实测（WCAG 2.x，正文 ≥4.5:1 · 11sp 加粗标签 ≥3:1）</div>
+      <table>
+        <tr><th>配对</th><th>比值</th><th>判定</th></tr>
+        <tr><td>正文 #2B1B10 / 底 #FBF7EF</td><td>15.5 : 1</td><td><span class="pill aa">AAA</span></td></tr>
+        <tr><td>次要 #6E5D4B / 卡片 #FFFFFF</td><td>6.3 : 1</td><td><span class="pill aa">AAA</span></td></tr>
+        <tr><td>主色块墨字 #241207 / #F0802C</td><td>6.7 : 1</td><td><span class="pill aa">AAA</span></td></tr>
+        <tr><td>链接/进度 #B45510 / #FBF7EF</td><td>4.5 : 1</td><td><span class="pill aa">AA</span></td></tr>
+        <tr><td>眉题 #8A7866 / #FFFFFF</td><td>4.2 : 1</td><td><span class="pill aa">AA</span></td></tr>
+        <tr><td>主色 #F0802C / 底（大面积 hero，非文字）</td><td>2.5 : 1</td><td><span class="pill big">大面积色块</span></td></tr>
+      </table>
+
+      <div class="fit">
+        <h4>与产品理念的贴合</h4>
+        <ul>
+          <li>与启动图标、首页 logo 同一套朝阳金——品牌第一次「图标 / 界面」完全一致。</li>
+          <li>暖米白底 + 大字重深墨字：长辈在室内、阳光下都看得清（正文 15.5:1）。</li>
+          <li>落日红 #E8502F 只做点缀（头像、轨迹），不做警示红——遵守「不做裁判」。</li>
+        </ul>
+        <h4 style="margin-top:10px">自绘控件构成三色（慢走 / 常跑 / 远足）</h4>
+        <ul>
+          <li>#FFC37A → #F0802C → #B45510（同族三阶，摆脱红绿对立）</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 方案二 · 橙意 ============ -->
+<section class="scheme" id="s2" style="--outer:#EAE4D6;--base:#F8F5EC;--card:#FFFFFF;--card2:#FBF8F0;--chip:#F3EEE0;--primary:#FB8C00;--deep:#9A5200;--secondary:#77492F;--secondary-soft:#C9A97E;--on-accent:#221103;--text:#271F15;--muted:#6F6354;--dim:#8C7F6E;--soft:#4E4536;--stroke:#E7DFC9;--divider:#EDE7D4;--go-bg:#271F15;--go-fg:#FFC069;--go-shadow:rgba(39,31,21,.28);--paper:#F4EFDF;--track:#D96A1D;--bar-off:rgba(39,31,21,.10);--chip-accent-bg:rgba(251,140,0,.13);--chip-accent-fg:#9A5200;--tag-bg:#271F15;--tag-fg:#FFC069;--hero-ring:rgba(34,17,3,.09);--hero-ring2:rgba(34,17,3,.07);--hero-dim-text:rgba(34,17,3,.42);--hero-end:#77492F;--hero-sub:rgba(34,17,3,.58);--avatar-ink:#FFFFFF;--scrim:rgba(34,17,3,.42)">
+  <div class="scheme-head">
+    <div class="t">
+      <h2>方案二 · 橙意 <small>JUICE ORANGE</small></h2>
+      <div class="pos">运动 App 里被验证最多的「经典橙」：直接采用 FitoTrack 的 Material Orange 主色，配骑行棕做次色。想最稳、最有「运动 App 熟悉感」的选它。</div>
+    </div>
+    <div class="src">取色来源：<a href="https://codeberg.org/jannis/FitoTrack/blame/commit/0ed68f487bdc2fa750051c8d5b48e7d7e3a9acf5/app/src/main/res/values/colors.xml" target="_blank">FitoTrack colors.xml</a>（colorPrimary <code>#FB8C00</code>、colorPrimaryDark <code>#EF6C00</code>、colorPrimaryBicycling <code>#77492F</code>）；底色结构参考 Endurain 暖中性。</div>
+  </div>
+  <div class="scheme-body">
+    <div>
+      <div class="swatches">
+        <div class="sw"><i style="background:#EAE4D6"></i><b>bg_outer</b><span>#EAE4D6</span></div>
+        <div class="sw"><i style="background:#F8F5EC"></i><b>bg_base</b><span>#F8F5EC</span></div>
+        <div class="sw"><i style="background:#FFFFFF;border-bottom:1px solid #E7DFC9"></i><b>bg_card</b><span>#FFFFFF</span></div>
+        <div class="sw"><i style="background:#F3EEE0"></i><b>bg_chip</b><span>#F3EEE0</span></div>
+        <div class="sw"><i style="background:#FB8C00"></i><b>primary</b><span>#FB8C00</span></div>
+        <div class="sw"><i style="background:#9A5200"></i><b>deep</b><span>#9A5200</span></div>
+        <div class="sw"><i style="background:#77492F"></i><b>secondary</b><span>#77492F</span></div>
+        <div class="sw"><i style="background:#221103"></i><b>on_accent</b><span>#221103</span></div>
+        <div class="sw"><i style="background:#271F15"></i><b>text</b><span>#271F15</span></div>
+        <div class="sw"><i style="background:#6F6354"></i><b>muted</b><span>#6F6354</span></div>
+        <div class="sw"><i style="background:#8C7F6E"></i><b>dim</b><span>#8C7F6E</span></div>
+        <div class="sw"><i style="background:#E7DFC9"></i><b>stroke</b><span>#E7DFC9</span></div>
+      </div>
+
+      <div class="phone">
+        <div class="notch"><i></i></div>
+        <div class="p-pad">
+          <div class="p-head">
+            <div class="brand">
+              <div class="logo-tile"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="#221103" stroke-width="2.4"/><path d="M12 8.5 L12 3.5" stroke="#221103" stroke-width="2.2" stroke-linecap="round"/></svg></div>
+              <div><div class="eyebrow">Run Club</div><div class="date">10月27日 · 周二</div></div>
+            </div>
+            <div class="right">
+              <div class="wx">☀ 18°C</div>
+              <div class="avatar">K<i></i></div>
+            </div>
+          </div>
+
+          <div class="hero">
+            <i class="ring1"></i><i class="ring2"></i>
+            <div class="hero-tag">Morning Run</div>
+            <div class="inner">
+              <span class="pill-tag"><i></i>Ready to move</span>
+              <h1>今天，跑出<br/>你的节奏<em>。</em></h1>
+              <div class="bottom">
+                <div class="suggest">
+                  <div class="k">今日建议</div>
+                  <div class="v">出门走走 · 3.0 公里</div>
+                  <div class="d">◷ 预计 30 分钟</div>
+                </div>
+                <div class="go-btn"><span class="go">GO</span><span class="lbl">起跑</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="stats3">
+            <div class="cell"><div class="k">本周动了</div><div class="v">5<span class="u">天 / 7</span></div></div>
+            <div class="cell"><div class="k">里程</div><div class="v">23.6<span class="u">公里</span></div></div>
+            <div class="cell"><div class="k">时长</div><div class="v">2<span class="u">时</span>18<span class="u">分</span></div></div>
+          </div>
+
+          <div class="card">
+            <div class="head">
+              <div><div class="k">This Week</div><h3>本周节奏</h3></div>
+              <span class="chip-accent">已动 5 / 7 天</span>
+            </div>
+            <div class="bars">
+              <div class="b on"><i style="height:26px"></i><span>一</span></div>
+              <div class="b on"><i style="height:46px"></i><span>二</span></div>
+              <div class="b on"><i style="height:34px"></i><span>三</span></div>
+              <div class="b on"><i style="height:62px"></i><span>四</span></div>
+              <div class="b on"><i style="height:44px"></i><span>五</span></div>
+              <div class="b off"><i style="height:10px"></i><span>六</span></div>
+              <div class="b off"><i style="height:16px"></i><span>日</span></div>
+            </div>
+            <div class="progress"><i></i></div>
+            <div class="prog-note"><span>已动 5 天，共 7 天</span><span>每次完成就是满分</span></div>
+          </div>
+
+          <div class="card">
+            <div class="head"><div><div class="k">Last Run</div><h3>上次跑步</h3></div><a class="link" href="#">全部记录 ›</a></div>
+            <div class="lastrun" style="margin-top:10px">
+              <div class="track-thumb"><svg viewBox="0 0 76 76"><rect width="76" height="76" fill="#F4EFDF"/><path d="M-4 20 L82 14" stroke="#FFFFFF" stroke-width="8"/><path d="M-4 61 L82 48" stroke="#E0D8C2" stroke-width="5"/><path d="M18 -4 L25 82" stroke="#FFFFFF" stroke-width="7"/><path d="M56 -4 L48 82" stroke="#FFFFFF" stroke-width="6"/><path d="M7 65 C18 51 19 35 31 32 C43 28 48 19 65 18" fill="none" stroke="#D96A1D" stroke-linecap="round" stroke-width="4"/><circle cx="7" cy="65" fill="#FB8C00" r="4" stroke="#F8F5EC" stroke-width="2"/></svg></div>
+              <div class="info">
+                <div class="t">晨跑 · 滨江绿道 <span class="tag">常跑</span></div>
+                <div class="m">4.2 公里 · 每公里约 6 分 12 秒</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="btn-row"><div class="btn primary">开始跑步</div><div class="btn ghost">查看记录</div></div>
+
+          <div class="dialog-demo">
+            <div class="dialog-card">
+              <div class="t">删除这条记录？</div>
+              <div class="b">记录删除后无法找回，轨迹也会一起删除。</div>
+              <div class="btns"><div class="btn ghost">取消</div><div class="btn primary">删除</div></div>
+            </div>
+          </div>
+          <div class="p-note">FitoTrack 原版白字压 #FB8C00 只有 2.4:1，本方案改深墨字 7.6:1</div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="tbl-title">落地映射表（令牌名 = 现有 colors.xml）</div>
+      <table>
+        <tr><th>令牌（现名）</th><th>现值</th><th>新值</th><th>说明</th></tr>
+        <tr><td>bg_outer</td><td class="old"><span class="hex">#050705</span></td><td class="new"><span class="swatch" style="background:#EAE4D6"></span><span class="hex">#EAE4D6</span></td><td>页面最底 / 状态栏</td></tr>
+        <tr><td>bg_base</td><td class="old"><span class="hex">#080B08</span></td><td class="new"><span class="swatch" style="background:#F8F5EC"></span><span class="hex">#F8F5EC</span></td><td>全局底色</td></tr>
+        <tr><td>bg_card / bg_card_alt</td><td class="old"><span class="hex">#111611 / #121712</span></td><td class="new"><span class="hex">#FFFFFF / #FBF8F0</span></td><td>卡片</td></tr>
+        <tr><td>bg_chip · modal_bg</td><td class="old"><span class="hex">#151B15</span></td><td class="new"><span class="hex">#F3EEE0 · 弹层卡改 #FFFFFF</span></td><td>chip / 提示卡</td></tr>
+        <tr><td>accent_lime</td><td class="old"><span class="hex">#D9FF43</span></td><td class="new"><span class="swatch" style="background:#FB8C00"></span><span class="hex">#FB8C00</span></td><td>主色：FitoTrack colorPrimary</td></tr>
+        <tr><td>accent_orange</td><td class="old"><span class="hex">#FF5C35</span></td><td class="new"><span class="swatch" style="background:#77492F"></span><span class="hex">#77492F</span></td><td>次色：FitoTrack 骑行棕，白字可读</td></tr>
+        <tr><td><b>新增</b> accent_deep</td><td class="old">—</td><td class="new"><span class="swatch" style="background:#9A5200"></span><span class="hex">#9A5200</span></td><td>链接 / 进度 / 图表强调</td></tr>
+        <tr><td>orange_light / orange_soft</td><td class="old"><span class="hex">#FF8465 / #FF7E5C</span></td><td class="new"><span class="hex">#EF6C00 / #FFB05C</span></td><td>FitoTrack colorPrimaryDark / 选中柱</td></tr>
+        <tr><td>text_primary</td><td class="old"><span class="hex">#FFFFFF</span></td><td class="new"><span class="swatch" style="background:#271F15"></span><span class="hex">#271F15</span></td><td>暖墨正文</td></tr>
+        <tr><td>text_muted</td><td class="old"><span class="hex">#8C978C</span></td><td class="new"><span class="hex">#6F6354</span></td><td>次要文字</td></tr>
+        <tr><td>text_dim / dim2</td><td class="old"><span class="hex">#6F7A6F / #737E73</span></td><td class="new"><span class="hex">#8C7F6E / #958875</span></td><td>眉题标签</td></tr>
+        <tr><td>text_soft / soft2</td><td class="old"><span class="hex">#C5CEC5 / #AAB4AA</span></td><td class="new"><span class="hex">#4E4536 / #5C5242</span></td><td>深灰反转</td></tr>
+        <tr><td>stroke_subtle / divider</td><td class="old"><span class="hex">#1E261E / #1A211A</span></td><td class="new"><span class="hex">#E7DFC9 / #EDE7D4</span></td><td>描边 / 分隔线</td></tr>
+        <tr><td>white_04…95</td><td class="old"><span class="hex">白色透明度阶梯</span></td><td class="new"><span class="hex">#271F15 @ 4…60%</span></td><td>反转为暖墨透明度</td></tr>
+        <tr><td>lime_06…30 / orange_15…20</td><td class="old"><span class="hex">主/次色透明度</span></td><td class="new"><span class="hex">#FB8C00 / #77492F 同透明度</span></td><td>tint、chip、轨道</td></tr>
+        <tr><td>ink_06…60 · ink_orange</td><td class="old"><span class="hex">#080B08 透明度</span></td><td class="new"><span class="hex">#221103 透明度（次色块上用 #FFFFFF）</span></td><td>色块上的文字</td></tr>
+        <tr><td>scrim_dark / scrim_modal</td><td class="old"><span class="hex">#E60B0F0B / #B3050705</span></td><td class="new"><span class="hex">#6B221103 / #B3221103</span></td><td>暖黑遮罩</td></tr>
+        <tr><td>report_hero_bg · footer_bg</td><td class="old"><span class="hex">#141A14 / #0A0E0A</span></td><td class="new"><span class="hex">#F4F0E3 / #F1EBDD</span></td><td>报告主卡 / 底栏</td></tr>
+        <tr><td>bg_card_month · ink_month 系</td><td class="old"><span class="hex">#1A1410 + 深墨字</span></td><td class="new"><span class="hex">#FCEBD3 + #221103 字</span></td><td>月度卡 → 橙 tint 浅卡</td></tr>
+        <tr><td>legend_gray · text_olive 系</td><td class="old"><span class="hex">#5B675B / #94A163 等</span></td><td class="new"><span class="hex">#8C7F6E / #9C6A22 等</span></td><td>暖调灰</td></tr>
+        <tr><td>map_road_text 等</td><td class="old"><span class="hex">#7D897A 等</span></td><td class="new"><span class="hex">#8C7F6E / #7C8455 / #6F94A6</span></td><td>手绘地图注记</td></tr>
+        <tr><td>sunward_ink / sunward_halo</td><td class="old"><span class="hex">#1C1310 / #29FF8A3C</span></td><td class="new"><span class="hex">保留不变</span></td><td>品牌色不动</td></tr>
+      </table>
+
+      <div class="tbl-title">对比度实测</div>
+      <table>
+        <tr><th>配对</th><th>比值</th><th>判定</th></tr>
+        <tr><td>正文 #271F15 / 底 #F8F5EC</td><td>14.9 : 1</td><td><span class="pill aa">AAA</span></td></tr>
+        <tr><td>次要 #6F6354 / 卡片 #FFFFFF</td><td>5.9 : 1</td><td><span class="pill aa">AAA</span></td></tr>
+        <tr><td>主色块墨字 #221103 / #FB8C00</td><td>7.6 : 1</td><td><span class="pill aa">AAA</span></td></tr>
+        <tr><td>链接/进度 #9A5200 / #F8F5EC</td><td>5.4 : 1</td><td><span class="pill aa">AAA</span></td></tr>
+        <tr><td>眉题 #8C7F6E / #FFFFFF</td><td>3.9 : 1</td><td><span class="pill aa">AA（11sp 加粗）</span></td></tr>
+        <tr><td>白字 / 骑行棕 #77492F（次色块）</td><td>7.6 : 1</td><td><span class="pill aa">AAA</span></td></tr>
+      </table>
+
+      <div class="fit">
+        <h4>与产品理念的贴合</h4>
+        <ul>
+          <li>「运动 App 最经典的一口橙」：FitoTrack（GPL，多年维护）用同色做主色，久经验证不刺眼、不分性别年龄。</li>
+          <li>次色用骑行棕而非红：全家感的暖棕替代警示感红系，符合「不做裁判」。</li>
+          <li>FitoTrack 原版在橙上压白字只有 2.4:1，长辈看不清——本方案改成深墨字（7.6:1），这是「成熟方案 + 家人标准」的修正点。</li>
+        </ul>
+        <h4 style="margin-top:10px">自绘控件构成三色（慢走 / 常跑 / 远足）</h4>
+        <ul><li>#FFC069 → #FB8C00 → #9A5200</li></ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 方案三 · 蜜琥珀 ============ -->
+<section class="scheme" id="s3" style="--outer:#E9E6DC;--base:#F1EFE8;--card:#FFFFFF;--card2:#F7F5EF;--chip:#EAE6DA;--primary:#EF9F27;--deep:#8A5A00;--secondary:#854F0B;--secondary-soft:#C9A254;--on-accent:#2C2C2A;--text:#2C2C2A;--muted:#6E6A61;--dim:#8D897E;--soft:#4A473F;--stroke:#E3DFD2;--divider:#E9E5D9;--go-bg:#2C2C2A;--go-fg:#EF9F27;--go-shadow:rgba(44,44,42,.26);--paper:#F0EEE3;--track:#B45309;--bar-off:rgba(44,44,42,.10);--chip-accent-bg:rgba(239,159,39,.14);--chip-accent-fg:#8A5A00;--tag-bg:#2C2C2A;--tag-fg:#EF9F27;--hero-ring:rgba(44,44,42,.09);--hero-ring2:rgba(44,44,42,.07);--hero-dim-text:rgba(44,44,42,.42);--hero-end:#854F0B;--hero-sub:rgba(44,44,42,.58);--avatar-ink:#FFFFFF;--scrim:rgba(44,44,42,.42)">
+  <div class="scheme-head">
+    <div class="t">
+      <h2>方案三 · 蜜琥珀 <small>HONEY AMBER</small></h2>
+      <div class="pos">最「安静」的暖：Endurain 的暖中性灰哲学 + 琥珀主色。奶油灰底、克制、不甜腻——「逐日是安静的名字」这条产品自述，在这套上最成立。</div>
+    </div>
+    <div class="src">取色来源：<a href="https://github.com/endurain-project/endurain/blob/f537651809e51a35799d95ef591c667b8596559f/docs/developer-guide/brand-and-ux-guidelines.md" target="_blank">Endurain Brand &amp; UX guidelines</a>（effort 琥珀 <code>#EF9F27</code>、hiking 深琥珀 <code>#854F0B</code>、暖中性 surface <code>#F1EFE8</code> / ink <code>#2C2C2A</code>）；其 muted 原值 #888780 对比度 3.6:1 不达标，本方案加深为 #6E6A61。</div>
+  </div>
+  <div class="scheme-body">
+    <div>
+      <div class="swatches">
+        <div class="sw"><i style="background:#E9E6DC"></i><b>bg_outer</b><span>#E9E6DC</span></div>
+        <div class="sw"><i style="background:#F1EFE8"></i><b>bg_base</b><span>#F1EFE8</span></div>
+        <div class="sw"><i style="background:#FFFFFF;border-bottom:1px solid #E3DFD2"></i><b>bg_card</b><span>#FFFFFF</span></div>
+        <div class="sw"><i style="background:#EAE6DA"></i><b>bg_chip</b><span>#EAE6DA</span></div>
+        <div class="sw"><i style="background:#EF9F27"></i><b>primary</b><span>#EF9F27</span></div>
+        <div class="sw"><i style="background:#8A5A00"></i><b>deep</b><span>#8A5A00</span></div>
+        <div class="sw"><i style="background:#854F0B"></i><b>secondary</b><span>#854F0B</span></div>
+        <div class="sw"><i style="background:#2C2C2A"></i><b>on_accent</b><span>#2C2C2A</span></div>
+        <div class="sw"><i style="background:#2C2C2A"></i><b>text</b><span>#2C2C2A</span></div>
+        <div class="sw"><i style="background:#6E6A61"></i><b>muted</b><span>#6E6A61</span></div>
+        <div class="sw"><i style="background:#8D897E"></i><b>dim</b><span>#8D897E</span></div>
+        <div class="sw"><i style="background:#E3DFD2"></i><b>stroke</b><span>#E3DFD2</span></div>
+      </div>
+
+      <div class="phone">
+        <div class="notch"><i></i></div>
+        <div class="p-pad">
+          <div class="p-head">
+            <div class="brand">
+              <div class="logo-tile"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="#2C2C2A" stroke-width="2.4"/><path d="M12 8.5 L12 3.5" stroke="#2C2C2A" stroke-width="2.2" stroke-linecap="round"/></svg></div>
+              <div><div class="eyebrow">Run Club</div><div class="date">10月27日 · 周二</div></div>
+            </div>
+            <div class="right">
+              <div class="wx">☀ 18°C</div>
+              <div class="avatar">K<i></i></div>
+            </div>
+          </div>
+
+          <div class="hero">
+            <i class="ring1"></i><i class="ring2"></i>
+            <div class="hero-tag">Morning Run</div>
+            <div class="inner">
+              <span class="pill-tag"><i></i>Ready to move</span>
+              <h1>今天，跑出<br/>你的节奏<em>。</em></h1>
+              <div class="bottom">
+                <div class="suggest">
+                  <div class="k">今日建议</div>
+                  <div class="v">出门走走 · 3.0 公里</div>
+                  <div class="d">◷ 预计 30 分钟</div>
+                </div>
+                <div class="go-btn"><span class="go">GO</span><span class="lbl">起跑</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="stats3">
+            <div class="cell"><div class="k">本周动了</div><div class="v">5<span class="u">天 / 7</span></div></div>
+            <div class="cell"><div class="k">里程</div><div class="v">23.6<span class="u">公里</span></div></div>
+            <div class="cell"><div class="k">时长</div><div class="v">2<span class="u">时</span>18<span class="u">分</span></div></div>
+          </div>
+
+          <div class="card">
+            <div class="head">
+              <div><div class="k">This Week</div><h3>本周节奏</h3></div>
+              <span class="chip-accent">已动 5 / 7 天</span>
+            </div>
+            <div class="bars">
+              <div class="b on"><i style="height:26px"></i><span>一</span></div>
+              <div class="b on"><i style="height:46px"></i><span>二</span></div>
+              <div class="b on"><i style="height:34px"></i><span>三</span></div>
+              <div class="b on"><i style="height:62px"></i><span>四</span></div>
+              <div class="b on"><i style="height:44px"></i><span>五</span></div>
+              <div class="b off"><i style="height:10px"></i><span>六</span></div>
+              <div class="b off"><i style="height:16px"></i><span>日</span></div>
+            </div>
+            <div class="progress"><i></i></div>
+            <div class="prog-note"><span>已动 5 天，共 7 天</span><span>每次完成就是满分</span></div>
+          </div>
+
+          <div class="card">
+            <div class="head"><div><div class="k">Last Run</div><h3>上次跑步</h3></div><a class="link" href="#">全部记录 ›</a></div>
+            <div class="lastrun" style="margin-top:10px">
+              <div class="track-thumb"><svg viewBox="0 0 76 76"><rect width="76" height="76" fill="#F0EEE3"/><path d="M-4 20 L82 14" stroke="#FFFFFF" stroke-width="8"/><path d="M-4 61 L82 48" stroke="#DEDACB" stroke-width="5"/><path d="M18 -4 L25 82" stroke="#FFFFFF" stroke-width="7"/><path d="M56 -4 L48 82" stroke="#FFFFFF" stroke-width="6"/><path d="M7 65 C18 51 19 35 31 32 C43 28 48 19 65 18" fill="none" stroke="#B45309" stroke-linecap="round" stroke-width="4"/><circle cx="7" cy="65" fill="#EF9F27" r="4" stroke="#F1EFE8" stroke-width="2"/></svg></div>
+              <div class="info">
+                <div class="t">晨跑 · 滨江绿道 <span class="tag">常跑</span></div>
+                <div class="m">4.2 公里 · 每公里约 6 分 12 秒</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="btn-row"><div class="btn primary">开始跑步</div><div class="btn ghost">查看记录</div></div>
+
+          <div class="dialog-demo">
+            <div class="dialog-card">
+              <div class="t">删除这条记录？</div>
+              <div class="b">记录删除后无法找回，轨迹也会一起删除。</div>
+              <div class="btns"><div class="btn ghost">取消</div><div class="btn primary">删除</div></div>
+            </div>
+          </div>
+          <div class="p-note">Endurain 心率红 #E24B4A 仅留作数据系列色，不做界面警示色</div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="tbl-title">落地映射表（令牌名 = 现有 colors.xml）</div>
+      <table>
+        <tr><th>令牌（现名）</th><th>现值</th><th>新值</th><th>说明</th></tr>
+        <tr><td>bg_outer</td><td class="old"><span class="hex">#050705</span></td><td class="new"><span class="swatch" style="background:#E9E6DC"></span><span class="hex">#E9E6DC</span></td><td>页面最底 / 状态栏</td></tr>
+        <tr><td>bg_base</td><td class="old"><span class="hex">#080B08</span></td><td class="new"><span class="swatch" style="background:#F1EFE8"></span><span class="hex">#F1EFE8</span></td><td>Endurain 暖中性 surface</td></tr>
+        <tr><td>bg_card / bg_card_alt</td><td class="old"><span class="hex">#111611 / #121712</span></td><td class="new"><span class="hex">#FFFFFF / #F7F5EF</span></td><td>卡片</td></tr>
+        <tr><td>bg_chip · modal_bg</td><td class="old"><span class="hex">#151B15</span></td><td class="new"><span class="hex">#EAE6DA · 弹层卡改 #FFFFFF</span></td><td>chip / 提示卡</td></tr>
+        <tr><td>accent_lime</td><td class="old"><span class="hex">#D9FF43</span></td><td class="new"><span class="swatch" style="background:#EF9F27"></span><span class="hex">#EF9F27</span></td><td>主色：Endurain effort 琥珀</td></tr>
+        <tr><td>accent_orange</td><td class="old"><span class="hex">#FF5C35</span></td><td class="new"><span class="swatch" style="background:#854F0B"></span><span class="hex">#854F0B</span></td><td>次色：Endurain hiking 深琥珀</td></tr>
+        <tr><td><b>新增</b> accent_deep</td><td class="old">—</td><td class="new"><span class="swatch" style="background:#8A5A00"></span><span class="hex">#8A5A00</span></td><td>链接 / 进度 / 图表强调</td></tr>
+        <tr><td>orange_light / orange_soft</td><td class="old"><span class="hex">#FF8465 / #FF7E5C</span></td><td class="new"><span class="hex">#B45309 / #FFC260</span></td><td>轨迹深琥珀 / 选中柱亮琥珀</td></tr>
+        <tr><td>text_primary</td><td class="old"><span class="hex">#FFFFFF</span></td><td class="new"><span class="swatch" style="background:#2C2C2A"></span><span class="hex">#2C2C2A</span></td><td>Endurain ink</td></tr>
+        <tr><td>text_muted</td><td class="old"><span class="hex">#8C978C</span></td><td class="new"><span class="hex">#6E6A61</span></td><td>原 Endurain muted 加深达标</td></tr>
+        <tr><td>text_dim / dim2</td><td class="old"><span class="hex">#6F7A6F / #737E73</span></td><td class="new"><span class="hex">#8D897E / #949084</span></td><td>眉题标签</td></tr>
+        <tr><td>text_soft / soft2</td><td class="old"><span class="hex">#C5CEC5 / #AAB4AA</span></td><td class="new"><span class="hex">#4A473F / #57544B</span></td><td>深灰反转</td></tr>
+        <tr><td>stroke_subtle / divider</td><td class="old"><span class="hex">#1E261E / #1A211A</span></td><td class="new"><span class="hex">#E3DFD2 / #E9E5D9</span></td><td>描边 / 分隔线</td></tr>
+        <tr><td>white_04…95</td><td class="old"><span class="hex">白色透明度阶梯</span></td><td class="new"><span class="hex">#2C2C2A @ 4…60%</span></td><td>反转</td></tr>
+        <tr><td>lime_06…30 / orange_15…20</td><td class="old"><span class="hex">主/次色透明度</span></td><td class="new"><span class="hex">#EF9F27 / #854F0B 同透明度</span></td><td>tint、chip、轨道</td></tr>
+        <tr><td>ink_06…60 · ink_orange</td><td class="old"><span class="hex">#080B08 透明度</span></td><td class="new"><span class="hex">#2C2C2A 透明度</span></td><td>色块上的墨字</td></tr>
+        <tr><td>scrim_dark / scrim_modal</td><td class="old"><span class="hex">#E60B0F0B / #B3050705</span></td><td class="new"><span class="hex">#6B2C2C2A / #B32C2C2A</span></td><td>暖黑遮罩</td></tr>
+        <tr><td>report_hero_bg · footer_bg</td><td class="old"><span class="hex">#141A14 / #0A0E0A</span></td><td class="new"><span class="hex">#EDEBE1 / #E8E5DA</span></td><td>报告主卡 / 底栏</td></tr>
+        <tr><td>bg_card_month · ink_month 系</td><td class="old"><span class="hex">#1A1410 + 深墨字</span></td><td class="new"><span class="hex">#F8EAD1 + #2C2C2A 字</span></td><td>月度卡 → 琥珀 tint</td></tr>
+        <tr><td>legend_gray · text_olive 系</td><td class="old"><span class="hex">#5B675B / #94A163 等</span></td><td class="new"><span class="hex">#8D897E / #A05E0A 等</span></td><td>暖调灰</td></tr>
+        <tr><td>map_road_text 等</td><td class="old"><span class="hex">#7D897A 等</span></td><td class="new"><span class="hex">#8D897E / #7C8455 / #6F94A6</span></td><td>手绘地图注记</td></tr>
+        <tr><td>sunward_ink / sunward_halo</td><td class="old"><span class="hex">#1C1310 / #29FF8A3C</span></td><td class="new"><span class="hex">保留不变</span></td><td>品牌色不动</td></tr>
+      </table>
+
+      <div class="tbl-title">对比度实测</div>
+      <table>
+        <tr><th>配对</th><th>比值</th><th>判定</th></tr>
+        <tr><td>正文 #2C2C2A / 底 #F1EFE8</td><td>12.2 : 1</td><td><span class="pill aa">AAA</span></td></tr>
+        <tr><td>次要 #6E6A61 / 卡片 #FFFFFF</td><td>5.4 : 1</td><td><span class="pill aa">AAA</span></td></tr>
+        <tr><td>主色块墨字 #2C2C2A / #EF9F27</td><td>6.4 : 1</td><td><span class="pill aa">AAA</span></td></tr>
+        <tr><td>链接/进度 #8A5A00 / #F1EFE8</td><td>5.2 : 1</td><td><span class="pill aa">AAA</span></td></tr>
+        <tr><td>眉题 #8D897E / #FFFFFF</td><td>3.5 : 1</td><td><span class="pill aa">AA（11sp 加粗）</span></td></tr>
+        <tr><td>白字 / 深琥珀 #854F0B（次色块）</td><td>6.7 : 1</td><td><span class="pill aa">AAA</span></td></tr>
+      </table>
+
+      <div class="fit">
+        <h4>与产品理念的贴合</h4>
+        <ul>
+          <li>Endurain 的暖中性灰哲学（「不冷、不像后台仪表盘」）与「给家人、不说行话」是同一种气质。</li>
+          <li>全案没有一个高饱和刺眼色：琥珀 5.2:1 起步，最柔和的一套，夜间/清晨看也不扎眼。</li>
+          <li>主色与「蜜色太阳」直觉一致，和朝阳金图标色相相邻，落地时图标不用动。</li>
+        </ul>
+        <h4 style="margin-top:10px">自绘控件构成三色（慢走 / 常跑 / 远足）</h4>
+        <ul><li>#FFC260 → #EF9F27 → #8A5A00</li></ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 方案四 · 珊瑚 ============ -->
+<section class="scheme" id="s4" style="--outer:#F0E4DA;--base:#FBF4EE;--card:#FFFFFF;--card2:#FDFAF6;--chip:#F6ECE3;--primary:#F26845;--deep:#B23A17;--secondary:#FFB74D;--secondary-soft:#FFD9A8;--on-accent:#2A130A;--text:#2E1A0F;--muted:#7A655A;--dim:#97816F;--soft:#553F32;--stroke:#EDE0D3;--divider:#F2E7DC;--go-bg:#2E1A0F;--go-fg:#FF8F70;--go-shadow:rgba(46,26,15,.28);--paper:#F9F0E7;--track:#E85D3A;--bar-off:rgba(46,26,15,.10);--chip-accent-bg:rgba(242,104,69,.12);--chip-accent-fg:#B23A17;--tag-bg:#2E1A0F;--tag-fg:#FF9F82;--hero-ring:rgba(42,19,10,.09);--hero-ring2:rgba(42,19,10,.07);--hero-dim-text:rgba(42,19,10,.42);--hero-end:#B23A17;--hero-sub:rgba(42,19,10,.58);--avatar-ink:#2A130A;--scrim:rgba(42,19,10,.42)">
+  <div class="scheme-head">
+    <div class="t">
+      <h2>方案四 · 珊瑚 <small>CORAL PEACH</small></h2>
+      <div class="pos">最年轻的一套：RunnerUp 深底界面里的暖色点缀族（鲑鱼粉 / 暖琥珀）搬到浅底上做主角，配杏仁奶底。全家女性长辈常见的「珊瑚粉」偏好，落在这里。</div>
+    </div>
+    <div class="src">取色来源：<a href="https://github.com/jonasoreland/runnerup/blob/master/app/res/values/colors.xml" target="_blank">RunnerUp colors.xml</a>（stepActive <code>#FF978E</code>、stepWarmup <code>#FFB74D</code>、sportBiking <code>#FEBC5A</code>；同为运动向的 Strava 服务橙 <code>#FC4C02</code> 亦在其中）。主色 <code>#F26845</code> 为 #FF978E 加深至墨字 5.7:1 的衍生值。</div>
+  </div>
+  <div class="scheme-body">
+    <div>
+      <div class="swatches">
+        <div class="sw"><i style="background:#F0E4DA"></i><b>bg_outer</b><span>#F0E4DA</span></div>
+        <div class="sw"><i style="background:#FBF4EE"></i><b>bg_base</b><span>#FBF4EE</span></div>
+        <div class="sw"><i style="background:#FFFFFF;border-bottom:1px solid #EDE0D3"></i><b>bg_card</b><span>#FFFFFF</span></div>
+        <div class="sw"><i style="background:#F6ECE3"></i><b>bg_chip</b><span>#F6ECE3</span></div>
+        <div class="sw"><i style="background:#F26845"></i><b>primary</b><span>#F26845</span></div>
+        <div class="sw"><i style="background:#B23A17"></i><b>deep</b><span>#B23A17</span></div>
+        <div class="sw"><i style="background:#FFB74D"></i><b>secondary</b><span>#FFB74D</span></div>
+        <div class="sw"><i style="background:#2A130A"></i><b>on_accent</b><span>#2A130A</span></div>
+        <div class="sw"><i style="background:#2E1A0F"></i><b>text</b><span>#2E1A0F</span></div>
+        <div class="sw"><i style="background:#7A655A"></i><b>muted</b><span>#7A655A</span></div>
+        <div class="sw"><i style="background:#97816F"></i><b>dim</b><span>#97816F</span></div>
+        <div class="sw"><i style="background:#EDE0D3"></i><b>stroke</b><span>#EDE0D3</span></div>
+      </div>
+
+      <div class="phone">
+        <div class="notch"><i></i></div>
+        <div class="p-pad">
+          <div class="p-head">
+            <div class="brand">
+              <div class="logo-tile"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="#2A130A" stroke-width="2.4"/><path d="M12 8.5 L12 3.5" stroke="#2A130A" stroke-width="2.2" stroke-linecap="round"/></svg></div>
+              <div><div class="eyebrow">Run Club</div><div class="date">10月27日 · 周二</div></div>
+            </div>
+            <div class="right">
+              <div class="wx">☀ 18°C</div>
+              <div class="avatar">K<i></i></div>
+            </div>
+          </div>
+
+          <div class="hero">
+            <i class="ring1"></i><i class="ring2"></i>
+            <div class="hero-tag">Morning Run</div>
+            <div class="inner">
+              <span class="pill-tag"><i></i>Ready to move</span>
+              <h1>今天，跑出<br/>你的节奏<em>。</em></h1>
+              <div class="bottom">
+                <div class="suggest">
+                  <div class="k">今日建议</div>
+                  <div class="v">出门走走 · 3.0 公里</div>
+                  <div class="d">◷ 预计 30 分钟</div>
+                </div>
+                <div class="go-btn"><span class="go">GO</span><span class="lbl">起跑</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="stats3">
+            <div class="cell"><div class="k">本周动了</div><div class="v">5<span class="u">天 / 7</span></div></div>
+            <div class="cell"><div class="k">里程</div><div class="v">23.6<span class="u">公里</span></div></div>
+            <div class="cell"><div class="k">时长</div><div class="v">2<span class="u">时</span>18<span class="u">分</span></div></div>
+          </div>
+
+          <div class="card">
+            <div class="head">
+              <div><div class="k">This Week</div><h3>本周节奏</h3></div>
+              <span class="chip-accent">已动 5 / 7 天</span>
+            </div>
+            <div class="bars">
+              <div class="b on"><i style="height:26px"></i><span>一</span></div>
+              <div class="b on"><i style="height:46px"></i><span>二</span></div>
+              <div class="b on"><i style="height:34px"></i><span>三</span></div>
+              <div class="b on"><i style="height:62px"></i><span>四</span></div>
+              <div class="b on"><i style="height:44px"></i><span>五</span></div>
+              <div class="b off"><i style="height:10px"></i><span>六</span></div>
+              <div class="b off"><i style="height:16px"></i><span>日</span></div>
+            </div>
+            <div class="progress"><i></i></div>
+            <div class="prog-note"><span>已动 5 天，共 7 天</span><span>每次完成就是满分</span></div>
+          </div>
+
+          <div class="card">
+            <div class="head"><div><div class="k">Last Run</div><h3>上次跑步</h3></div><a class="link" href="#">全部记录 ›</a></div>
+            <div class="lastrun" style="margin-top:10px">
+              <div class="track-thumb"><svg viewBox="0 0 76 76"><rect width="76" height="76" fill="#F9F0E7"/><path d="M-4 20 L82 14" stroke="#FFFFFF" stroke-width="8"/><path d="M-4 61 L82 48" stroke="#E9DCCD" stroke-width="5"/><path d="M18 -4 L25 82" stroke="#FFFFFF" stroke-width="7"/><path d="M56 -4 L48 82" stroke="#FFFFFF" stroke-width="6"/><path d="M7 65 C18 51 19 35 31 32 C43 28 48 19 65 18" fill="none" stroke="#E85D3A" stroke-linecap="round" stroke-width="4"/><circle cx="7" cy="65" fill="#F26845" r="4" stroke="#FBF4EE" stroke-width="2"/></svg></div>
+              <div class="info">
+                <div class="t">晨跑 · 滨江绿道 <span class="tag">常跑</span></div>
+                <div class="m">4.2 公里 · 每公里约 6 分 12 秒</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="btn-row"><div class="btn primary">开始跑步</div><div class="btn ghost">查看记录</div></div>
+
+          <div class="dialog-demo">
+            <div class="dialog-card">
+              <div class="t">删除这条记录？</div>
+              <div class="b">记录删除后无法找回，轨迹也会一起删除。</div>
+              <div class="btns"><div class="btn ghost">取消</div><div class="btn primary">删除</div></div>
+            </div>
+          </div>
+          <div class="p-note">珊瑚粉主色来自 RunnerUp 间歇训练的「活跃段」色</div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="tbl-title">落地映射表（令牌名 = 现有 colors.xml）</div>
+      <table>
+        <tr><th>令牌（现名）</th><th>现值</th><th>新值</th><th>说明</th></tr>
+        <tr><td>bg_outer</td><td class="old"><span class="hex">#050705</span></td><td class="new"><span class="swatch" style="background:#F0E4DA"></span><span class="hex">#F0E4DA</span></td><td>页面最底 / 状态栏</td></tr>
+        <tr><td>bg_base</td><td class="old"><span class="hex">#080B08</span></td><td class="new"><span class="swatch" style="background:#FBF4EE"></span><span class="hex">#FBF4EE</span></td><td>杏仁奶底</td></tr>
+        <tr><td>bg_card / bg_card_alt</td><td class="old"><span class="hex">#111611 / #121712</span></td><td class="new"><span class="hex">#FFFFFF / #FDFAF6</span></td><td>卡片</td></tr>
+        <tr><td>bg_chip · modal_bg</td><td class="old"><span class="hex">#151B15</span></td><td class="new"><span class="hex">#F6ECE3 · 弹层卡改 #FFFFFF</span></td><td>chip / 提示卡</td></tr>
+        <tr><td>accent_lime</td><td class="old"><span class="hex">#D9FF43</span></td><td class="new"><span class="swatch" style="background:#F26845"></span><span class="hex">#F26845</span></td><td>主色：RunnerUp #FF978E 加深衍生</td></tr>
+        <tr><td>accent_orange</td><td class="old"><span class="hex">#FF5C35</span></td><td class="new"><span class="swatch" style="background:#FFB74D"></span><span class="hex">#FFB74D</span></td><td>次色：RunnerUp stepWarmup 暖琥珀</td></tr>
+        <tr><td><b>新增</b> accent_deep</td><td class="old">—</td><td class="new"><span class="swatch" style="background:#B23A17"></span><span class="hex">#B23A17</span></td><td>链接 / 进度 / 图表强调</td></tr>
+        <tr><td>orange_light / orange_soft</td><td class="old"><span class="hex">#FF8465 / #FF7E5C</span></td><td class="new"><span class="hex">#E85D3A / #FF9F82</span></td><td>轨迹深珊瑚 / 选中柱</td></tr>
+        <tr><td>text_primary</td><td class="old"><span class="hex">#FFFFFF</span></td><td class="new"><span class="swatch" style="background:#2E1A0F"></span><span class="hex">#2E1A0F</span></td><td>暖深褐正文</td></tr>
+        <tr><td>text_muted</td><td class="old"><span class="hex">#8C978C</span></td><td class="new"><span class="hex">#7A655A</span></td><td>次要文字</td></tr>
+        <tr><td>text_dim / dim2</td><td class="old"><span class="hex">#6F7A6F / #737E73</span></td><td class="new"><span class="hex">#97816F / #A08B79</span></td><td>眉题标签</td></tr>
+        <tr><td>text_soft / soft2</td><td class="old"><span class="hex">#C5CEC5 / #AAB4AA</span></td><td class="new"><span class="hex">#553F32 / #634C3E</span></td><td>深灰反转</td></tr>
+        <tr><td>stroke_subtle / divider</td><td class="old"><span class="hex">#1E261E / #1A211A</span></td><td class="new"><span class="hex">#EDE0D3 / #F2E7DC</span></td><td>描边 / 分隔线</td></tr>
+        <tr><td>white_04…95</td><td class="old"><span class="hex">白色透明度阶梯</span></td><td class="new"><span class="hex">#2E1A0F @ 4…60%</span></td><td>反转</td></tr>
+        <tr><td>lime_06…30 / orange_15…20</td><td class="old"><span class="hex">主/次色透明度</span></td><td class="new"><span class="hex">#F26845 / #FFB74D 同透明度</span></td><td>tint、chip、轨道</td></tr>
+        <tr><td>ink_06…60 · ink_orange</td><td class="old"><span class="hex">#080B08 透明度</span></td><td class="new"><span class="hex">#2A130A 透明度</span></td><td>色块上的墨字</td></tr>
+        <tr><td>scrim_dark / scrim_modal</td><td class="old"><span class="hex">#E60B0F0B / #B3050705</span></td><td class="new"><span class="hex">#6B2A130A / #B32A130A</span></td><td>暖黑遮罩</td></tr>
+        <tr><td>report_hero_bg · footer_bg</td><td class="old"><span class="hex">#141A14 / #0A0E0A</span></td><td class="new"><span class="hex">#F7EFE6 / #F3EADF</span></td><td>报告主卡 / 底栏</td></tr>
+        <tr><td>bg_card_month · ink_month 系</td><td class="old"><span class="hex">#1A1410 + 深墨字</span></td><td class="new"><span class="hex">#FDE3D9 + #2A130A 字</span></td><td>月度卡 → 珊瑚 tint</td></tr>
+        <tr><td>legend_gray · text_olive 系</td><td class="old"><span class="hex">#5B675B / #94A163 等</span></td><td class="new"><span class="hex">#97816F / #B23A17 等</span></td><td>暖调灰</td></tr>
+        <tr><td>map_road_text 等</td><td class="old"><span class="hex">#7D897A 等</span></td><td class="new"><span class="hex">#97816F / #7C8455 / #6F94A6</span></td><td>手绘地图注记</td></tr>
+        <tr><td>sunward_ink / sunward_halo</td><td class="old"><span class="hex">#1C1310 / #29FF8A3C</span></td><td class="new"><span class="hex">保留不变</span></td><td>品牌色不动</td></tr>
+      </table>
+
+      <div class="tbl-title">对比度实测</div>
+      <table>
+        <tr><th>配对</th><th>比值</th><th>判定</th></tr>
+        <tr><td>正文 #2E1A0F / 底 #FBF4EE</td><td>15.2 : 1</td><td><span class="pill aa">AAA</span></td></tr>
+        <tr><td>次要 #7A655A / 卡片 #FFFFFF</td><td>5.5 : 1</td><td><span class="pill aa">AAA</span></td></tr>
+        <tr><td>主色块墨字 #2A130A / #F26845</td><td>5.7 : 1</td><td><span class="pill aa">AAA</span></td></tr>
+        <tr><td>链接/进度 #B23A17 / #FBF4EE</td><td>5.5 : 1</td><td><span class="pill aa">AAA</span></td></tr>
+        <tr><td>眉题 #97816F / #FFFFFF</td><td>3.7 : 1</td><td><span class="pill aa">AA（11sp 加粗）</span></td></tr>
+        <tr><td>GO 亮字 #FF8F70 / 深墨钮 #2E1A0F</td><td>7.4 : 1</td><td><span class="pill aa">AAA</span></td></tr>
+      </table>
+
+      <div class="fit">
+        <h4>与产品理念的贴合</h4>
+        <ul>
+          <li>珊瑚粉是「鼓励色」而非「成绩色」：暖而不竞技，和「不比快慢」一致。</li>
+          <li>RunnerUp 用 #FF978E 标记训练里的「活跃段」——语义天然是「今天动了」。</li>
+          <li>GO 按钮沿用「深底 + 亮字」的现有形制，只是荧光绿换成亮珊瑚，长辈的认知零迁移。</li>
+        </ul>
+        <h4 style="margin-top:10px">自绘控件构成三色（慢走 / 常跑 / 远足）</h4>
+        <ul><li>#FF9F82 → #F26845 → #B23A17</li></ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 方案五 · 陶土 ============ -->
+<section class="scheme" id="s5" style="--outer:#E5DCCE;--base:#F2EBE1;--card:#FBF9F3;--card2:#F8F4EB;--chip:#EBE2D3;--primary:#B4552D;--deep:#A04420;--secondary:#77492F;--secondary-soft:#C9A15C;--on-accent:#FFF8F0;--text:#2E2318;--muted:#6F5F4A;--dim:#8F7D64;--soft:#4F4433;--stroke:#E0D5C0;--divider:#E8DCC7;--go-bg:#2E2318;--go-fg:#E8A87C;--go-shadow:rgba(46,35,24,.28);--paper:#F1EBDD;--track:#A04420;--bar-off:rgba(46,35,24,.10);--chip-accent-bg:rgba(180,85,45,.12);--chip-accent-fg:#A04420;--tag-bg:#2E2318;--tag-fg:#E8A87C;--hero-ring:rgba(255,248,240,.16);--hero-ring2:rgba(255,248,240,.12);--hero-dim-text:rgba(255,248,240,.5);--hero-end:#FFD9A8;--hero-sub:rgba(255,248,240,.68);--avatar-ink:#2E2318;--scrim:rgba(46,35,24,.42)">
+  <div class="scheme-head">
+    <div class="t">
+      <h2>方案五 · 陶土 <small>TERRACOTTA EARTH</small></h2>
+      <div class="pos">最沉稳的一套：FitoTrack 骑行棕做骨架、陶土做主色，暖沙底。唯一一套主色深到可以直接压白字的方案——「家里那只旧陶杯」的踏实感。</div>
+    </div>
+    <div class="src">取色来源：<a href="https://codeberg.org/jannis/FitoTrack/blame/commit/0ed68f487bdc2fa750051c8d5b48e7d7e3a9acf5/app/src/main/res/values/colors.xml" target="_blank">FitoTrack colors.xml</a>（colorPrimaryBicycling <code>#523220</code> / BicyclingLighter <code>#77492F</code>）+ Endurain 暖中性。陶土主色 <code>#B4552D</code> 为 <code>#77492F</code> 提亮加红的衍生值（白字 4.9:1）。</div>
+  </div>
+  <div class="scheme-body">
+    <div>
+      <div class="swatches">
+        <div class="sw"><i style="background:#E5DCCE"></i><b>bg_outer</b><span>#E5DCCE</span></div>
+        <div class="sw"><i style="background:#F2EBE1"></i><b>bg_base</b><span>#F2EBE1</span></div>
+        <div class="sw"><i style="background:#FBF9F3;border-bottom:1px solid #E0D5C0"></i><b>bg_card</b><span>#FBF9F3</span></div>
+        <div class="sw"><i style="background:#EBE2D3"></i><b>bg_chip</b><span>#EBE2D3</span></div>
+        <div class="sw"><i style="background:#B4552D"></i><b>primary</b><span>#B4552D</span></div>
+        <div class="sw"><i style="background:#A04420"></i><b>deep</b><span>#A04420</span></div>
+        <div class="sw"><i style="background:#77492F"></i><b>secondary</b><span>#77492F</span></div>
+        <div class="sw"><i style="background:#FFF8F0"></i><b>on_accent</b><span>#FFF8F0</span></div>
+        <div class="sw"><i style="background:#2E2318"></i><b>text</b><span>#2E2318</span></div>
+        <div class="sw"><i style="background:#6F5F4A"></i><b>muted</b><span>#6F5F4A</span></div>
+        <div class="sw"><i style="background:#8F7D64"></i><b>dim</b><span>#8F7D64</span></div>
+        <div class="sw"><i style="background:#E0D5C0"></i><b>stroke</b><span>#E0D5C0</span></div>
+      </div>
+
+      <div class="phone">
+        <div class="notch"><i></i></div>
+        <div class="p-pad">
+          <div class="p-head">
+            <div class="brand">
+              <div class="logo-tile"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="#FFF8F0" stroke-width="2.4"/><path d="M12 8.5 L12 3.5" stroke="#FFF8F0" stroke-width="2.2" stroke-linecap="round"/></svg></div>
+              <div><div class="eyebrow">Run Club</div><div class="date">10月27日 · 周二</div></div>
+            </div>
+            <div class="right">
+              <div class="wx">☀ 18°C</div>
+              <div class="avatar">K<i></i></div>
+            </div>
+          </div>
+
+          <div class="hero">
+            <i class="ring1"></i><i class="ring2"></i>
+            <div class="hero-tag">Morning Run</div>
+            <div class="inner">
+              <span class="pill-tag"><i></i>Ready to move</span>
+              <h1>今天，跑出<br/>你的节奏<em>。</em></h1>
+              <div class="bottom">
+                <div class="suggest">
+                  <div class="k">今日建议</div>
+                  <div class="v">出门走走 · 3.0 公里</div>
+                  <div class="d">◷ 预计 30 分钟</div>
+                </div>
+                <div class="go-btn"><span class="go">GO</span><span class="lbl">起跑</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="stats3">
+            <div class="cell"><div class="k">本周动了</div><div class="v">5<span class="u">天 / 7</span></div></div>
+            <div class="cell"><div class="k">里程</div><div class="v">23.6<span class="u">公里</span></div></div>
+            <div class="cell"><div class="k">时长</div><div class="v">2<span class="u">时</span>18<span class="u">分</span></div></div>
+          </div>
+
+          <div class="card">
+            <div class="head">
+              <div><div class="k">This Week</div><h3>本周节奏</h3></div>
+              <span class="chip-accent">已动 5 / 7 天</span>
+            </div>
+            <div class="bars">
+              <div class="b on"><i style="height:26px"></i><span>一</span></div>
+              <div class="b on"><i style="height:46px"></i><span>二</span></div>
+              <div class="b on"><i style="height:34px"></i><span>三</span></div>
+              <div class="b on"><i style="height:62px"></i><span>四</span></div>
+              <div class="b on"><i style="height:44px"></i><span>五</span></div>
+              <div class="b off"><i style="height:10px"></i><span>六</span></div>
+              <div class="b off"><i style="height:16px"></i><span>日</span></div>
+            </div>
+            <div class="progress"><i></i></div>
+            <div class="prog-note"><span>已动 5 天，共 7 天</span><span>每次完成就是满分</span></div>
+          </div>
+
+          <div class="card">
+            <div class="head"><div><div class="k">Last Run</div><h3>上次跑步</h3></div><a class="link" href="#">全部记录 ›</a></div>
+            <div class="lastrun" style="margin-top:10px">
+              <div class="track-thumb"><svg viewBox="0 0 76 76"><rect width="76" height="76" fill="#F1EBDD"/><path d="M-4 20 L82 14" stroke="#FFFFFF" stroke-width="8"/><path d="M-4 61 L82 48" stroke="#DDD3BE" stroke-width="5"/><path d="M18 -4 L25 82" stroke="#FFFFFF" stroke-width="7"/><path d="M56 -4 L48 82" stroke="#FFFFFF" stroke-width="6"/><path d="M7 65 C18 51 19 35 31 32 C43 28 48 19 65 18" fill="none" stroke="#A04420" stroke-linecap="round" stroke-width="4"/><circle cx="7" cy="65" fill="#B4552D" r="4" stroke="#F2EBE1" stroke-width="2"/></svg></div>
+              <div class="info">
+                <div class="t">晨跑 · 滨江绿道 <span class="tag">常跑</span></div>
+                <div class="m">4.2 公里 · 每公里约 6 分 12 秒</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="btn-row"><div class="btn primary">开始跑步</div><div class="btn ghost">查看记录</div></div>
+
+          <div class="dialog-demo">
+            <div class="dialog-card">
+              <div class="t">删除这条记录？</div>
+              <div class="b">记录删除后无法找回，轨迹也会一起删除。</div>
+              <div class="btns"><div class="btn ghost">取消</div><div class="btn primary">删除</div></div>
+            </div>
+          </div>
+          <div class="p-note">唯一一套主色压白字的方案（其余四案用深墨字）</div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="tbl-title">落地映射表（令牌名 = 现有 colors.xml）</div>
+      <table>
+        <tr><th>令牌（现名）</th><th>现值</th><th>新值</th><th>说明</th></tr>
+        <tr><td>bg_outer</td><td class="old"><span class="hex">#050705</span></td><td class="new"><span class="swatch" style="background:#E5DCCE"></span><span class="hex">#E5DCCE</span></td><td>页面最底 / 状态栏</td></tr>
+        <tr><td>bg_base</td><td class="old"><span class="hex">#080B08</span></td><td class="new"><span class="swatch" style="background:#F2EBE1"></span><span class="hex">#F2EBE1</span></td><td>暖沙底</td></tr>
+        <tr><td>bg_card / bg_card_alt</td><td class="old"><span class="hex">#111611 / #121712</span></td><td class="new"><span class="hex">#FBF9F3 / #F8F4EB</span></td><td>卡片</td></tr>
+        <tr><td>bg_chip · modal_bg</td><td class="old"><span class="hex">#151B15</span></td><td class="new"><span class="hex">#EBE2D3 · 弹层卡改 #FFFFFF</span></td><td>chip / 提示卡</td></tr>
+        <tr><td>accent_lime</td><td class="old"><span class="hex">#D9FF43</span></td><td class="new"><span class="swatch" style="background:#B4552D"></span><span class="hex">#B4552D</span></td><td>主色：陶土（白字 4.9:1）</td></tr>
+        <tr><td>accent_orange</td><td class="old"><span class="hex">#FF5C35</span></td><td class="new"><span class="swatch" style="background:#77492F"></span><span class="hex">#77492F</span></td><td>次色：FitoTrack 骑行棕</td></tr>
+        <tr><td><b>新增</b> accent_deep</td><td class="old">—</td><td class="new"><span class="swatch" style="background:#A04420"></span><span class="hex">#A04420</span></td><td>链接 / 进度 / 图表强调</td></tr>
+        <tr><td>orange_light / orange_soft</td><td class="old"><span class="hex">#FF8465 / #FF7E5C</span></td><td class="new"><span class="hex">#D0784E / #E8A87C</span></td><td>陶土亮阶 / GO 亮字</td></tr>
+        <tr><td>text_primary</td><td class="old"><span class="hex">#FFFFFF</span></td><td class="new"><span class="swatch" style="background:#2E2318"></span><span class="hex">#2E2318</span></td><td>暖墨正文</td></tr>
+        <tr><td>text_muted</td><td class="old"><span class="hex">#8C978C</span></td><td class="new"><span class="hex">#6F5F4A</span></td><td>次要文字</td></tr>
+        <tr><td>text_dim / dim2</td><td class="old"><span class="hex">#6F7A6F / #737E73</span></td><td class="new"><span class="hex">#8F7D64 / #98866C</span></td><td>眉题标签</td></tr>
+        <tr><td>text_soft / soft2</td><td class="old"><span class="hex">#C5CEC5 / #AAB4AA</span></td><td class="new"><span class="hex">#4F4433 / #5E5040</span></td><td>深灰反转</td></tr>
+        <tr><td>stroke_subtle / divider</td><td class="old"><span class="hex">#1E261E / #1A211A</span></td><td class="new"><span class="hex">#E0D5C0 / #E8DCC7</span></td><td>描边 / 分隔线</td></tr>
+        <tr><td>white_04…95</td><td class="old"><span class="hex">白色透明度阶梯</span></td><td class="new"><span class="hex">#2E2318 @ 4…60%</span></td><td>反转</td></tr>
+        <tr><td>lime_06…30 / orange_15…20</td><td class="old"><span class="hex">主/次色透明度</span></td><td class="new"><span class="hex">#B4552D / #77492F 同透明度</span></td><td>tint、chip、轨道</td></tr>
+        <tr><td>ink_06…60 · ink_orange</td><td class="old"><span class="hex">#080B08 透明度</span></td><td class="new"><span class="hex">#FFF8F0 透明度（色块改压白字）</span></td><td>色块文字反转</td></tr>
+        <tr><td>scrim_dark / scrim_modal</td><td class="old"><span class="hex">#E60B0F0B / #B3050705</span></td><td class="new"><span class="hex">#6B2E2318 / #B32E2318</span></td><td>暖黑遮罩</td></tr>
+        <tr><td>report_hero_bg · footer_bg</td><td class="old"><span class="hex">#141A14 / #0A0E0A</span></td><td class="new"><span class="hex">#EFE9DE / #EAE3D3</span></td><td>报告主卡 / 底栏</td></tr>
+        <tr><td>bg_card_month · ink_month 系</td><td class="old"><span class="hex">#1A1410 + 深墨字</span></td><td class="new"><span class="hex">#E9D5C4（primary tint）+ #FFF8F0 字</span></td><td>月度卡 → 陶土深卡压白字</td></tr>
+        <tr><td>legend_gray · text_olive 系</td><td class="old"><span class="hex">#5B675B / #94A163 等</span></td><td class="new"><span class="hex">#8F7D64 / #A04420 等</span></td><td>暖调灰</td></tr>
+        <tr><td>map_road_text 等</td><td class="old"><span class="hex">#7D897A 等</span></td><td class="new"><span class="hex">#8F7D64 / #7C8455 / #6F94A6</span></td><td>手绘地图注记</td></tr>
+        <tr><td>sunward_ink / sunward_halo</td><td class="old"><span class="hex">#1C1310 / #29FF8A3C</span></td><td class="new"><span class="hex">保留不变</span></td><td>品牌色不动</td></tr>
+      </table>
+
+      <div class="tbl-title">对比度实测</div>
+      <table>
+        <tr><th>配对</th><th>比值</th><th>判定</th></tr>
+        <tr><td>正文 #2E2318 / 底 #F2EBE1</td><td>13.0 : 1</td><td><span class="pill aa">AAA</span></td></tr>
+        <tr><td>次要 #6F5F4A / 卡片 #FBF9F3</td><td>5.9 : 1</td><td><span class="pill aa">AAA</span></td></tr>
+        <tr><td>白字 #FFF8F0 / 陶土 #B4552D（主色块）</td><td>4.9 : 1</td><td><span class="pill aa">AA</span></td></tr>
+        <tr><td>链接/进度 #A04420 / #F2EBE1</td><td>5.3 : 1</td><td><span class="pill aa">AAA</span></td></tr>
+        <tr><td>眉题 #8F7D64 / #FBF9F3</td><td>3.8 : 1</td><td><span class="pill aa">AA（11sp 加粗）</span></td></tr>
+        <tr><td>GO 亮字 #E8A87C / 深墨钮 #2E2318</td><td>7.5 : 1</td><td><span class="pill aa">AAA</span></td></tr>
+      </table>
+
+      <div class="fit">
+        <h4>与产品理念的贴合</h4>
+        <ul>
+          <li>陶土 + 大地棕 = 「田埂和跑鞋的泥」——最不像「健身 App」的一套，最像「过日子」。</li>
+          <li>主色饱和度全案最低：长时间盯报告页柱状图最不累眼。</li>
+          <li>色块压白字的形制与陶土质感互衬，视觉「硬朗」不减。</li>
+        </ul>
+        <h4 style="margin-top:10px">自绘控件构成三色（慢走 / 常跑 / 远足）</h4>
+        <ul><li>#D0784E → #B4552D → #77492F</li></ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 附录 A · 暖色深底对照 ============ -->
+<div class="appendix" id="dark-appendix">
+  <h2>附录 A · 同族暖色的深底对照（不占用五案名额）</h2>
+  <div class="lead">如果落地前想再对比一次「保留深色」的感觉：同一暖家族（朝阳金）反转到深底的样子。图标底色 #1C1310 直接做全局底，金橙从「渐变末端」提到主位。</div>
+  <div class="dark-strip" style="margin-top:16px">
+    <div class="phone" style="width:290px">
+      <div class="notch"><i></i></div>
+      <div class="p-pad">
+        <div class="p-head">
+          <div class="brand">
+            <div class="logo-tile"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="#1C1310" stroke-width="2.4"/><path d="M12 8.5 L12 3.5" stroke="#1C1310" stroke-width="2.2" stroke-linecap="round"/></svg></div>
+            <div><div class="eyebrow">Run Club</div><div class="date">10月27日 · 周二</div></div>
+          </div>
+          <div class="right"><div class="wx">☀ 18°C</div><div class="avatar">K<i></i></div></div>
+        </div>
+        <div class="hero">
+          <i class="ring1"></i><i class="ring2"></i>
+          <div class="inner">
+            <span class="pill-tag"><i></i>Ready to move</span>
+            <h1 style="font-size:26px">今天，跑出<br/>你的节奏<em>。</em></h1>
+            <div class="bottom">
+              <div class="suggest">
+                <div class="k">今日建议</div>
+                <div class="v" style="font-size:14px">出门走走 · 3.0 公里</div>
+              </div>
+              <div class="go-btn" style="width:86px;height:86px"><span class="go" style="font-size:25px">GO</span><span class="lbl">起跑</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="head"><div><div class="k">This Week</div><h3>本周节奏</h3></div><span class="chip-accent">已动 5 / 7 天</span></div>
+          <div class="bars">
+            <div class="b on"><i style="height:24px"></i><span>一</span></div>
+            <div class="b on"><i style="height:44px"></i><span>二</span></div>
+            <div class="b on"><i style="height:32px"></i><span>三</span></div>
+            <div class="b on"><i style="height:60px"></i><span>四</span></div>
+            <div class="b on"><i style="height:42px"></i><span>五</span></div>
+            <div class="b off"><i style="height:10px"></i><span>六</span></div>
+            <div class="b off"><i style="height:16px"></i><span>日</span></div>
+          </div>
+          <div class="progress"><i></i></div>
+          <div class="prog-note"><span>已动 5 天，共 7 天</span><span>每次完成就是满分</span></div>
+        </div>
+      </div>
+    </div>
+    <div style="flex:1;min-width:260px">
+      <div class="swatches">
+        <div class="sw"><i style="background:#1C1310"></i><b>bg_base</b><span>#1C1310</span></div>
+        <div class="sw"><i style="background:#262019"></i><b>bg_card</b><span>#262019</span></div>
+        <div class="sw"><i style="background:#FFB65C"></i><b>primary</b><span>#FFB65C</span></div>
+        <div class="sw"><i style="background:#F0802C"></i><b>secondary</b><span>#F0802C</span></div>
+        <div class="sw"><i style="background:#E8502F"></i><b>accent</b><span>#E8502F</span></div>
+        <div class="sw"><i style="background:#FFF6E8"></i><b>text</b><span>#FFF6E8</span></div>
+        <div class="sw"><i style="background:#C9B49A"></i><b>muted</b><span>#C9B49A</span></div>
+      </div>
+      <table>
+        <tr><th>配对</th><th>比值</th><th>判定</th></tr>
+        <tr><td>金 #FFB65C / 暖棕黑 #1C1310</td><td>10.5 : 1</td><td><span class="pill aa">AAA</span></td></tr>
+        <tr><td>正文 #FFF6E8 / #1C1310</td><td>15.0 : 1</td><td><span class="pill aa">AAA</span></td></tr>
+        <tr><td>墨字 #1C1310 / 金底 #FFB65C（GO / 主按钮）</td><td>10.4 : 1</td><td><span class="pill aa">AAA</span></td></tr>
+      </table>
+      <p style="margin-top:10px;font-size:12px;color:var(--page-muted)">深底方案对现有架构改动最小（仍是唯一深色主题，只换色值）；浅色方案则是本次主推方向——取舍见附录 B。</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 附录 B · 落地影响评估 ============ -->
+<div class="appendix" id="impact">
+  <h2>附录 B · 「改浅色底」对项目的影响评估</h2>
+  <div class="lead">回答本次的先行问题：改动大不大、会不会毁坏项目。结论：<b>工程量中等、完全可控；数据层零接触，「毁坏项目」的可能性约为零</b>（git 分支可回滚，所有改动集中在视觉层）。</div>
+
+  <h3>要动什么（按影响从大到小）</h3>
+  <ol>
+    <li><b>colors.xml 全量重映射（1 个文件，115 行 / 约 110 个令牌）</b>：现有结构是集中式设计令牌，全部通过名字引用——这是本项目最好的消息，浅色化主要就是重写这一份文件。其中 <code>white_04…95</code> 的白色透明度阶梯（深底专用）需整体反转为暖墨透明度；<code>lime_XX / orange_XX</code> alpha 梯度换新主色即可。</li>
+    <li><b>Kotlin 里 53 处硬编码色值（7 个文件）</b>：自绘 Canvas 控件没有走资源令牌，逐处改：TrendChartView.kt（柱 / 线 / 点 / 气泡，14 处）、TrackCanvasView.kt（轨迹 / 起终点，6 处）、TrackThumbView.kt（纸底 / 轨迹，7 处）、CityMapView.kt（手绘地图 9 常量 + 7 个注记色——它本来就是浅色纸底 #E9EEE4，浅主题反而更统一）、PaceCurveView.kt（4 处）、WeekBarsView.kt（1 处）、ReportBuilder.kt:294-317（运动构成三色，建议顺势换成各案的「同族三阶」）。建议借机把这些 <code>Color.parseColor("#…")</code> 改为引用 colors.xml 令牌，一次还清技术债。</li>
+    <li><b>themes.xml（15 行）</b>：parent 从 <code>Theme.Material3.Dark.NoActionBar</code> 换 <code>Light</code>，<code>android:windowLightStatusBar</code> 改 true（浅底配深色图标），状态栏 / 导航栏色换浅色。仍是「全局唯一主题、不随系统切换」，架构不变。</li>
+    <li><b>drawable 层</b>：<code>bg_pill_lime</code> 等内嵌荧光绿的背景 drawable 换新主色版本；scrim / 遮罩色换暖黑。</li>
+    <li><b>文档同步</b>：产品理念 §六「视觉基调」（深色 + 荧光绿 → 暖色浅底）、README「名称与图标」的品牌色表述、design/prototype 视觉基线说明。</li>
+  </ol>
+
+  <h3>完全不碰什么（= 毁坏风险为零的部分）</h3>
+  <ul>
+    <li>数据层：SQLite、RunRepository、ReportBuilder 的统计口径——一行不动，家人的跑步记录不受任何影响。</li>
+    <li>算法红线：坐标系（WGS-84 / GCJ-02）、EMA 距离平滑、状态机、前台服务类型——全部与颜色无关。</li>
+    <li>品牌资产：启动图标、首页 logo（朝阳金）保持不变，浅底方案与它是同一色族。</li>
+  </ul>
+
+  <h3>真实的风险在哪里（都有对策）</h3>
+  <ul>
+    <li><b>对比度回归</b>：深底方案里「白字怎么都够对比」，浅底不行——本文件每案都给出实测对比度表，落地时按表验收，全站正文 ≥4.5:1。</li>
+    <li><b>漏改的硬编码色</b>：grep 只有 53 处但分散在 7 个文件，靠「逐页模拟器走查」兜底：GO→暂停→继续→结束→成绩页、记录页筛选与展开、报告周 / 月 / 年切换、强杀恢复提示。</li>
+    <li><b>深浅判断惯性</b>：白色透明度阶梯在浅底会「消失」，需按新令牌整体替换，不能只改主色。</li>
+    <li><b>回滚成本</b>：单独分支（如 <code>feat/light-theme-warm</code>）一次提交完成主体，出问题 revert 即回到现状，不污染 main。</li>
+  </ul>
+
+  <h3>建议的落地顺序（方案确认后执行，本次不实施）</h3>
+  <ol>
+    <li>分支 <code>feat/light-theme-warm</code>，重写 colors.xml（按选定方案的映射表）。</li>
+    <li>themes.xml 换 Light parent + 状态栏设置；新增 / 替换相关 drawable。</li>
+    <li>7 个 Kotlin 文件的硬编码色改为资源引用（顺手还债，不改逻辑）。</li>
+    <li><code>gradlew testLocalDebugUnitTest</code>（纯逻辑 59 个测试应全绿）+ <code>assembleLocalDebug</code> / <code>assembleAmapDebug</code>。</li>
+    <li>模拟器 local 变体逐页走查 + 截图入 <code>docs/screenshots/</code>；amap 变体真机确认。</li>
+    <li>同步产品理念 §六、README，验收报告补记录。</li>
+  </ol>
+
+  <p style="margin-top:14px;color:var(--page-muted);font-size:12px">注：以上文件行号与统计（115 行 colors.xml、53 处硬编码）均为 2026-10-27 对当前 main 工作区的实测值。</p>
+</div>
+
+<footer>
+  逐日 · SUNWARD 暖色主题五案 —— 设计探索稿（浅色暖底）。本文件为唯一交付物：未改动任何 App 代码、资源与文档；方案经确认后按附录 B 步骤另行实施。<br/>
+  开源取色来源：FitoTrack（GPL）· RunnerUp（GPL）· Endurain（AGPL）；对比度按 WCAG 2.x 相对亮度公式计算。生成于 2026-10-27。
+</footer>
+
+</div>
+</body>
+</html>

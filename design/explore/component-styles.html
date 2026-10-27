@@ -1,0 +1,1515 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>逐日 SUNWARD · 组件样式可视化（方案三 · 蜜琥珀）</title>
+<style>
+/* ============ 方案三 · 蜜琥珀 HONEY AMBER 设计令牌 ============ */
+:root{
+  --bg-outer:#E9E6DC; --bg-base:#F1EFE8; --bg-card:#FFFFFF; --bg-card-alt:#F7F5EF;
+  --bg-chip:#EAE6DA; --modal-bg:#FFFFFF;
+  --primary:#EF9F27; --primary-soft:#FFC260; --primary-deep:#8A5A00;
+  --secondary:#854F0B; --track:#B45309;
+  --text:#2C2C2A; --soft:#4A473F; --muted:#6E6A61; --dim:#8D897E; --faint:#B9B4A8;
+  --stroke:#E3DFD2; --divider:#E9E5D9;
+  --ink:#2C2C2A; --cream:#F5F2E9;
+  --paper:#F0EEE3; --month-card:#F8EAD1; --hero-card:#EDEBE1; --footer-bg:#E8E5DA;
+  --scrim:rgba(44,44,42,.42); --scrim-modal:rgba(44,44,42,.70);
+  /* 周节奏 · 暖调和谐七色（红橙黄绿青蓝紫，统一饱和度/明度，微暖） */
+  --w1:#CB5A4E; --w2:#DF8A3E; --w3:#E0B23F; --w4:#8CA84F; --w5:#5EA79E; --w6:#5E80B8; --w7:#9070A6;
+  --today-bg:rgba(239,159,39,.10);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"PingFang SC","HarmonyOS Sans SC","Microsoft YaHei",-apple-system,"Segoe UI",sans-serif;
+  background:var(--bg-outer); color:var(--text); font-size:14px; line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1340px;margin:0 auto;padding:0 24px}
+.ic{flex:none;display:block}
+
+/* ============ 页头 ============ */
+.page-head{background:var(--ink);color:var(--cream);padding:44px 0 38px;position:relative;overflow:hidden}
+.page-head .ring{position:absolute;border-radius:50%;border:1.5px solid rgba(239,159,39,.25)}
+.page-head .ring.r1{width:340px;height:340px;right:-90px;top:-140px}
+.page-head .ring.r2{width:220px;height:220px;right:60px;top:-40px;border-color:rgba(239,159,39,.16)}
+.page-head .eyebrow{font-size:10px;letter-spacing:.32em;color:var(--primary);font-weight:800;text-transform:uppercase}
+.page-head h1{font-size:34px;font-weight:900;letter-spacing:-.04em;margin:8px 0 6px}
+.page-head h1 em{font-style:normal;color:var(--primary)}
+.page-head .sub{font-size:13px;color:#B9B4A8;max-width:760px}
+.head-badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+.hbadge{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;padding:5px 12px;border-radius:999px;background:rgba(239,159,39,.14);color:var(--primary)}
+.hbadge.plain{background:rgba(245,242,233,.08);color:#D8D3C6}
+
+/* ============ 目录导航 ============ */
+.toc{position:sticky;top:0;z-index:50;background:rgba(241,239,232,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--stroke)}
+.toc .wrap{display:flex;gap:8px;padding-top:10px;padding-bottom:10px;overflow-x:auto}
+.toc a{flex:none;font-size:12px;font-weight:700;color:var(--muted);text-decoration:none;padding:6px 14px;border-radius:999px;border:1px solid transparent}
+.toc a:hover{color:var(--ink);background:var(--bg-chip)}
+.toc a b{color:var(--primary-deep);font-weight:800;margin-right:4px}
+
+/* ============ 章节卡片 ============ */
+section.card{background:var(--bg-card);border:1px solid var(--stroke);border-radius:24px;padding:30px;margin:24px 0;box-shadow:0 8px 28px rgba(44,44,42,.06)}
+.sec-head{display:flex;align-items:baseline;gap:12px;margin-bottom:6px}
+.sec-head .no{font-size:11px;font-weight:900;color:var(--primary-deep);letter-spacing:.14em}
+.sec-head h2{font-size:21px;font-weight:900;letter-spacing:-.02em}
+.sec-sub{font-size:12px;color:var(--muted);margin-bottom:20px;max-width:900px}
+h3.grp{font-size:12px;font-weight:800;color:var(--soft);letter-spacing:.1em;margin:22px 0 10px;display:flex;align-items:center;gap:8px}
+h3.grp::after{content:"";flex:1;height:1px;background:var(--divider)}
+.note{font-size:11px;color:var(--dim);margin-top:10px}
+.callout{border-radius:14px;padding:12px 16px;font-size:12px;line-height:1.7}
+.callout.amber{background:rgba(239,159,39,.10);color:var(--soft);border:1px solid rgba(239,159,39,.3)}
+.callout.amber b{color:var(--primary-deep)}
+
+/* ============ 色板 ============ */
+.swgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:10px}
+.sw{border:1px solid var(--stroke);border-radius:14px;overflow:hidden;background:var(--bg-card)}
+.sw .chip{height:54px;border-bottom:1px solid rgba(44,44,42,.06)}
+.sw .meta{padding:8px 10px}
+.sw .name{font-size:10px;font-weight:800;color:var(--soft);font-family:Consolas,monospace}
+.sw .hex{font-size:11px;font-weight:700;color:var(--ink);font-family:Consolas,monospace;margin-top:1px}
+.sw .role{font-size:10px;color:var(--dim);margin-top:2px}
+
+/* ============ 表格 ============ */
+table.spec{width:100%;border-collapse:collapse;font-size:12px}
+table.spec th{background:var(--bg-card-alt);color:var(--muted);font-size:10px;font-weight:800;letter-spacing:.08em;text-align:left;padding:8px 12px;border-bottom:1px solid var(--stroke)}
+table.spec td{padding:8px 12px;border-bottom:1px solid var(--divider);vertical-align:middle;color:var(--soft)}
+table.spec tr:last-child td{border-bottom:none}
+table.spec code{font-family:Consolas,monospace;font-size:11px;background:var(--bg-card-alt);border:1px solid var(--divider);border-radius:5px;padding:1px 5px;color:var(--ink)}
+.dot{display:inline-block;width:14px;height:14px;border-radius:5px;vertical-align:-2px;margin-right:6px;border:1px solid rgba(44,44,42,.12)}
+
+/* ============ 周节奏 · 交互区 ============ */
+.week-layout{display:flex;gap:26px;flex-wrap:wrap;align-items:flex-start}
+.week-stage{flex:none;width:400px}
+.toolbar{background:var(--bg-card-alt);border:1px solid var(--stroke);border-radius:16px;padding:12px 14px;margin-bottom:14px}
+.toolbar .row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.toolbar .sys{font-size:11px;font-weight:700;color:var(--muted)}
+.toolbar .sys b{color:var(--primary-deep)}
+.daybtn{border:1px solid var(--stroke);background:var(--bg-card);color:var(--muted);font-size:11px;font-weight:700;border-radius:999px;padding:5px 11px;cursor:pointer;font-family:inherit}
+.daybtn:hover{border-color:var(--primary);color:var(--ink)}
+.daybtn.on{background:var(--ink);border-color:var(--ink);color:var(--primary)}
+.resetbtn{margin-left:auto;border:none;background:rgba(239,159,39,.14);color:var(--primary-deep);font-size:11px;font-weight:800;border-radius:999px;padding:6px 12px;cursor:pointer;font-family:inherit}
+
+/* 周节奏卡本体（大展示与手机内共用） */
+.weekcard{background:var(--bg-card);border:1px solid var(--divider);border-radius:28px;padding:20px 18px 16px;box-shadow:0 14px 34px rgba(44,44,42,.10)}
+.weekcard .wc-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px}
+.weekcard .eyebrow{font-size:9px;letter-spacing:.26em;font-weight:800;color:var(--dim);text-transform:uppercase}
+.weekcard .title{font-size:18px;font-weight:900;letter-spacing:-.02em;color:var(--ink);margin-top:2px}
+.chip{display:inline-flex;align-items:center;gap:5px;border-radius:999px;font-size:10px;font-weight:800;padding:4px 11px}
+.chip-accent{background:rgba(239,159,39,.14);color:var(--primary-deep)}
+.chip-solid{background:var(--primary);color:var(--ink)}
+.chip-glass{background:var(--bg-chip);color:var(--muted);border:1px solid var(--stroke)}
+.chip-ink{background:var(--ink);color:var(--primary)}
+.chip-live{background:rgba(239,159,39,.14);color:var(--track)}
+.wk{display:flex;justify-content:center;margin-top:4px}
+.wk-col{display:flex;flex-direction:column;align-items:center;gap:5px;border-radius:12px;padding:3px 0 7px;flex:none}
+.wk-col.today{background:var(--today-bg)}
+.wk-chip-slot{height:17px;display:flex;align-items:center}
+.wk-chip{font-size:9px;font-weight:800;color:var(--ink);background:var(--primary);border-radius:999px;padding:2px 8px;white-space:nowrap;box-shadow:0 2px 6px rgba(239,159,39,.4)}
+.wk-bars{display:flex;align-items:flex-end;justify-content:center}
+.wk-bar{border-radius:0;box-shadow:0 2px 6px rgba(44,44,42,.14)}
+.wk-label{font-size:11px;font-weight:700;color:var(--muted);line-height:1}
+.wk-col.today .wk-label{color:var(--primary-deep);font-weight:900}
+.wk-date{font-size:9px;font-weight:700;color:var(--dim);width:18px;height:18px;display:flex;align-items:center;justify-content:center;border-radius:50%;line-height:1}
+.wk-col.today .wk-date{background:var(--primary);color:var(--ink);font-weight:900;box-shadow:0 0 0 3px rgba(239,159,39,.25)}
+.wk-col.future .wk-label,.wk-col.future .wk-date{color:var(--faint)}
+.wk-progress{margin-top:14px}
+.wk-progress .bar{height:5px;border-radius:999px;background:var(--bg-chip);overflow:hidden}
+.wk-progress .fill{height:100%;border-radius:999px;background:var(--primary-deep)}
+.wk-progress .cap{display:flex;justify-content:space-between;font-size:9px;font-weight:700;color:var(--dim);margin-top:5px}
+.wk-foot{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-top:10px;padding-top:10px;border-top:1px solid var(--divider)}
+.wk-foot .l{font-size:10px;font-weight:700;color:var(--muted)}
+.wk-foot .r{font-size:10px;font-weight:800;color:var(--primary-deep)}
+.week-spec{flex:1;min-width:340px}
+
+/* ============ 基础组件 ============ */
+.demo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:14px}
+.tile{border:1px solid var(--stroke);border-radius:18px;padding:16px;background:var(--bg-card)}
+.tile h4{font-size:10px;font-weight:800;color:var(--dim);letter-spacing:.14em;margin-bottom:14px;text-transform:uppercase}
+.tile .stack{display:flex;flex-direction:column;gap:10px;align-items:flex-start}
+.tile .rowline{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;border-radius:999px;font-weight:800;cursor:pointer;border:none;font-family:inherit;font-size:13px;height:48px;padding:0 22px;transition:transform .1s}
+.btn:active{transform:scale(.97)}
+.btn-primary{background:var(--primary);color:var(--ink)}
+.btn-ink{background:var(--ink);color:var(--cream)}
+.btn-ghost{background:var(--bg-chip);color:var(--soft);border:1px solid var(--stroke)}
+.btn-warn{background:var(--bg-chip);color:var(--track);border:1px solid var(--stroke)}
+.btn-sm{height:40px;font-size:12px;padding:0 16px}
+.icon-btn{width:40px;height:40px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--stroke);background:var(--bg-card);color:var(--soft);cursor:pointer}
+.icon-btn.tint{background:rgba(239,159,39,.12);border-color:rgba(239,159,39,.35);color:var(--primary-deep)}
+.icon-btn.solid{background:var(--bg-card);border-color:var(--stroke);color:var(--ink)}
+.icon-btn.lg{width:58px;height:58px}
+.go-demo{width:96px;height:96px;border-radius:50%;background:var(--ink);color:var(--primary);display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 0 0 7px rgba(44,44,42,.10),0 0 0 8px rgba(239,159,39,.35) inset,0 14px 30px rgba(44,44,42,.3);position:relative}
+.go-demo .go{font-size:28px;font-weight:900;font-style:italic;letter-spacing:-.02em;line-height:1}
+.go-demo .hint{font-size:8px;color:#B9B4A8;letter-spacing:.3em;margin-top:4px}
+.tag-pb{display:inline-flex;font-size:9px;font-weight:900;letter-spacing:.06em;color:var(--secondary);background:rgba(133,79,11,.12);border-radius:6px;padding:2px 7px}
+.seg{display:inline-flex;background:var(--bg-chip);border-radius:999px;padding:3px;gap:2px}
+.seg button{border:none;background:transparent;color:var(--muted);font-size:11px;font-weight:800;border-radius:999px;padding:6px 16px;cursor:pointer;font-family:inherit}
+.seg button.on{background:var(--primary);color:var(--ink);box-shadow:0 2px 6px rgba(44,44,42,.15)}
+.tabs-demo{display:flex;gap:22px}
+.tabs-demo .t{font-size:13px;font-weight:800;color:var(--dim);padding-bottom:8px;border-bottom:2.5px solid transparent;cursor:pointer}
+.tabs-demo .t.on{color:var(--ink);border-bottom-color:var(--primary)}
+.progress-demo{width:100%}
+.progress-demo .bar{height:6px;border-radius:999px;background:var(--bg-chip);overflow:hidden}
+.progress-demo .fill{height:100%;background:var(--primary-deep);border-radius:999px}
+.progress-demo .lbl{display:flex;justify-content:space-between;font-size:10px;color:var(--muted);font-weight:700;margin-bottom:6px}
+.stat3{display:flex;width:100%;background:var(--bg-card);border:1px solid var(--divider);border-radius:20px;overflow:hidden}
+.stat3 .c{flex:1;padding:14px 12px;text-align:center}
+.stat3 .c+.c{border-left:1px solid var(--divider)}
+.stat3 .lbl{font-size:9px;font-weight:700;color:var(--muted);letter-spacing:.06em}
+.stat3 .val{font-size:20px;font-weight:900;color:var(--ink);letter-spacing:-.03em;margin-top:2px}
+.stat3 .unit{font-size:9px;font-weight:800;color:var(--primary-deep)}
+.type-row{display:flex;flex-direction:column;gap:8px}
+.type-row .t{display:flex;align-items:baseline;gap:12px}
+.type-row .spec{flex:none;width:170px;font-size:10px;color:var(--dim);font-family:Consolas,monospace}
+
+/* 底部导航 / 顶栏 demo */
+.nav-demo{display:flex;gap:10px;background:var(--footer-bg);border-radius:20px;padding:10px 14px;width:100%}
+.nav-demo .item{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;height:44px;border-radius:14px;font-size:12px;font-weight:800;color:var(--dim)}
+.nav-demo .item.on{background:var(--primary);color:var(--ink)}
+.header-demo{display:flex;align-items:center;gap:12px;width:100%}
+.logo-tile{width:40px;height:40px;border-radius:14px;background:var(--primary);display:flex;align-items:center;justify-content:center;color:var(--ink);box-shadow:0 4px 10px rgba(239,159,39,.35)}
+.header-demo .who{flex:1}
+.header-demo .eyebrow{font-size:8px;letter-spacing:.26em;font-weight:800;color:var(--dim)}
+.header-demo .date{font-size:13px;font-weight:800;color:var(--ink)}
+.avatar{width:36px;height:36px;border-radius:50%;background:var(--track);color:var(--cream);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;position:relative}
+.avatar .online{position:absolute;right:-1px;bottom:-1px;width:10px;height:10px;border-radius:50%;background:var(--primary);border:2px solid var(--bg-card)}
+
+/* 弹窗 demo */
+.dialog-demo{width:100%;background:rgba(44,44,42,.55);border-radius:18px;padding:20px 16px;display:flex;justify-content:center}
+.dialog-card{width:100%;max-width:300px;background:var(--modal-bg);border-radius:26px;padding:22px;box-shadow:0 20px 50px rgba(20,20,18,.4)}
+.dialog-card .icbox{width:46px;height:46px;border-radius:16px;background:var(--primary);display:flex;align-items:center;justify-content:center;color:var(--ink)}
+.dialog-card .dt{font-size:21px;font-weight:900;letter-spacing:-.03em;color:var(--ink);margin-top:14px}
+.dialog-card .dm{font-size:11px;color:var(--muted);margin-top:7px;line-height:1.7}
+.dialog-stats{display:flex;gap:8px;margin-top:16px}
+.dialog-stats .c{flex:1;background:var(--bg-card-alt);border:1px solid var(--divider);border-radius:14px;padding:9px 6px;text-align:center}
+.dialog-stats .l{font-size:8px;font-weight:700;color:var(--dim)}
+.dialog-stats .v{font-size:13px;font-weight:900;color:var(--ink);margin-top:1px}
+.dialog-btns{display:flex;gap:8px;margin-top:16px}
+.dialog-btns .btn{flex:1;height:44px;font-size:12px;padding:0}
+.empty-demo{display:flex;flex-direction:column;align-items:center;gap:8px;padding:18px 0;width:100%}
+.empty-demo .ebox{width:52px;height:52px;border-radius:18px;background:var(--bg-chip);display:flex;align-items:center;justify-content:center;color:var(--dim)}
+.empty-demo .t{font-size:13px;font-weight:800;color:var(--soft)}
+.empty-demo .s{font-size:10px;color:var(--dim)}
+.toast-demo{width:100%;background:var(--ink);border:1px solid rgba(239,159,39,.4);border-radius:16px;padding:12px 16px;text-align:center;box-shadow:0 12px 30px rgba(20,20,18,.35)}
+.toast-demo .t{font-size:12px;font-weight:800;color:var(--primary)}
+.toast-demo .s{font-size:9px;color:#B9B4A8;margin-top:2px}
+
+/* ============ 手机整机预览 ============ */
+.screens{display:flex;gap:26px;flex-wrap:wrap;justify-content:center;align-items:flex-start}
+.screen-col{display:flex;flex-direction:column;align-items:center;gap:12px}
+.screen-col .cap{font-size:12px;font-weight:800;color:var(--soft)}
+.screen-col .cap small{display:block;font-size:10px;font-weight:600;color:var(--dim);text-align:center;margin-top:2px}
+.phone{width:411px;border-radius:46px;background:#232320;padding:8px;box-shadow:0 26px 60px rgba(35,35,32,.35);flex:none}
+.screen{width:395px;height:852px;border-radius:40px;overflow:hidden;background:var(--bg-base);display:flex;flex-direction:column;position:relative}
+.statusbar{height:36px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 24px;font-size:11px;font-weight:800;color:var(--text)}
+.statusbar .sicons{display:flex;gap:5px;align-items:center;color:var(--text)}
+.pscroll{flex:1;overflow-y:auto;scrollbar-width:none}
+.pscroll::-webkit-scrollbar{display:none}
+.pfoot{flex:none;border-top:1px solid var(--divider);background:var(--footer-bg);padding:10px 18px 14px}
+
+/* 手机内通用 */
+.p-sec{padding:0 18px;margin-bottom:14px}
+.pcard{background:var(--bg-card);border:1px solid var(--divider);border-radius:24px}
+.p-eyebrow{font-size:8px;letter-spacing:.26em;font-weight:800;color:var(--dim);text-transform:uppercase}
+.p-hrow{display:flex;align-items:center;justify-content:space-between}
+
+/* 首页 */
+.home-head{display:flex;align-items:center;gap:11px;padding:6px 18px 14px}
+.home-head .who{flex:1}
+.home-head .date{font-size:13px;font-weight:800;color:var(--ink)}
+.wchip{display:inline-flex;align-items:center;gap:5px;background:var(--bg-chip);border:1px solid var(--stroke);border-radius:999px;font-size:10px;font-weight:800;color:var(--soft);padding:4px 10px}
+.hero{margin:0 18px 14px;border-radius:30px;background:var(--primary);color:var(--ink);padding:22px 22px 26px;position:relative;overflow:hidden;box-shadow:0 16px 36px rgba(239,159,39,.35)}
+.hero .deco{position:absolute;border-radius:50%;border:1.5px solid rgba(44,44,42,.14)}
+.hero .deco.d1{width:260px;height:260px;right:-110px;top:-120px}
+.hero .deco.d2{width:180px;height:180px;right:-40px;top:-60px;border-color:rgba(44,44,42,.10)}
+.hero .vmark{position:absolute;right:20px;top:96px;writing-mode:vertical-rl;font-size:9px;letter-spacing:.32em;font-weight:800;color:rgba(44,44,42,.5)}
+.hero .ready{display:inline-flex;align-items:center;gap:7px;background:var(--ink);color:var(--primary);border-radius:999px;font-size:10px;font-weight:800;letter-spacing:.16em;padding:5px 12px}
+.hero .ready .rdot{width:6px;height:6px;border-radius:50%;background:var(--primary)}
+.hero h2{font-size:38px;font-weight:900;letter-spacing:-.07em;line-height:1.14;margin:16px 0 0;color:var(--ink)}
+.hero h2 .dot{color:var(--secondary)}
+.hero-row{display:flex;align-items:flex-end;gap:12px;margin-top:20px}
+.hero .sug{flex:1;min-width:0}
+.hero .sug .l{font-size:11px;font-weight:800;letter-spacing:.08em;color:rgba(44,44,42,.55)}
+.hero .sug .v{font-size:17px;font-weight:900;color:var(--ink);margin-top:4px;letter-spacing:-.01em}
+.hero .sug .e{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:rgba(44,44,42,.65);margin-top:4px}
+.go-btn{width:112px;height:112px;border-radius:50%;background:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;box-shadow:0 14px 34px rgba(35,35,32,.45);cursor:pointer;flex:none}
+.go-btn::before{content:"";position:absolute;inset:7px;border-radius:50%;border:1.5px solid rgba(239,159,39,.4)}
+.go-btn::after{content:"";position:absolute;inset:-14px;border-radius:50%;border:1.5px solid rgba(44,44,42,.18);animation:ping 2.4s cubic-bezier(0,0,.2,1) infinite}
+@keyframes ping{0%{transform:scale(.92);opacity:.9}70%,100%{transform:scale(1.12);opacity:0}}
+.go-btn .go{font-size:32px;font-weight:900;font-style:italic;color:var(--primary);letter-spacing:-.08em;line-height:1}
+.go-btn .hint{display:flex;align-items:center;gap:4px;font-size:9px;font-weight:700;letter-spacing:.16em;color:rgba(245,242,233,.62);margin-top:8px}
+.stats3{margin:0 18px 14px;display:flex;background:var(--bg-card);border:1px solid var(--divider);border-radius:22px;overflow:hidden}
+.stats3 .c{flex:1;padding:15px 8px;text-align:center}
+.stats3 .c+.c{border-left:1px solid var(--divider)}
+.stats3 .l{font-size:9px;font-weight:700;color:var(--muted)}
+.stats3 .v{font-size:20px;font-weight:900;letter-spacing:-.03em;color:var(--ink);margin-top:3px}
+.stats3 .u{font-size:9px;font-weight:800;color:var(--primary-deep)}
+.week-mini{margin:0 18px 14px}
+.week-mini .weekcard{border-radius:26px;padding:18px 14px 14px;box-shadow:none}
+.lastrun{margin:0 18px 14px;background:var(--bg-card);border:1px solid var(--divider);border-radius:26px;padding:16px}
+.lastrun .hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:13px}
+.lastrun .hd .t{font-size:15px;font-weight:900;color:var(--ink)}
+.lastrun .all{display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:800;color:var(--primary-deep)}
+.lr-item{display:flex;gap:13px;align-items:center}
+.lr-thumb{width:74px;height:74px;border-radius:18px;overflow:hidden;flex:none;border:1px solid var(--stroke)}
+.lr-info{flex:1;min-width:0}
+.lr-title{display:flex;align-items:center;gap:7px}
+.lr-title .t{font-size:13px;font-weight:900;color:var(--ink)}
+.lr-when{font-size:10px;color:var(--dim);margin-top:3px}
+.lr-metrics{display:flex;gap:12px;align-items:baseline;margin-top:7px}
+.lr-metrics .km{font-size:14px;font-weight:900;color:var(--primary-deep)}
+.lr-metrics .m{font-size:10px;font-weight:700;color:var(--soft)}
+
+/* 实时跑步页 */
+.live-top{position:absolute;top:44px;left:18px;right:18px;z-index:5;display:flex;align-items:center;gap:11px}
+.live-status{flex:1;display:flex;flex-direction:column;align-items:center;gap:1px}
+.live-status .row{display:flex;align-items:center;gap:7px}
+.livedot{width:8px;height:8px;border-radius:50%;background:var(--primary);box-shadow:0 0 0 3px rgba(239,159,39,.25);animation:blink 1.6s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
+.live-status .t{font-size:13px;font-weight:900;color:var(--ink)}
+.live-status .s{font-size:8px;letter-spacing:.24em;font-weight:800;color:var(--dim)}
+.map-host{position:relative;height:404px;margin-top:-36px}
+.map-host svg.citymap{width:100%;height:100%;display:block}
+.map-ovl{position:absolute;z-index:4}
+.pill{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.95);border:1px solid var(--stroke);border-radius:999px;padding:6px 12px;box-shadow:0 4px 12px rgba(44,44,42,.10)}
+.pill .t{font-size:10px;font-weight:800;color:var(--ink)}
+.pill .s{font-size:9px;color:var(--dim);padding-left:7px;border-left:1px solid var(--divider)}
+.pill-ink{background:var(--ink);border-color:var(--ink)}
+.pill-ink .t{color:var(--cream)}
+.pill-ink .s{color:#B9B4A8;border-left-color:rgba(245,242,233,.2)}
+.gps-ic{width:18px;height:18px;border-radius:50%;background:var(--primary);color:var(--ink);display:flex;align-items:center;justify-content:center}
+.locate-btn{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.95);border:1px solid var(--stroke);display:flex;align-items:center;justify-content:center;color:var(--soft);box-shadow:0 6px 16px rgba(44,44,42,.14)}
+.live-data{position:relative;z-index:4;margin:-26px 18px 0;background:var(--bg-base);border-radius:26px 26px 0 0;padding:18px 4px 0}
+.live-data .dhead{display:flex;align-items:center;gap:9px}
+.live-data .dhead .eyebrow{font-size:9px;letter-spacing:.26em;font-weight:800;color:var(--dim)}
+.bignum{font-size:48px;font-weight:900;letter-spacing:-.05em;color:var(--ink);line-height:1.05;margin-top:4px}
+.bignum .u{font-size:11px;font-weight:800;color:var(--primary-deep);letter-spacing:.1em;margin-left:6px}
+.goal-row{display:flex;align-items:center;gap:10px;margin-top:10px}
+.goal-row .l{font-size:10px;font-weight:700;color:var(--muted)}
+.goal-row .v{font-size:10px;font-weight:800;color:var(--primary-deep);margin-left:auto}
+.goalbar{flex:1;max-width:150px;height:5px;border-radius:999px;background:var(--bg-chip);overflow:hidden}
+.goalbar .f{height:100%;background:var(--primary);border-radius:999px}
+.live3{display:flex;margin-top:14px;border-top:1px solid var(--divider);border-bottom:1px solid var(--divider)}
+.live3 .c{flex:1;padding:12px 6px;text-align:center}
+.live3 .c+.c{border-left:1px solid var(--divider)}
+.live3 .l{font-size:9px;font-weight:700;color:var(--muted)}
+.live3 .v{font-size:17px;font-weight:900;color:var(--ink);letter-spacing:-.02em;margin-top:2px}
+.live3 .u{font-size:8px;font-weight:800;color:var(--primary-deep)}
+.live-ctrl{display:flex;gap:12px;align-items:center;padding:16px 18px 6px}
+.pause-col{display:flex;flex-direction:column;align-items:center;gap:4px}
+.pause-col .lbl{font-size:8px;font-weight:700;color:var(--dim)}
+.pause-btn{width:58px;height:58px;border-radius:50%;border:1px solid var(--stroke);background:var(--bg-chip);color:var(--ink);display:flex;align-items:center;justify-content:center;cursor:pointer}
+.end-btn{flex:1;height:58px;border-radius:999px;background:var(--primary);color:var(--ink);display:flex;align-items:center;justify-content:center;gap:8px;font-size:13px;font-weight:900;cursor:pointer;box-shadow:0 10px 24px rgba(239,159,39,.4)}
+.live-hint{text-align:center;font-size:9px;color:var(--dim);padding:8px 30px 16px}
+
+/* 成绩页 */
+.res-head{display:flex;align-items:center;justify-content:space-between;padding:6px 18px 12px}
+.res-head .mid{text-align:center}
+.res-head .t{font-size:14px;font-weight:900;color:var(--ink)}
+.res-head .s{font-size:8px;letter-spacing:.24em;font-weight:800;color:var(--dim)}
+.res-hero{margin:0 18px 14px;border-radius:30px;background:var(--primary);color:var(--ink);padding:22px;position:relative;overflow:hidden;box-shadow:0 16px 36px rgba(239,159,39,.35)}
+.res-hero .deco{position:absolute;border-radius:50%;border:1.5px solid rgba(44,44,42,.12);width:240px;height:240px;right:-100px;bottom:-130px}
+.res-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(44,44,42,.14);border-radius:999px;font-size:9px;font-weight:900;letter-spacing:.18em;padding:5px 12px}
+.res-hero .date{font-size:10px;font-weight:700;color:rgba(44,44,42,.65);margin-top:12px}
+.res-hero .greet{font-size:28px;font-weight:900;letter-spacing:-.04em;line-height:1.2;margin-top:5px}
+.res-hero .gsub{font-size:11px;font-weight:600;color:rgba(44,44,42,.75);margin-top:6px}
+.res-total{display:flex;align-items:flex-end;justify-content:space-between;margin-top:18px;padding-top:14px;border-top:1.5px solid rgba(44,44,42,.15)}
+.res-total .l{font-size:9px;font-weight:800;letter-spacing:.2em;color:rgba(44,44,42,.6)}
+.res-total .v{font-size:44px;font-weight:900;letter-spacing:-.05em;line-height:1}
+.res-total .u{font-size:11px;font-weight:800;margin-left:4px}
+.res-total .r{text-align:right}
+.res-total .r .k{font-size:9px;font-weight:700;color:rgba(44,44,42,.6)}
+.res-total .r .v2{font-size:15px;font-weight:900}
+.route-card{margin:0 18px 14px;background:var(--bg-card);border:1px solid var(--divider);border-radius:26px;padding:16px}
+.route-card .hd{margin-bottom:12px}
+.route-card .t{font-size:16px;font-weight:900;color:var(--ink);margin-top:2px}
+.route-map{position:relative;border-radius:20px;overflow:hidden;border:1px solid var(--stroke)}
+.route-map .ovl{position:absolute;z-index:3}
+.mini-pill{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.95);border:1px solid var(--stroke);border-radius:999px;font-size:9px;font-weight:800;color:var(--ink);padding:4px 10px}
+.legend-pill{display:inline-flex;align-items:center;gap:8px;background:var(--ink);border-radius:999px;font-size:8px;font-weight:800;color:var(--cream);padding:5px 11px}
+.legend-pill .ld{display:inline-flex;align-items:center;gap:4px}
+.legend-pill .pt{width:6px;height:6px;border-radius:50%}
+.res-cards2{display:flex;gap:10px;margin:0 18px 14px}
+.kcal-card{flex:1;background:rgba(239,159,39,.10);border:1px solid rgba(239,159,39,.3);border-radius:22px;padding:15px}
+.kcal-card .eyebrow{font-size:8px;letter-spacing:.22em;font-weight:900;color:var(--track)}
+.kcal-card .v{font-size:28px;font-weight:900;color:var(--ink);letter-spacing:-.03em;margin-top:6px}
+.kcal-card .u{font-size:9px;font-weight:800;color:var(--primary-deep);margin-left:3px}
+.kcal-card .s{font-size:9px;color:var(--muted);margin-top:4px}
+.pace-card{margin:0 18px 14px;background:var(--bg-card);border:1px solid var(--divider);border-radius:26px;padding:16px}
+.pace-card .hd{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
+.pace-card .t{font-size:16px;font-weight:900;color:var(--ink);margin-top:2px}
+.pace-card .avg{text-align:right}
+.pace-card .avg .l{font-size:9px;color:var(--muted);font-weight:700}
+.pace-card .avg .v{font-size:15px;font-weight:900;color:var(--primary-deep)}
+.split-row{margin-top:10px}
+.split-row .l1{display:flex;justify-content:space-between;font-size:10px}
+.split-row .n{font-weight:800;color:var(--soft)}
+.split-row .p{font-weight:900;color:var(--ink)}
+.split-row .bar{height:7px;border-radius:999px;background:var(--bg-chip);margin-top:5px;overflow:hidden}
+.split-row .f{height:100%;border-radius:999px;background:var(--primary)}
+.split-row .f.last{background:var(--track)}
+.pace-curve{margin-top:14px;background:var(--bg-card-alt);border:1px solid var(--divider);border-radius:16px;padding:10px 8px 6px}
+.tip-card{margin:12px 0 0;display:flex;gap:10px;background:rgba(239,159,39,.10);border-radius:16px;padding:12px}
+.tip-card .tico{flex:none;width:22px;height:22px;border-radius:50%;background:var(--primary);color:var(--ink);display:flex;align-items:center;justify-content:center;margin-top:1px}
+.tip-card p{font-size:10px;line-height:1.7;color:var(--soft)}
+.res-foot{display:flex;gap:10px;padding:10px 18px 16px}
+.res-foot .btn{height:50px}
+.res-foot .b1{width:112px;flex:none}
+.res-foot .b2{flex:1}
+
+/* 记录页 */
+.rec-head{padding:6px 18px 12px}
+.rec-head .brand{font-size:8px;letter-spacing:.26em;font-weight:800;color:var(--dim)}
+.rec-head .row{display:flex;align-items:flex-end;justify-content:space-between;margin-top:4px}
+.rec-head .t{font-size:24px;font-weight:900;letter-spacing:-.03em;color:var(--ink)}
+.rec-head .sub{font-size:10px;color:var(--muted);margin-top:2px}
+.streak{display:flex;align-items:baseline;gap:5px;background:var(--bg-chip);border:1px solid var(--stroke);border-radius:14px;padding:7px 12px}
+.streak .l{font-size:8px;font-weight:700;color:var(--dim)}
+.streak .v{font-size:19px;font-weight:900;color:var(--ink)}
+.streak .u{font-size:9px;font-weight:800;color:var(--primary-deep)}
+.rec-tabs{display:flex;gap:24px;padding:0 18px;border-bottom:1px solid var(--divider);margin-bottom:14px}
+.rec-tabs .t{font-size:13px;font-weight:800;color:var(--dim);padding-bottom:9px;border-bottom:2.5px solid transparent;cursor:pointer;margin-bottom:-1px}
+.rec-tabs .t.on{color:var(--ink);border-bottom-color:var(--primary)}
+.month-card{margin:0 18px 14px;background:var(--month-card);border:1px solid #EFE0C2;border-radius:26px;padding:18px;position:relative;overflow:hidden}
+.month-card .deco{position:absolute;width:180px;height:180px;border-radius:50%;border:1.5px solid rgba(180,83,9,.14);right:-70px;top:-80px}
+.month-card .hd{display:flex;justify-content:space-between;align-items:center}
+.month-card .mark{font-size:9px;font-weight:800;letter-spacing:.18em;color:var(--track)}
+.month-card .ttl{font-size:17px;font-weight:900;color:var(--ink);margin-top:8px}
+.month-big{display:flex;align-items:flex-end;gap:14px;margin-top:10px}
+.month-big .days{display:flex;align-items:baseline;gap:4px}
+.month-big .v{font-size:40px;font-weight:900;letter-spacing:-.04em;color:var(--ink);line-height:1}
+.month-big .u{font-size:12px;font-weight:800;color:var(--soft)}
+.month-big .l{font-size:9px;font-weight:700;color:var(--muted);margin-top:3px}
+.month-big .right{margin-left:auto;text-align:right}
+.month-big .km{font-size:13px;font-weight:900;color:var(--track)}
+.month-big .pct{font-size:10px;font-weight:800;color:var(--muted);margin-top:1px}
+.month-prog{height:5px;border-radius:999px;background:rgba(180,83,9,.14);margin-top:12px;overflow:hidden}
+.month-prog .f{height:100%;background:var(--track);border-radius:999px}
+.month3{display:flex;margin-top:14px;padding-top:12px;border-top:1px solid rgba(180,83,9,.16)}
+.month3 .c{flex:1;text-align:center}
+.month3 .c+.c{border-left:1px solid rgba(180,83,9,.16)}
+.month3 .v{font-size:15px;font-weight:900;color:var(--ink)}
+.month3 .l{font-size:8px;font-weight:700;color:var(--muted);margin-top:1px}
+.filters{display:flex;gap:8px;padding:0 18px;margin-bottom:12px}
+.fchip{border:1px solid var(--stroke);background:var(--bg-chip);color:var(--muted);font-size:11px;font-weight:800;border-radius:999px;padding:6px 15px;cursor:pointer;font-family:inherit}
+.fchip.on{background:var(--ink);border-color:var(--ink);color:var(--primary)}
+.hist-list{padding:0 18px;display:flex;flex-direction:column;gap:12px}
+.h-item{background:var(--bg-card);border:1px solid var(--divider);border-radius:22px;padding:13px}
+.h-top{display:flex;gap:13px;align-items:center}
+.h-thumb{width:62px;height:62px;border-radius:16px;overflow:hidden;flex:none;border:1px solid var(--stroke)}
+.h-info{flex:1;min-width:0}
+.h-title{display:flex;align-items:center;gap:7px}
+.h-title .t{font-size:13px;font-weight:900;color:var(--ink)}
+.h-when{font-size:10px;color:var(--dim);margin-top:3px}
+.h-metrics{display:flex;gap:11px;align-items:baseline;margin-top:6px}
+.h-metrics .km{font-size:13px;font-weight:900;color:var(--primary-deep)}
+.h-metrics .m{font-size:10px;font-weight:700;color:var(--soft)}
+.h-detail{margin-top:12px;padding-top:12px;border-top:1px solid var(--divider)}
+.h-detail .bigthumb{width:100%;height:150px;border-radius:16px;overflow:hidden;border:1px solid var(--stroke)}
+.del-btn{width:100%;height:42px;border-radius:999px;background:var(--bg-chip);border:1px solid var(--stroke);color:var(--track);font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:6px;margin-top:12px;cursor:pointer}
+.toreport{margin:14px 18px;display:flex;align-items:center;justify-content:center;gap:6px;height:46px;border-radius:999px;border:1px dashed var(--stroke);background:var(--bg-card-alt);color:var(--soft);font-size:12px;font-weight:800;cursor:pointer}
+/* 报告 */
+.report{padding:0 18px}
+.rep-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.rep-dist{background:var(--bg-card);border:1px solid var(--divider);border-radius:26px;padding:18px;margin-bottom:12px}
+.rep-dist .top{display:flex;align-items:center;gap:9px}
+.rep-dist .v{font-size:40px;font-weight:900;letter-spacing:-.04em;color:var(--ink);line-height:1.05;margin-top:8px}
+.rep-dist .u{font-size:11px;font-weight:800;color:var(--primary-deep);margin-left:4px}
+.delta-chip{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:800;color:var(--primary-deep);background:rgba(239,159,39,.14);border-radius:999px;padding:4px 10px;margin-left:auto}
+.rep3{display:flex;margin-top:14px;padding-top:12px;border-top:1px solid var(--divider)}
+.rep3 .c{flex:1;text-align:center}
+.rep3 .c+.c{border-left:1px solid var(--divider)}
+.rep3 .v{font-size:16px;font-weight:900;color:var(--ink)}
+.rep3 .l{font-size:8px;font-weight:700;color:var(--muted);margin-top:2px}
+.rep-prog{background:var(--bg-card);border:1px solid var(--divider);border-radius:20px;padding:14px 16px;margin-bottom:12px}
+.rep-prog .l1{display:flex;justify-content:space-between;font-size:10px;font-weight:700;color:var(--muted)}
+.rep-prog .l1 b{color:var(--primary-deep);font-weight:900}
+.rep-prog .bar{height:6px;border-radius:999px;background:var(--bg-chip);margin-top:8px;overflow:hidden}
+.rep-prog .f{height:100%;background:var(--primary-deep);border-radius:999px}
+.chart-card{background:var(--bg-card);border:1px solid var(--divider);border-radius:26px;padding:16px;margin-bottom:12px}
+.chart-card .hd{margin-bottom:6px}
+.chart-card .t{font-size:15px;font-weight:900;color:var(--ink);margin-top:2px}
+.chart-card .s{font-size:10px;color:var(--muted);margin-top:2px}
+.legend-row{display:flex;gap:14px;margin:8px 0 4px}
+.legend-row .li{display:flex;align-items:center;gap:5px;font-size:9px;font-weight:700;color:var(--muted)}
+.legend-row .sw{width:9px;height:9px;border-radius:3px}
+.legend-row .ln{width:12px;height:2.5px;border-radius:2px}
+.comp-card{background:var(--bg-card);border:1px solid var(--divider);border-radius:26px;padding:16px;margin-bottom:12px}
+.comp-bar{display:flex;height:13px;border-radius:999px;overflow:hidden;margin-top:12px}
+.comp-legend{display:flex;margin-top:11px}
+.comp-legend .c{flex:1}
+.comp-legend .row{display:flex;align-items:center;gap:5px;font-size:9px;font-weight:700;color:var(--muted)}
+.comp-legend .pt{width:8px;height:8px;border-radius:3px}
+.comp-legend .pct{font-size:13px;font-weight:900;color:var(--ink);margin-top:1px}
+.insight{background:rgba(239,159,39,.10);border:1px solid rgba(239,159,39,.28);border-radius:22px;padding:15px;margin-bottom:12px}
+.insight .hd{display:flex;align-items:center;gap:8px}
+.insight .ai{font-size:8px;font-weight:900;letter-spacing:.2em;color:var(--track)}
+.insight .t{font-size:13px;font-weight:900;color:var(--ink)}
+.insight p{font-size:10px;line-height:1.8;color:var(--soft);margin-top:7px}
+.rep-foot{text-align:center;font-size:9px;color:var(--dim);padding:4px 0 18px}
+
+/* ============ 页脚 ============ */
+.page-foot{padding:30px 0 46px;color:var(--dim);font-size:11px;text-align:center}
+.page-foot b{color:var(--muted)}
+
+/* 打印/窄屏 */
+@media (max-width:900px){ .week-stage{width:100%} }
+</style>
+</head>
+<body>
+
+<!-- ===== 图标 sprite ===== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.6"/><path d="M12 2v2.6M12 19.4V22M2 12h2.6M19.4 12H22M4.9 4.9l1.9 1.9M17.2 17.2l1.9 1.9M19.1 4.9l-1.9 1.9M6.8 17.2l-1.9 1.9"/></symbol>
+<symbol id="i-flag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V4M5 4.8h11.5L14 8.5l2.5 3.7H5"/></symbol>
+<symbol id="i-pause" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"><path d="M9.5 5v14M14.5 5v14"/></symbol>
+<symbol id="i-chev-r" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></symbol>
+<symbol id="i-chev-l" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></symbol>
+<symbol id="i-chev-d" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l7 7 7-7"/></symbol>
+<symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+<symbol id="i-share" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v13M7 8l5-5 5 5M5 21h14"/></symbol>
+<symbol id="i-gps" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2.2" fill="currentColor" stroke="none"/><path d="M12 1.8v3M12 19.2v3M1.8 12h3M19.2 12h3"/></symbol>
+<symbol id="i-spark" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2.5l2.1 6.1 6.1 2.1-6.1 2.1L12 19l-2.1-6.2-6.1-2.1 6.1-2.1z"/></symbol>
+<symbol id="i-cal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M8 3v4M16 3v4M8.8 13.2l2.2 2.2 4.2-4.6"/></symbol>
+<symbol id="i-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5.5 20v-7M12 20V4.5M18.5 20v-10"/></symbol>
+<symbol id="i-flame" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c3.2 4.2 5.2 6.4 5.2 9.4A5.2 5.2 0 0 1 12 21a5.2 5.2 0 0 1-5.2-8.6C6.8 9.4 8.8 7.2 12 3z"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 6.5"/></symbol>
+<symbol id="i-bolt" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M13.2 2L4.8 13.6h5.3L9.4 22l8.6-11.9h-5.5z"/></symbol>
+<symbol id="i-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></symbol>
+<symbol id="i-trend" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8M15 7h6v6"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 6.8V12l3.4 2.2"/></symbol>
+<symbol id="i-wifi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4.5 10.5a11 11 0 0 1 15 0M7.8 14a6.6 6.6 0 0 1 8.4 0"/><circle cx="12" cy="17.8" r="1.3" fill="currentColor" stroke="none"/></symbol>
+<symbol id="i-batt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="8" width="17" height="8.5" rx="2.2"/><path d="M22 11v3" stroke-linecap="round"/><rect x="4.6" y="10" width="10" height="4.5" rx="1" fill="currentColor" stroke="none"/></symbol>
+<symbol id="i-shoe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17v-4l4-1 2.5-3.5L12 10l4 1.5 4.5 1c.9.2 1.5 1 1.5 1.9V17a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1zM3 14h19"/></symbol>
+<symbol id="i-route" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="5.5" r="2.5"/><path d="M8 18.5h5a3.5 3.5 0 0 0 0-7h-2a3.5 3.5 0 0 1 0-7h5" stroke-dasharray="0.5 3.4"/></symbol>
+<symbol id="i-arrow-ur" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></symbol>
+<symbol id="i-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V4.8h6V7M6.5 7l.8 12.2a1.8 1.8 0 0 0 1.8 1.8h5.8a1.8 1.8 0 0 0 1.8-1.8L17.5 7"/></symbol>
+</defs></svg>
+
+<!-- ===== 页头 ===== -->
+<header class="page-head">
+  <div class="ring r1"></div><div class="ring r2"></div>
+  <div class="wrap" style="position:relative">
+    <div class="eyebrow">SUNWARD DESIGN SYSTEM · SCHEME 03</div>
+    <h1>组件样式可视化 · <em>方案三 蜜琥珀</em></h1>
+    <p class="sub">「逐日 SUNWARD」全组件按方案三（HONEY AMBER · 浅色暖底 · Endurain 暖中性系）渲染的设计稿，含<b style="color:#EF9F27">周节奏卡重设计</b>：本周暖调七色方柱密排 + 按系统日期自动高亮今天（可切换演示）。配套文件：<span style="color:#D8D3C6">design/explore/color-schemes.html</span>（五案全量对比）。</p>
+    <div class="head-badges">
+      <span class="hbadge">设计稿 · 不参与构建 · 未提交</span>
+      <span class="hbadge plain">代码 / 资源保持冻结，待确认后才落地</span>
+      <span class="hbadge plain">页面内数据均为演示样例</span>
+      <span class="hbadge plain">2026-10-27</span>
+    </div>
+  </div>
+</header>
+
+<nav class="toc">
+  <div class="wrap">
+    <a href="#tokens"><b>01</b>设计令牌</a>
+    <a href="#week"><b>02</b>周节奏重设计</a>
+    <a href="#basics"><b>03</b>基础组件</a>
+    <a href="#screens"><b>04</b>整机预览 ×4</a>
+    <a href="#widgets"><b>05</b>自绘控件映射</a>
+    <a href="#deliver"><b>06</b>交付说明</a>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<!-- ============ 01 设计令牌 ============ -->
+<section class="card" id="tokens">
+  <div class="sec-head"><span class="no">01</span><h2>设计令牌 · 方案三 蜜琥珀</h2></div>
+  <p class="sec-sub">与 <code style="font-family:Consolas,monospace;font-size:11px">colors.xml</code> 现有令牌一一对应（令牌名不变、值替换），完整新旧映射见 color-schemes.html 方案三。文字对比度为白卡 #FFFFFF 上实测：正文 12.2:1 · muted 5.4:1 · 墨字/主色 6.4:1 · deep/底 5.2:1。</p>
+
+  <h3 class="grp">背景层级</h3>
+  <div class="swgrid">
+    <div class="sw"><div class="chip" style="background:#E9E6DC"></div><div class="meta"><div class="name">bg_outer</div><div class="hex">#E9E6DC</div><div class="role">页面最外层底</div></div></div>
+    <div class="sw"><div class="chip" style="background:#F1EFE8"></div><div class="meta"><div class="name">bg_base</div><div class="hex">#F1EFE8</div><div class="role">屏幕底色（奶油纸）</div></div></div>
+    <div class="sw"><div class="chip" style="background:#FFFFFF;border-bottom:1px solid var(--stroke)"></div><div class="meta"><div class="name">bg_card</div><div class="hex">#FFFFFF</div><div class="role">卡片</div></div></div>
+    <div class="sw"><div class="chip" style="background:#F7F5EF"></div><div class="meta"><div class="name">bg_card_alt</div><div class="hex">#F7F5EF</div><div class="role">卡内嵌套 / 输入底</div></div></div>
+    <div class="sw"><div class="chip" style="background:#EAE6DA"></div><div class="meta"><div class="name">bg_chip · modal_bg</div><div class="hex">#EAE6DA</div><div class="role">胶囊 / 轨道底（弹层卡为 #FFF）</div></div></div>
+    <div class="sw"><div class="chip" style="background:#F8EAD1"></div><div class="meta"><div class="name">bg_card_month</div><div class="hex">#F8EAD1</div><div class="role">月回顾卡（琥珀浅 tint）</div></div></div>
+    <div class="sw"><div class="chip" style="background:#E8E5DA"></div><div class="meta"><div class="name">footer</div><div class="hex">#E8E5DA</div><div class="role">底栏 / 页脚</div></div></div>
+    <div class="sw"><div class="chip" style="background:#F0EEE3"></div><div class="meta"><div class="name">map_paper</div><div class="hex">#F0EEE3</div><div class="role">地图 / 缩略图纸底</div></div></div>
+  </div>
+
+  <h3 class="grp">主色与功能色</h3>
+  <div class="swgrid">
+    <div class="sw"><div class="chip" style="background:#EF9F27"></div><div class="meta"><div class="name">accent_lime → primary</div><div class="hex">#EF9F27</div><div class="role">主色 · 蜜琥珀（Endurain effort）</div></div></div>
+    <div class="sw"><div class="chip" style="background:#FFC260"></div><div class="meta"><div class="name">primary_soft</div><div class="hex">#FFC260</div><div class="role">主色浅档 · 图表柱 / 构成-慢走</div></div></div>
+    <div class="sw"><div class="chip" style="background:#8A5A00"></div><div class="meta"><div class="name">accent_deep</div><div class="hex">#8A5A00</div><div class="role">主色深档 · 链接 / 进度 / 细线（5.2:1）</div></div></div>
+    <div class="sw"><div class="chip" style="background:#854F0B"></div><div class="meta"><div class="name">secondary</div><div class="hex">#854F0B</div><div class="role">次色 · 徒步棕（Endurain hiking）</div></div></div>
+    <div class="sw"><div class="chip" style="background:#B45309"></div><div class="meta"><div class="name">orange_light → track</div><div class="hex">#B45309</div><div class="role">轨迹线 / 强调数字</div></div></div>
+    <div class="sw"><div class="chip" style="background:#2C2C2A"></div><div class="meta"><div class="name">ink（sunward_ink）</div><div class="hex">#2C2C2A</div><div class="role">深墨 · GO 钮 / 气泡 / 底导航字</div></div></div>
+    <div class="sw"><div class="chip" style="background:rgba(44,44,42,.42)"></div><div class="meta"><div class="name">scrim_dark</div><div class="hex">#6B2C2C2A</div><div class="role">遮罩 42%（暖黑）</div></div></div>
+    <div class="sw"><div class="chip" style="background:rgba(44,44,42,.70)"></div><div class="meta"><div class="name">scrim_modal</div><div class="hex">#B32C2C2A</div><div class="role">弹窗遮罩 70%</div></div></div>
+  </div>
+
+  <h3 class="grp">文字与描边（白卡上对比度）</h3>
+  <div class="swgrid">
+    <div class="sw"><div class="chip" style="background:#2C2C2A"></div><div class="meta"><div class="name">text_primary</div><div class="hex">#2C2C2A</div><div class="role">正文 12.2:1</div></div></div>
+    <div class="sw"><div class="chip" style="background:#4A473F"></div><div class="meta"><div class="name">text_soft</div><div class="hex">#4A473F</div><div class="role">次级正文 8.6:1</div></div></div>
+    <div class="sw"><div class="chip" style="background:#6E6A61"></div><div class="meta"><div class="name">text_muted</div><div class="hex">#6E6A61</div><div class="role">说明文字 5.4:1（Endurain muted 加深）</div></div></div>
+    <div class="sw"><div class="chip" style="background:#8D897E"></div><div class="meta"><div class="name">text_dim</div><div class="hex">#8D897E</div><div class="role">弱化标签 3.6:1（仅大字/装饰）</div></div></div>
+    <div class="sw"><div class="chip" style="background:#E3DFD2"></div><div class="meta"><div class="name">stroke</div><div class="hex">#E3DFD2</div><div class="role">描边 / 网格线</div></div></div>
+    <div class="sw"><div class="chip" style="background:#E9E5D9"></div><div class="meta"><div class="name">divider</div><div class="hex">#E9E5D9</div><div class="role">分隔线</div></div></div>
+  </div>
+
+  <h3 class="grp">周节奏 · 暖调和谐七色（本页新增令牌）</h3>
+  <div class="swgrid">
+    <div class="sw"><div class="chip" style="background:#CB5A4E"></div><div class="meta"><div class="name">week_day_1 周一 · 红</div><div class="hex">#CB5A4E</div><div class="role">陶土红</div></div></div>
+    <div class="sw"><div class="chip" style="background:#DF8A3E"></div><div class="meta"><div class="name">week_day_2 周二 · 橙</div><div class="hex">#DF8A3E</div><div class="role">琥珀橙</div></div></div>
+    <div class="sw"><div class="chip" style="background:#E0B23F"></div><div class="meta"><div class="name">week_day_3 周三 · 黄</div><div class="hex">#E0B23F</div><div class="role">蜜黄</div></div></div>
+    <div class="sw"><div class="chip" style="background:#8CA84F"></div><div class="meta"><div class="name">week_day_4 周四 · 绿</div><div class="hex">#8CA84F</div><div class="role">橄榄绿（暖绿）</div></div></div>
+    <div class="sw"><div class="chip" style="background:#5EA79E"></div><div class="meta"><div class="name">week_day_5 周五 · 青</div><div class="hex">#5EA79E</div><div class="role">灰青</div></div></div>
+    <div class="sw"><div class="chip" style="background:#5E80B8"></div><div class="meta"><div class="name">week_day_6 周六 · 蓝</div><div class="hex">#5E80B8</div><div class="role">雾蓝</div></div></div>
+    <div class="sw"><div class="chip" style="background:#9070A6"></div><div class="meta"><div class="name">week_day_7 周日 · 紫</div><div class="hex">#9070A6</div><div class="role">暖紫</div></div></div>
+  </div>
+
+  <h3 class="grp">运动构成三色（ReportBuilder）</h3>
+  <div class="swgrid">
+    <div class="sw"><div class="chip" style="background:#FFC260"></div><div class="meta"><div class="name">慢走</div><div class="hex">#FFC260</div><div class="role">原 #D9FF43</div></div></div>
+    <div class="sw"><div class="chip" style="background:#EF9F27"></div><div class="meta"><div class="name">常跑</div><div class="hex">#EF9F27</div><div class="role">原 #FF5C35</div></div></div>
+    <div class="sw"><div class="chip" style="background:#8A5A00"></div><div class="meta"><div class="name">远足</div><div class="hex">#8A5A00</div><div class="role">原 #5B675B</div></div></div>
+  </div>
+</section>
+
+<!-- ============ 02 周节奏重设计 ============ -->
+<section class="card" id="week">
+  <div class="sec-head"><span class="no">02</span><h2>周节奏卡 · 重设计（交互演示）</h2></div>
+  <p class="sec-sub">按已确认的四项决策实现：① 暖调和谐七色（红→橙→黄→绿→青→蓝→紫，统一饱和度/明度、整体微暖）；② 方柱、排列收紧（2026-10-27 第二轮修订：不再显示上周灰柱）；③ 柱高口径 = 当日运动时长（分钟）；④ 按系统日期自动高亮今天，可用下方按钮切换演示。</p>
+
+  <div class="week-layout">
+    <div class="week-stage">
+      <div class="toolbar">
+        <div class="row">
+          <span class="sys">系统今天：<b id="sysToday">—</b></span>
+          <button class="resetbtn" id="btnReset">回到系统今天</button>
+        </div>
+        <div class="row" style="margin-top:9px" id="dayBtns"></div>
+      </div>
+
+      <div class="weekcard" id="weekBig">
+        <div class="wc-head">
+          <div>
+            <div class="eyebrow">This Week</div>
+            <div class="title">本周节奏</div>
+          </div>
+          <span class="chip chip-accent" data-role="wk-chip">动了 — 天</span>
+        </div>
+        <div class="wk"></div>
+        <div class="wk-progress">
+          <div class="bar"><div class="fill" data-role="wk-fill" style="width:0%"></div></div>
+          <div class="cap"><span>动过的天数</span><span data-role="wk-pv">— / 7 天</span></div>
+        </div>
+        <div class="wk-foot">
+          <span class="l" data-role="wk-note">—</span>
+          <span class="r" data-role="wk-enc">—</span>
+        </div>
+      </div>
+      <p class="note">方柱紧密排列；柱高 = 当日运动时长（分钟），按本周已发生值的最大分钟数归一化。未来日留空、标签淡化。演示数据：本周 [32,45,26,38,52,68,24] 分。</p>
+    </div>
+
+    <div class="week-spec">
+      <h3 class="grp" style="margin-top:0">视觉规格</h3>
+      <table class="spec">
+        <tr><th style="width:110px">元素</th><th>规格</th></tr>
+        <tr><td>本周彩柱</td><td>方柱（直角）· 宽 28dp（手机内紧凑版 20dp）· 列间距 6dp 密排居中 · 周一至周日依次 <code>week_day_1..7</code>（七色见 01 节）</td></tr>
+        <tr><td>刻度</td><td>按本周已发生值的最大分钟数归一化；柱区高 150dp（手机内紧凑版 92dp）；有值最小可见高 6dp；未来日留空</td></tr>
+        <tr><td>今日高亮</td><td>整列淡色衬条 <code>week_today_bg rgba(239,159,39,.10)</code> + 星期字 <code>accent_deep</code> 加粗 + 日期数字琥珀实心圆（墨字）+ 柱顶时长 chip（琥珀底墨字）</td></tr>
+        <tr><td>日期行</td><td>星期（一二三四五六日）+ 真实日期数字（JS 按系统日期计算本周周一~周日）；未来日标签淡化 <code>#B9B4A8</code></td></tr>
+        <tr><td>进度条</td><td>动过的天数 / 7 · 填充 <code>accent_deep #8A5A00</code>（天数口径，非里程，无欠账文案）</td></tr>
+        <tr><td>卡内文案</td><td>chip「动了 X 天」· 左注「本周动了 X 天，共 7 天」· 右注按状态取 <code>home_week_encourage_start / more / all</code>（真实 strings.xml 文案）</td></tr>
+      </table>
+
+      <h3 class="grp">落地改动点（待确认后实施，现未改任何代码）</h3>
+      <table class="spec">
+        <tr><th style="width:220px">文件</th><th>改动</th></tr>
+        <tr><td><code>ui/widget/WeekBarsView.kt</code></td><td><code>dailyKm: List&lt;Double&gt;</code> → <code>dailyMinutes: List&lt;Int&gt;</code>；单柱三档白透明圆胶囊 → 七色方柱密排绘制；labelPaint <code>#717C71</code> → <code>#6E6A61</code>；新增今日列衬条/日期圆/chip 绘制；保留无数据静态高度兜底</td></tr>
+        <tr><td><code>res/values/colors.xml</code></td><td>新增 <code>week_day_1..7</code>、<code>week_today_bg</code>（8 个令牌）</td></tr>
+        <tr><td><code>ui/HomeActivity.kt</code></td><td>周卡数据源从每日公里改为每日时长（分钟）——ReportBuilder 周聚合已含 durationMs，仅取数口径变化</td></tr>
+      </table>
+      <div class="callout amber" style="margin-top:14px"><b>理念核对：</b>柱高与进度均为「动了几天 / 动了几分钟」的正向记录，无「还差 / 达标 / 目标进度」措辞；七色为装饰性数据编码，不承担红绿对错语义（红色周一 ≠ 警示）。</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 03 基础组件 ============ -->
+<section class="card" id="basics">
+  <div class="sec-head"><span class="no">03</span><h2>基础组件</h2></div>
+  <p class="sec-sub">全站通用件按方案三重绘。深色件（GO 钮 / 气泡 / 底导航激活态 / Toast）沿用「深墨底 + 琥珀字」的品牌形制，与图标 sunward 同族。</p>
+
+  <div class="demo-grid">
+    <div class="tile">
+      <h4>按钮</h4>
+      <div class="stack">
+        <button class="btn btn-primary"><svg class="ic" width="15" height="15"><use href="#i-flag"/></svg>结束跑步</button>
+        <div class="rowline">
+          <button class="btn btn-ink btn-sm">结束并保存</button>
+          <button class="btn btn-ghost btn-sm">继续跑</button>
+        </div>
+        <div class="rowline">
+          <button class="btn btn-warn btn-sm"><svg class="ic" width="13" height="13"><use href="#i-trash"/></svg>删除这条记录</button>
+        </div>
+        <p class="note" style="margin-top:2px">主按钮琥珀底墨字（6.4:1）· 墨按钮深墨底奶油字 · 幽灵钮 chip 底+描边 · 删除钮用轨迹棕（不用红色警示）</p>
+      </div>
+    </div>
+
+    <div class="tile">
+      <h4>GO 主按钮（首页）</h4>
+      <div style="display:flex;justify-content:center;padding:14px 0 6px">
+        <div class="go-demo"><span class="go">GO</span><span class="hint">起跑</span></div>
+      </div>
+      <p class="note">112dp 深墨圆钮 · GO 32sp 斜体琥珀字 · 内 7dp 琥珀描边环 · 外脉冲环 rgba(44,44,42,.18)</p>
+    </div>
+
+    <div class="tile">
+      <h4>图标圆钮</h4>
+      <div class="rowline">
+        <span class="icon-btn"><svg class="ic" width="17" height="17"><use href="#i-chev-l"/></svg></span>
+        <span class="icon-btn tint"><svg class="ic" width="17" height="17"><use href="#i-gps"/></svg></span>
+        <span class="icon-btn solid"><svg class="ic" width="17" height="17"><use href="#i-share"/></svg></span>
+        <span class="icon-btn solid"><svg class="ic" width="17" height="17"><use href="#i-x"/></svg></span>
+        <span class="pause-btn" style="width:48px;height:48px"><svg class="ic" width="17" height="17"><use href="#i-pause"/></svg></span>
+      </div>
+      <p class="note">返回 / GPS（琥珀 tint）/ 分享 / 关闭 / 暂停（58dp 实时页）</p>
+    </div>
+
+    <div class="tile">
+      <h4>Chip 与标签</h4>
+      <div class="rowline">
+        <span class="chip chip-accent">动了 5 天</span>
+        <span class="chip chip-solid">本周</span>
+        <span class="chip chip-live"><svg class="ic" width="10" height="10"><use href="#i-bolt"/></svg>实时</span>
+        <span class="chip chip-glass">模拟</span>
+        <span class="tag-pb">PB</span>
+        <span class="chip chip-ink">GPS 信号强</span>
+      </div>
+      <p class="note">accent=琥珀 14% 底+deep 字 · solid=报告周期 · glass=模拟标记（必须保留）· ink=深墨反白</p>
+    </div>
+
+    <div class="tile">
+      <h4>筛选 / 周期 / Tab</h4>
+      <div class="stack">
+        <div class="rowline">
+          <button class="fchip on">全部</button><button class="fchip">5 KM+</button><button class="fchip">10 KM+</button>
+        </div>
+        <div class="seg"><button class="on">周</button><button>月</button><button>年</button></div>
+        <div class="tabs-demo"><span class="t on">历史</span><span class="t">报告</span></div>
+      </div>
+    </div>
+
+    <div class="tile">
+      <h4>底部导航</h4>
+      <div class="nav-demo">
+        <span class="item on"><svg class="ic" width="16" height="16"><use href="#i-bolt"/></svg>运动</span>
+        <span class="item"><svg class="ic" width="16" height="16"><use href="#i-list"/></svg>记录</span>
+      </div>
+      <p class="note">激活 = 琥珀实底圆角块 + 墨字；未激活 = dim 灰</p>
+    </div>
+
+    <div class="tile">
+      <h4>顶栏 Header</h4>
+      <div class="header-demo">
+        <span class="logo-tile"><svg class="ic" width="21" height="21"><use href="#i-sun"/></svg></span>
+        <span class="who">
+          <span class="eyebrow" style="display:block">RUN CLUB</span>
+          <span class="date">10月27日 周一</span>
+        </span>
+        <span class="wchip"><svg class="ic" width="11" height="11" style="color:var(--primary)"><use href="#i-sun"/></svg>18°C</span>
+        <span class="avatar">K<span class="online"></span></span>
+      </div>
+      <p class="note">logo 块 = 琥珀底墨 icon（图标 sunward 同族）· 头像 = 轨迹棕底 + 琥珀在线点</p>
+    </div>
+
+    <div class="tile" style="grid-column:span 2">
+      <h4>统一提示卡 SunwardDialog（结束确认 / 恢复 / 删除 / 隐私共用）</h4>
+      <div class="dialog-demo">
+        <div class="dialog-card">
+          <span class="icbox"><svg class="ic" width="21" height="21"><use href="#i-flag"/></svg></span>
+          <div class="dt">结束本次跑步？</div>
+          <div class="dm">结束后会保存这次的路线和用时。</div>
+          <div class="dialog-stats">
+            <div class="c"><div class="l">距离</div><div class="v">2.41 KM</div></div>
+            <div class="c"><div class="l">用时</div><div class="v">13:43</div></div>
+            <div class="c"><div class="l">每公里</div><div class="v">5'42"</div></div>
+          </div>
+          <div class="dialog-btns">
+            <button class="btn btn-ghost">继续跑</button>
+            <button class="btn btn-primary">结束并保存</button>
+          </div>
+        </div>
+      </div>
+      <p class="note">浅色化：卡 #FFFFFF（原 #151B15）· 图标方块琥珀底墨 icon（原橙底白）· 负钮 chip 底墨字（原深墨 pill 白字）· 正钮琥珀底墨字（原荧光绿）· 遮罩 rgba(44,44,42,.70) + blur</p>
+    </div>
+
+    <div class="tile">
+      <h4>空状态</h4>
+      <div class="empty-demo">
+        <span class="ebox"><svg class="ic" width="22" height="22"><use href="#i-shoe"/></svg></span>
+        <span class="t">还没有跑步记录</span>
+        <span class="s">完成一次跑步后，记录会出现在这里</span>
+      </div>
+    </div>
+
+    <div class="tile">
+      <h4>Toast</h4>
+      <div class="toast-demo">
+        <div class="t">成绩卡已生成，可以分享啦</div>
+        <div class="s">分享给跑友，一起保持运动节奏</div>
+      </div>
+      <p class="note">深墨底 + 琥珀标题（保留深色件的品牌对比）</p>
+    </div>
+
+    <div class="tile">
+      <h4>进度条族</h4>
+      <div class="stack">
+        <div class="progress-demo">
+          <div class="lbl"><span>动过的天数</span><span>5 / 7 天</span></div>
+          <div class="bar"><div class="fill" style="width:71%"></div></div>
+        </div>
+        <div class="progress-demo">
+          <div class="lbl"><span>今天想走</span><span>2.41 / 5.00 KM</span></div>
+          <div class="bar"><div class="fill" style="width:48%;background:var(--primary)"></div></div>
+        </div>
+        <div class="progress-demo">
+          <div class="lbl"><span>分段条（第 1 公里）</span><span>5'36"</span></div>
+          <div class="bar" style="height:8px"><div class="fill" style="width:86%;background:var(--primary)"></div></div>
+        </div>
+      </div>
+      <p class="note">天数进度 = deep · 实时目标 / 分段 = primary · 轨道底 bg_chip</p>
+    </div>
+
+    <div class="tile">
+      <h4>三列数据格</h4>
+      <div class="stat3">
+        <div class="c"><div class="lbl">本周里程</div><div class="val">23.6</div><div class="unit">KM</div></div>
+        <div class="c"><div class="lbl">运动时长</div><div class="val">2H18M</div><div class="unit">&nbsp;</div></div>
+        <div class="c"><div class="lbl">消耗热量</div><div class="val">1,840</div><div class="unit">KCAL</div></div>
+      </div>
+      <p class="note">label 9sp muted · 值 20sp Black 墨字 · 单位 9sp deep · 分隔 divider</p>
+    </div>
+
+    <div class="tile" style="grid-column:span 2">
+      <h4>字阶与文字色</h4>
+      <div class="type-row">
+        <div class="t"><span class="spec">48sp Black -0.05em</span><span style="font-size:34px;font-weight:900;letter-spacing:-.05em;color:var(--ink)">2.41</span></div>
+        <div class="t"><span class="spec">34sp Black -0.06em</span><span style="font-size:24px;font-weight:900;letter-spacing:-.04em;color:var(--ink)">今天，跑出你的节奏。</span></div>
+        <div class="t"><span class="spec">24sp Bold 弹窗标题</span><span style="font-size:18px;font-weight:800;color:var(--ink)">结束本次跑步？</span></div>
+        <div class="t"><span class="spec">16sp Black 卡片标题</span><span style="font-size:15px;font-weight:900;color:var(--ink)">本次跑步路线</span></div>
+        <div class="t"><span class="spec">13sp Bold 正文</span><span style="font-size:13px;font-weight:700;color:var(--text)">每公里的快慢只差 8 秒，节奏很稳。</span></div>
+        <div class="t"><span class="spec">11sp 说明 · muted</span><span style="font-size:11px;color:var(--muted)">结束后将自动生成本次跑步的完整路线图</span></div>
+        <div class="t"><span class="spec">9sp Eyebrow · dim</span><span style="font-size:9px;font-weight:800;letter-spacing:.26em;color:var(--dim)">THIS WEEK · 全站字号下限 11sp（eyebrow 装饰字除外）</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 04 整机预览 ============ -->
+<section class="card" id="screens">
+  <div class="sec-head"><span class="no">04</span><h2>整机预览 · 四页</h2></div>
+  <p class="sec-sub">393×852 手机框，内容可滚动。文案全部取自真实 <code style="font-family:Consolas,monospace;font-size:11px">strings.xml</code>（数值为演示样例）；地图为 CityMapView 浅色纸底按方案三重绘。记录页内「历史 / 报告」Tab 可点击切换。</p>
+
+  <div class="screens">
+
+    <!-- ======= 首页 ======= -->
+    <div class="screen-col">
+      <div class="phone"><div class="screen">
+        <div class="statusbar"><span>07:24</span><span class="sicons"><svg class="ic" width="13" height="13"><use href="#i-wifi"/></svg><svg class="ic" width="17" height="17"><use href="#i-batt"/></svg></span></div>
+        <div class="pscroll">
+          <div class="home-head">
+            <span class="logo-tile"><svg class="ic" width="21" height="21"><use href="#i-sun"/></svg></span>
+            <span class="who">
+              <span class="p-eyebrow" style="display:block">RUN CLUB</span>
+              <span class="date">10月27日 周一</span>
+            </span>
+            <span class="wchip"><svg class="ic" width="11" height="11" style="color:var(--primary)"><use href="#i-sun"/></svg>18°C</span>
+            <span class="avatar">K<span class="online"></span></span>
+          </div>
+
+          <div class="hero">
+            <div class="deco d1"></div><div class="deco d2"></div>
+            <div class="vmark">MORNING RUN</div>
+            <span class="ready"><span class="rdot"></span>Ready to move</span>
+            <h2>今天，跑出<br>你的节奏<span class="dot">。</span></h2>
+            <div class="hero-row">
+              <div class="sug">
+                <div class="l">今日建议</div>
+                <div class="v">出门走走 · 3.0 KM</div>
+                <div class="e"><svg class="ic" width="12" height="12"><use href="#i-clock"/></svg>大概 20 分钟</div>
+              </div>
+              <div class="go-btn"><span class="go">GO</span><span class="hint">起跑<svg class="ic" width="11" height="11"><use href="#i-arrow-ur"/></svg></span></div>
+            </div>
+          </div>
+
+          <div class="stats3">
+            <div class="c"><div class="l">本周里程</div><div class="v">23.6</div><div class="u">KM</div></div>
+            <div class="c"><div class="l">运动时长</div><div class="v">2H18M</div><div class="u">&nbsp;</div></div>
+            <div class="c"><div class="l">消耗热量</div><div class="v">1,840</div><div class="u">KCAL</div></div>
+          </div>
+
+          <div class="week-mini">
+            <div class="weekcard" id="weekHome">
+              <div class="wc-head">
+                <div>
+                  <div class="eyebrow">This Week</div>
+                  <div class="title" style="font-size:16px">本周节奏</div>
+                </div>
+                <span class="chip chip-accent" data-role="wk-chip">动了 — 天</span>
+              </div>
+              <div class="wk"></div>
+              <div class="wk-progress">
+                <div class="bar"><div class="fill" data-role="wk-fill" style="width:0%"></div></div>
+              </div>
+              <div class="wk-foot">
+                <span class="l" data-role="wk-note">—</span>
+                <span class="r" data-role="wk-enc">—</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="lastrun">
+            <div class="hd">
+              <span class="t">上次跑步</span>
+              <span class="all">全部记录<svg class="ic" width="12" height="12"><use href="#i-chev-r"/></svg></span>
+            </div>
+            <div class="lr-item">
+              <div class="lr-thumb">
+                <svg viewBox="0 0 74 74" width="74" height="74">
+                  <rect width="74" height="74" fill="#F0EEE3"/>
+                  <path d="M-2 46 H76 M30 -2 V76" stroke="#DFDBCD" stroke-width="7"/>
+                  <path d="M-2 46 H76 M30 -2 V76" stroke="#FDFCF6" stroke-width="4"/>
+                  <path d="M12 62 C 24 54, 20 38, 34 34 S 52 24, 58 12" fill="none" stroke="#FFFDF6" stroke-width="6.5" stroke-linecap="round"/>
+                  <path d="M12 62 C 24 54, 20 38, 34 34 S 52 24, 58 12" fill="none" stroke="#B45309" stroke-width="4" stroke-linecap="round"/>
+                  <circle cx="12" cy="62" r="4.6" fill="#FFFFFF"/><circle cx="12" cy="62" r="3" fill="#EF9F27"/>
+                  <circle cx="58" cy="12" r="4" fill="#2C2C2A"/><circle cx="58" cy="12" r="2.2" fill="#EF9F27"/>
+                </svg>
+              </div>
+              <div class="lr-info">
+                <div class="lr-title"><span class="t">晨跑</span><span class="tag-pb">PB</span></div>
+                <div class="lr-when">今天 06:42 · 户外跑</div>
+                <div class="lr-metrics"><span class="km">2.41 KM</span><span class="m">13:43</span><span class="m">5'42"</span></div>
+              </div>
+              <svg class="ic" width="16" height="16" style="color:var(--dim)"><use href="#i-chev-r"/></svg>
+            </div>
+          </div>
+          <div style="height:8px"></div>
+        </div>
+        <div class="pfoot">
+          <div class="nav-demo" style="background:transparent;padding:0">
+            <span class="item on"><svg class="ic" width="16" height="16"><use href="#i-bolt"/></svg>运动</span>
+            <span class="item"><svg class="ic" width="16" height="16"><use href="#i-list"/></svg>记录</span>
+          </div>
+        </div>
+      </div></div>
+      <div class="cap">首页 · 运动<small>hero 琥珀底墨字 · GO 深墨钮 · 周节奏新卡</small></div>
+    </div>
+
+    <!-- ======= 实时跑步 ======= -->
+    <div class="screen-col">
+      <div class="phone"><div class="screen">
+        <div class="statusbar" style="position:absolute;top:0;left:0;right:0;z-index:6;background:transparent"><span>07:24</span><span class="sicons"><svg class="ic" width="13" height="13"><use href="#i-wifi"/></svg><svg class="ic" width="17" height="17"><use href="#i-batt"/></svg></span></div>
+        <div class="pscroll" style="display:flex;flex-direction:column">
+          <div style="position:relative;flex:none">
+            <div class="map-host">
+              <svg class="citymap" viewBox="0 0 395 404" preserveAspectRatio="xMidYMid slice">
+                <defs>
+                  <pattern id="dotsL" width="15" height="15" patternUnits="userSpaceOnUse"><circle cx="1.6" cy="1.6" r="1.1" fill="#DFDBCD"/></pattern>
+                  <linearGradient id="fadeT" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F1EFE8" stop-opacity=".9"/><stop offset="1" stop-color="#F1EFE8" stop-opacity="0"/></linearGradient>
+                  <linearGradient id="fadeB" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F1EFE8" stop-opacity="0"/><stop offset="1" stop-color="#F1EFE8" stop-opacity=".95"/></linearGradient>
+                </defs>
+                <rect width="395" height="404" fill="#F0EEE3"/>
+                <rect width="395" height="404" fill="url(#dotsL)"/>
+                <path d="M-10 96 C 80 126, 150 58, 250 96 S 360 148, 405 126" fill="none" stroke="#BFD6DB" stroke-width="26" stroke-linecap="round"/>
+                <path d="M268 214 q46 -22 78 12 q22 44 -24 66 q-56 22 -78 -24 q-10 -32 24 -54 z" fill="#D8E2BC"/>
+                <rect x="24" y="146" width="86" height="60" rx="8" fill="#FAF8F1" stroke="#E0DACB" stroke-width="1.6"/>
+                <rect x="128" y="286" width="94" height="64" rx="8" fill="#FAF8F1" stroke="#E0DACB" stroke-width="1.6"/>
+                <rect x="292" y="300" width="80" height="70" rx="8" fill="#FAF8F1" stroke="#E0DACB" stroke-width="1.6"/>
+                <rect x="150" y="150" width="70" height="52" rx="8" fill="#FAF8F1" stroke="#E0DACB" stroke-width="1.6"/>
+                <path d="M-10 246 H405" stroke="#DCD5C4" stroke-width="18"/><path d="M-10 246 H405" stroke="#FDFCF6" stroke-width="11"/>
+                <path d="M118 -10 V414" stroke="#DCD5C4" stroke-width="16"/><path d="M118 -10 V414" stroke="#FDFCF6" stroke-width="10"/>
+                <path d="M-10 372 L405 196" stroke="#EDE9DC" stroke-width="7"/>
+                <path d="M300 -10 V414" stroke="#EDE9DC" stroke-width="7"/>
+                <text x="196" y="240" font-size="9" font-weight="700" fill="#8D897E" letter-spacing="4">滨江大道</text>
+                <text x="112" y="330" font-size="9" font-weight="700" fill="#8D897E" letter-spacing="3" transform="rotate(-90 112 330)">公园路</text>
+                <text x="238" y="284" font-size="8" font-weight="700" fill="#A5A093" letter-spacing="2" transform="rotate(-23 238 284)">RUN ST.</text>
+                <text x="284" y="252" font-size="9" font-weight="700" fill="#7E8A5A" letter-spacing="2">河畔公园</text>
+                <text x="150" y="86" font-size="9" font-weight="700" fill="#7E97A0" letter-spacing="5">城 市 河</text>
+                <!-- 计划路线虚线底 -->
+                <path d="M56 336 C 92 306, 78 252, 132 238 S 226 254, 246 212 S 252 150, 306 138" fill="none" stroke="#B4AE9E" stroke-width="10" stroke-linecap="round" stroke-dasharray="1 12"/>
+                <!-- 已跑轨迹：白壳 + 琥珀棕 -->
+                <path d="M56 336 C 84 312, 76 268, 120 250 S 190 250, 212 224" fill="none" stroke="#FFFDF6" stroke-width="13" stroke-linecap="round"/>
+                <path d="M56 336 C 84 312, 76 268, 120 250 S 190 250, 212 224" fill="none" stroke="#B45309" stroke-width="8" stroke-linecap="round"/>
+                <circle cx="56" cy="336" r="9" fill="#FFFFFF"/><circle cx="56" cy="336" r="6" fill="#EF9F27"/>
+                <circle cx="212" cy="224" r="19" fill="#EF9F27" opacity=".16"/><circle cx="212" cy="224" r="13" fill="#EF9F27" opacity=".28"/>
+                <circle cx="212" cy="224" r="11.5" fill="#FFFFFF"/><circle cx="212" cy="224" r="8.5" fill="#2C2C2A" stroke="#EF9F27" stroke-width="2"/>
+                <rect width="395" height="58" fill="url(#fadeT)"/>
+                <rect y="330" width="395" height="74" fill="url(#fadeB)"/>
+              </svg>
+            </div>
+            <div class="live-top">
+              <span class="icon-btn solid" style="background:rgba(255,255,255,.92)"><svg class="ic" width="17" height="17"><use href="#i-chev-l"/></svg></span>
+              <div class="live-status">
+                <span class="row"><span class="livedot"></span><span class="t">实时记录中</span></span>
+                <span class="s">OUTDOOR RUNNING</span>
+              </div>
+              <span class="icon-btn tint" style="background:rgba(255,255,255,.92)"><svg class="ic" width="17" height="17"><use href="#i-gps"/></svg></span>
+            </div>
+            <div class="map-ovl" style="top:96px;left:18px"><span class="pill"><span class="gps-ic"><svg class="ic" width="10" height="10"><use href="#i-gps"/></svg></span><span class="t">GPS 信号强</span><span class="s">滨江绿道</span></span></div>
+            <div class="map-ovl" style="top:96px;right:18px"><span class="pill"><span class="t">18°C · 微风</span></span></div>
+            <div class="map-ovl" style="bottom:74px;left:18px"><span class="pill pill-ink"><svg class="ic" width="12" height="12" style="color:var(--primary)"><use href="#i-route"/></svg><span class="t" style="font-size:8px;letter-spacing:.2em">LIVE TRACK</span><span class="s">实时轨迹</span></span></div>
+            <div class="map-ovl" style="bottom:70px;right:18px"><span class="locate-btn"><svg class="ic" width="18" height="18"><use href="#i-gps"/></svg></span></div>
+          </div>
+
+          <div class="live-data" style="flex:1">
+            <div class="dhead">
+              <span class="eyebrow">DISTANCE</span>
+              <span class="chip chip-live"><svg class="ic" width="9" height="9"><use href="#i-bolt"/></svg>实时</span>
+            </div>
+            <div class="bignum">2.41<span class="u">KM</span></div>
+            <div class="goal-row">
+              <span class="l">今天想走</span>
+              <span class="goalbar"><span class="f" style="width:48%"></span></span>
+              <span class="v">5.00 KM</span>
+            </div>
+            <div class="live3">
+              <div class="c"><div class="l">用时</div><div class="v">00:13:43</div></div>
+              <div class="c"><div class="l">当前速度</div><div class="v">5'42"</div><div class="u">/KM</div></div>
+              <div class="c"><div class="l">消耗</div><div class="v">173</div><div class="u">KCAL</div></div>
+            </div>
+            <div class="live-ctrl">
+              <div class="pause-col">
+                <span class="pause-btn"><svg class="ic" width="18" height="18"><use href="#i-pause"/></svg></span>
+                <span class="lbl">暂停</span>
+              </div>
+              <button class="end-btn"><svg class="ic" width="16" height="16"><use href="#i-flag"/></svg>结束跑步</button>
+            </div>
+            <div class="live-hint">结束后将自动生成本次跑步的完整路线图</div>
+          </div>
+        </div>
+      </div></div>
+      <div class="cap">实时跑步<small>浅色纸底地图 · 轨迹 #B45309 · 结束钮琥珀底墨字</small></div>
+    </div>
+
+    <!-- ======= 成绩 ======= -->
+    <div class="screen-col">
+      <div class="phone"><div class="screen">
+        <div class="statusbar"><span>07:38</span><span class="sicons"><svg class="ic" width="13" height="13"><use href="#i-wifi"/></svg><svg class="ic" width="17" height="17"><use href="#i-batt"/></svg></span></div>
+        <div class="pscroll">
+          <div class="res-head">
+            <span class="icon-btn solid"><svg class="ic" width="16" height="16"><use href="#i-x"/></svg></span>
+            <div class="mid"><div class="t">今天也动了</div><div class="s">RUN SAVED</div></div>
+            <span class="icon-btn solid"><svg class="ic" width="16" height="16"><use href="#i-share"/></svg></span>
+          </div>
+
+          <div class="res-hero">
+            <div class="deco"></div>
+            <span class="res-badge"><svg class="ic" width="11" height="11"><use href="#i-check"/></svg>RUN COMPLETE</span>
+            <div class="date">10月27日 · 06:42</div>
+            <div class="greet">干得漂亮，K。</div>
+            <div class="gsub">本次用时 13:43，每公里约 5'42"。</div>
+            <div class="res-total">
+              <div>
+                <div class="l">TOTAL DISTANCE</div>
+                <div><span class="v">2.41</span><span class="u">KM</span></div>
+              </div>
+              <div class="r">
+                <div class="k">用时</div><div class="v2">13:43</div>
+                <div class="k" style="margin-top:5px">每公里约</div><div class="v2">5'42"</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="route-card">
+            <div class="hd p-hrow">
+              <div><div class="p-eyebrow">Route recap</div><div class="t">本次跑步路线</div></div>
+              <span class="chip chip-accent"><span style="width:5px;height:5px;border-radius:50%;background:var(--primary-deep)"></span>路线已保存</span>
+            </div>
+            <div class="route-map">
+              <svg viewBox="0 0 351 236" width="100%" style="display:block">
+                <defs><pattern id="dotsR" width="15" height="15" patternUnits="userSpaceOnUse"><circle cx="1.6" cy="1.6" r="1.1" fill="#DFDBCD"/></pattern></defs>
+                <rect width="351" height="236" fill="#F0EEE3"/>
+                <rect width="351" height="236" fill="url(#dotsR)"/>
+                <path d="M-10 58 C 70 84, 130 30, 220 60 S 320 96, 361 78" fill="none" stroke="#BFD6DB" stroke-width="20" stroke-linecap="round"/>
+                <path d="M238 130 q40 -18 66 10 q18 38 -20 56 q-48 18 -66 -20 q-8 -28 20 -46 z" fill="#D8E2BC"/>
+                <rect x="18" y="92" width="74" height="50" rx="7" fill="#FAF8F1" stroke="#E0DACB" stroke-width="1.5"/>
+                <rect x="120" y="168" width="80" height="52" rx="7" fill="#FAF8F1" stroke="#E0DACB" stroke-width="1.5"/>
+                <path d="M-10 146 H361" stroke="#DCD5C4" stroke-width="15"/><path d="M-10 146 H361" stroke="#FDFCF6" stroke-width="9"/>
+                <path d="M104 -10 V246" stroke="#DCD5C4" stroke-width="13"/><path d="M104 -10 V246" stroke="#FDFCF6" stroke-width="8"/>
+                <text x="150" y="140" font-size="8" font-weight="700" fill="#8D897E" letter-spacing="3">滨江大道</text>
+                <text x="252" y="160" font-size="8" font-weight="700" fill="#7E8A5A" letter-spacing="2">河畔公园</text>
+                <path d="M52 200 C 80 182, 70 150, 104 138 S 180 150, 208 122 S 226 66, 276 58 C 300 54, 306 80, 288 96 S 220 128, 180 158 S 110 208, 78 214 C 60 217, 48 210, 52 200 Z" fill="none" stroke="#FFFDF6" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M52 200 C 80 182, 70 150, 104 138 S 180 150, 208 122 S 226 66, 276 58 C 300 54, 306 80, 288 96 S 220 128, 180 158 S 110 208, 78 214 C 60 217, 48 210, 52 200 Z" fill="none" stroke="#B45309" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="52" cy="200" r="8" fill="#FFFFFF"/><circle cx="52" cy="200" r="5.2" fill="#EF9F27"/>
+                <circle cx="70" cy="212" r="9.5" fill="#2C2C2A"/><path d="M70 205 v-7 l8 2.6 -8 2.8" fill="#EF9F27" stroke="#EF9F27" stroke-width="1.6" stroke-linejoin="round"/>
+              </svg>
+              <div class="ovl" style="top:10px;left:10px"><span class="mini-pill">滨江绿道环线</span></div>
+              <div class="ovl" style="top:10px;right:10px"><span class="mini-pill">2.41 KM</span></div>
+              <div class="ovl" style="bottom:10px;left:10px">
+                <span class="legend-pill">
+                  <span class="ld"><span class="pt" style="background:#EF9F27"></span>起点</span>
+                  <span class="ld"><span class="pt" style="background:#B45309"></span>终点</span>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="res-cards2">
+            <div class="kcal-card">
+              <div class="eyebrow" style="display:flex;align-items:center;gap:5px"><svg class="ic" width="11" height="11"><use href="#i-flame"/></svg>消耗</div>
+              <div><span class="v">173</span><span class="u">KCAL</span></div>
+              <div class="s">按 60 kg 体重估算</div>
+            </div>
+            <div class="kcal-card" style="background:rgba(133,79,11,.08);border-color:rgba(133,79,11,.24)">
+              <div class="eyebrow" style="display:flex;align-items:center;gap:5px;color:var(--secondary)"><svg class="ic" width="11" height="11"><use href="#i-clock"/></svg>每公里约</div>
+              <div><span class="v">5'42"</span></div>
+              <div class="s">节奏很稳，保持就好</div>
+            </div>
+          </div>
+
+          <div class="pace-card">
+            <div class="hd">
+              <div><div class="p-eyebrow">Every kilometer</div><div class="t">每公里用时</div></div>
+              <div class="avg"><div class="l">每公里约</div><div class="v">5'42"/KM</div></div>
+            </div>
+            <div class="split-row">
+              <div class="l1"><span class="n">第 1 公里</span><span class="p">5'36"</span></div>
+              <div class="bar"><div class="f" style="width:86%"></div></div>
+            </div>
+            <div class="split-row">
+              <div class="l1"><span class="n">第 2 公里</span><span class="p">5'44"</span></div>
+              <div class="bar"><div class="f" style="width:78%;opacity:.82"></div></div>
+            </div>
+            <div class="split-row">
+              <div class="l1"><span class="n">最后 0.41 公里</span><span class="p">2'23"</span></div>
+              <div class="bar"><div class="f last" style="width:58%"></div></div>
+            </div>
+            <div class="pace-curve">
+              <svg viewBox="0 0 320 82" width="100%" style="display:block">
+                <g stroke="#2C2C2A" stroke-opacity=".08" stroke-width="1"><line x1="8" x2="312" y1="18" y2="18"/><line x1="8" x2="312" y1="41" y2="41"/><line x1="8" x2="312" y1="64" y2="64"/></g>
+                <path d="M10 44 L55 39 L100 52 L145 43 L190 57 L235 45 L280 50 L310 47" fill="none" stroke="#8A5A00" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/>
+                <g fill="#8A5A00"><circle cx="10" cy="44" r="2.6"/><circle cx="55" cy="39" r="2.6"/><circle cx="100" cy="52" r="2.6"/><circle cx="145" cy="43" r="2.6"/><circle cx="235" cy="45" r="2.6"/><circle cx="280" cy="50" r="2.6"/><circle cx="310" cy="47" r="2.6"/></g>
+                <circle cx="190" cy="57" r="6" fill="#B45309" opacity=".25"/><circle cx="190" cy="57" r="3" fill="#B45309"/>
+                <g fill="#6E6A61" font-size="7" font-family="Arial"><text x="8" y="78">0 KM</text><text x="135" y="78">1.0 KM</text><text x="282" y="78">2.4 KM</text></g>
+              </svg>
+            </div>
+            <div class="tip-card">
+              <span class="tico"><svg class="ic" width="11" height="11"><use href="#i-spark"/></svg></span>
+              <p>每公里的快慢只差 8 秒，节奏很稳。最后一段还提了速，收尾很有力。</p>
+            </div>
+          </div>
+
+          <div class="res-foot">
+            <button class="btn btn-ghost b1">回到运动</button>
+            <button class="btn btn-primary b2"><svg class="ic" width="15" height="15"><use href="#i-chart"/></svg>查看跑步记录</button>
+          </div>
+        </div>
+      </div></div>
+      <div class="cap">成绩<small>hero 琥珀庆祝卡 · 教练观察 = 只描述不评判</small></div>
+    </div>
+
+    <!-- ======= 记录 ======= -->
+    <div class="screen-col">
+      <div class="phone"><div class="screen">
+        <div class="statusbar"><span>07:40</span><span class="sicons"><svg class="ic" width="13" height="13"><use href="#i-wifi"/></svg><svg class="ic" width="17" height="17"><use href="#i-batt"/></svg></span></div>
+        <div class="pscroll">
+          <div class="rec-head">
+            <div class="brand">逐日 · 记录</div>
+            <div class="row">
+              <div>
+                <div class="t">跑步记录</div>
+                <div class="sub">每天一点，一年很远。</div>
+              </div>
+              <div class="streak"><span class="l">累计运动</span><span class="v">18</span><span class="u">天</span></div>
+            </div>
+          </div>
+          <div class="rec-tabs">
+            <span class="t on" id="tabHis" onclick="recTab('his')">历史</span>
+            <span class="t" id="tabRep" onclick="recTab('rep')">报告</span>
+          </div>
+
+          <!-- 历史面板 -->
+          <div id="panelHis">
+            <div class="month-card">
+              <div class="deco"></div>
+              <div class="hd">
+                <span class="p-eyebrow" style="color:var(--track)">MONTHLY RECAP</span>
+                <span class="mark">OCTOBER 2026</span>
+              </div>
+              <div class="ttl">本月回顾</div>
+              <div class="month-big">
+                <div>
+                  <div class="days"><span class="v">12</span><span class="u">天</span></div>
+                  <div class="l">本月动过</div>
+                </div>
+                <div class="right">
+                  <div class="km">累计 46.2 KM</div>
+                  <div class="pct">39%</div>
+                </div>
+              </div>
+              <div class="month-prog"><div class="f" style="width:39%"></div></div>
+              <div class="month3">
+                <div class="c"><div class="v">19</div><div class="l">次运动</div></div>
+                <div class="c"><div class="v">4H38M</div><div class="l">累计用时</div></div>
+                <div class="c"><div class="v">6'12"</div><div class="l">每公里约</div></div>
+              </div>
+            </div>
+
+            <div class="filters">
+              <button class="fchip on">全部</button><button class="fchip">5 KM+</button><button class="fchip">10 KM+</button>
+            </div>
+
+            <div class="hist-list">
+              <div class="h-item">
+                <div class="h-top">
+                  <div class="h-thumb">
+                    <svg viewBox="0 0 62 62" width="62" height="62"><rect width="62" height="62" fill="#F0EEE3"/><path d="M-2 38 H64 M26 -2 V64" stroke="#DFDBCD" stroke-width="6"/><path d="M-2 38 H64 M26 -2 V64" stroke="#FDFCF6" stroke-width="3.4"/><path d="M10 52 C 20 45, 17 32, 29 28 S 44 20, 49 10" fill="none" stroke="#FFFDF6" stroke-width="5.5" stroke-linecap="round"/><path d="M10 52 C 20 45, 17 32, 29 28 S 44 20, 49 10" fill="none" stroke="#B45309" stroke-width="3.4" stroke-linecap="round"/><circle cx="10" cy="52" r="3.8" fill="#FFF"/><circle cx="10" cy="52" r="2.4" fill="#EF9F27"/><circle cx="49" cy="10" r="3.2" fill="#2C2C2A"/></svg>
+                  </div>
+                  <div class="h-info">
+                    <div class="h-title"><span class="t">晨跑</span><span class="tag-pb">PB</span></div>
+                    <div class="h-when">今天 06:42 · 户外跑</div>
+                    <div class="h-metrics"><span class="km">2.41 KM</span><span class="m">13:43</span><span class="m">5'42"</span></div>
+                  </div>
+                  <svg class="ic" width="15" height="15" style="color:var(--dim)"><use href="#i-chev-d"/></svg>
+                </div>
+              </div>
+
+              <div class="h-item">
+                <div class="h-top">
+                  <div class="h-thumb">
+                    <svg viewBox="0 0 62 62" width="62" height="62"><rect width="62" height="62" fill="#F0EEE3"/><path d="M8 54 C 14 36, 30 44, 34 30 S 30 12, 48 8" fill="none" stroke="#FFFDF6" stroke-width="5.5" stroke-linecap="round"/><path d="M8 54 C 14 36, 30 44, 34 30 S 30 12, 48 8" fill="none" stroke="#B45309" stroke-width="3.4" stroke-linecap="round" stroke-dasharray="7 4"/><circle cx="8" cy="54" r="3.8" fill="#FFF"/><circle cx="8" cy="54" r="2.4" fill="#EF9F27"/><circle cx="48" cy="8" r="3.2" fill="#2C2C2A"/></svg>
+                  </div>
+                  <div class="h-info">
+                    <div class="h-title"><span class="t">傍晚跑</span><span class="chip chip-glass" style="font-size:9px;padding:2px 8px">模拟</span></div>
+                    <div class="h-when">昨天 18:20 · 户外跑</div>
+                    <div class="h-metrics"><span class="km">5.10 KM</span><span class="m">31:02</span><span class="m">6'05"</span></div>
+                  </div>
+                  <svg class="ic" width="15" height="15" style="color:var(--dim)"><use href="#i-chev-d"/></svg>
+                </div>
+              </div>
+
+              <div class="h-item">
+                <div class="h-top">
+                  <div class="h-thumb">
+                    <svg viewBox="0 0 62 62" width="62" height="62"><rect width="62" height="62" fill="#F0EEE3"/><path d="M-2 30 H64 M40 -2 V64" stroke="#DFDBCD" stroke-width="6"/><path d="M-2 30 H64 M40 -2 V64" stroke="#FDFCF6" stroke-width="3.4"/><path d="M12 12 C 30 18, 22 40, 44 48" fill="none" stroke="#FFFDF6" stroke-width="5.5" stroke-linecap="round"/><path d="M12 12 C 30 18, 22 40, 44 48" fill="none" stroke="#B45309" stroke-width="3.4" stroke-linecap="round"/><circle cx="12" cy="12" r="3.8" fill="#FFF"/><circle cx="12" cy="12" r="2.4" fill="#EF9F27"/><circle cx="44" cy="48" r="3.2" fill="#2C2C2A"/></svg>
+                  </div>
+                  <div class="h-info">
+                    <div class="h-title"><span class="t">夜跑</span></div>
+                    <div class="h-when">10月24日 21:05 · 户外跑</div>
+                    <div class="h-metrics"><span class="km">3.28 KM</span><span class="m">19:44</span><span class="m">6'01"</span></div>
+                  </div>
+                  <svg class="ic" width="15" height="15" style="color:var(--primary-deep);transform:rotate(180deg)"><use href="#i-chev-d"/></svg>
+                </div>
+                <div class="h-detail">
+                  <div class="bigthumb">
+                    <svg viewBox="0 0 320 150" width="100%" height="150" preserveAspectRatio="xMidYMid slice">
+                      <defs><pattern id="dotsB" width="16" height="16" patternUnits="userSpaceOnUse"><circle cx="1.8" cy="1.8" r="1.2" fill="#DFDBCD"/></pattern></defs>
+                      <rect width="320" height="150" fill="#F0EEE3"/><rect width="320" height="150" fill="url(#dotsB)"/>
+                      <path d="M-8 40 C 60 60, 110 20, 180 44 S 280 70, 328 54" fill="none" stroke="#BFD6DB" stroke-width="14" stroke-linecap="round"/>
+                      <path d="M-8 96 H328" stroke="#DCD5C4" stroke-width="11"/><path d="M-8 96 H328" stroke="#FDFCF6" stroke-width="7"/>
+                      <path d="M236 -8 V158" stroke="#DCD5C4" stroke-width="10"/><path d="M236 -8 V158" stroke="#FDFCF6" stroke-width="6"/>
+                      <path d="M36 128 C 66 110, 58 78, 96 66 S 168 76, 196 52 S 236 24, 284 30" fill="none" stroke="#FFFDF6" stroke-width="9" stroke-linecap="round"/>
+                      <path d="M36 128 C 66 110, 58 78, 96 66 S 168 76, 196 52 S 236 24, 284 30" fill="none" stroke="#B45309" stroke-width="5.5" stroke-linecap="round"/>
+                      <circle cx="36" cy="128" r="6.5" fill="#FFF"/><circle cx="36" cy="128" r="4.2" fill="#EF9F27"/>
+                      <circle cx="284" cy="30" r="7" fill="#2C2C2A"/><circle cx="284" cy="30" r="3.4" fill="#EF9F27"/>
+                    </svg>
+                  </div>
+                  <div class="split-row" style="margin-top:12px">
+                    <div class="l1"><span class="n">第 1 公里</span><span class="p">6'12"</span></div>
+                    <div class="bar"><div class="f" style="width:82%"></div></div>
+                  </div>
+                  <div class="split-row">
+                    <div class="l1"><span class="n">第 2 公里</span><span class="p">5'58"</span></div>
+                    <div class="bar"><div class="f" style="width:88%"></div></div>
+                  </div>
+                  <div class="split-row">
+                    <div class="l1"><span class="n">第 3 公里</span><span class="p">6'04"</span></div>
+                    <div class="bar"><div class="f" style="width:85%"></div></div>
+                  </div>
+                  <div class="split-row">
+                    <div class="l1"><span class="n">最后 0.28 公里</span><span class="p">1'38"</span></div>
+                    <div class="bar"><div class="f last" style="width:40%"></div></div>
+                  </div>
+                  <div class="del-btn"><svg class="ic" width="13" height="13"><use href="#i-trash"/></svg>删除这条记录</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="toreport">查看月报<svg class="ic" width="13" height="13"><use href="#i-chev-r"/></svg></div>
+          </div>
+
+          <!-- 报告面板 -->
+          <div id="panelRep" style="display:none">
+            <div class="report">
+              <div class="rep-head">
+                <div><div class="p-eyebrow">Performance</div><div style="font-size:20px;font-weight:900;color:var(--ink);margin-top:2px">跑步报告</div></div>
+                <div class="seg"><button class="on">周</button><button>月</button><button>年</button></div>
+              </div>
+
+              <div class="rep-dist">
+                <div class="top">
+                  <span class="chip chip-solid">本周</span>
+                  <span style="font-size:10px;color:var(--dim);font-weight:700">10.21 — 10.27</span>
+                  <span class="delta-chip"><svg class="ic" width="10" height="10"><use href="#i-trend"/></svg>较上期 +12%</span>
+                </div>
+                <div><span class="v">23.6</span><span class="u">KM</span></div>
+                <div class="rep3">
+                  <div class="c"><div class="v">5</div><div class="l">跑了多少次</div></div>
+                  <div class="c"><div class="v">2H18M</div><div class="l">累计用时</div></div>
+                  <div class="c"><div class="v">5</div><div class="l">动过的天数</div></div>
+                </div>
+              </div>
+
+              <div class="rep-prog">
+                <div class="l1"><span>本周动了 5 天</span><b>71%</b></div>
+                <div class="bar"><div class="f" style="width:71%"></div></div>
+              </div>
+
+              <div class="chart-card">
+                <div class="hd">
+                  <div class="p-eyebrow">Trend</div>
+                  <div class="t">每日里程</div>
+                  <div class="s">这周动了 5 天</div>
+                </div>
+                <div class="legend-row">
+                  <span class="li"><span class="sw" style="background:#FFC260"></span>里程</span>
+                  <span class="li"><span class="ln" style="background:#B45309"></span>快慢</span>
+                </div>
+                <svg viewBox="0 0 330 130" width="100%" style="display:block">
+                  <g stroke="#E3DFD2" stroke-width="1"><line x1="6" x2="324" y1="24" y2="24"/><line x1="6" x2="324" y1="56" y2="56"/><line x1="6" x2="324" y1="88" y2="88"/></g>
+                  <line x1="6" x2="324" y1="108" y2="108" stroke="#D9D4C4" stroke-width="1.4"/>
+                  <g>
+                    <rect x="14" y="66" width="22" height="42" rx="7" fill="#FFC260"/>
+                    <rect x="60" y="42" width="22" height="66" rx="7" fill="#FFC260"/>
+                    <rect x="106" y="102" width="22" height="6" rx="3" fill="#EAE6DA"/>
+                    <rect x="152" y="30" width="22" height="78" rx="7" fill="#EF9F27"/>
+                    <rect x="198" y="52" width="22" height="56" rx="7" fill="#FFC260"/>
+                    <rect x="244" y="18" width="22" height="90" rx="7" fill="#FFC260"/>
+                    <rect x="290" y="78" width="22" height="30" rx="7" fill="#FFC260"/>
+                  </g>
+                  <path d="M25 60 L71 48 L117 62 L163 38 L209 46 L255 30 L301 44" fill="none" stroke="#B45309" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <g fill="#B45309"><circle cx="25" cy="60" r="2.4"/><circle cx="71" cy="48" r="2.4"/><circle cx="163" cy="38" r="2.4"/><circle cx="209" cy="46" r="2.4"/><circle cx="255" cy="30" r="2.4"/><circle cx="301" cy="44" r="2.4"/></g>
+                  <g>
+                    <rect x="118" y="2" width="94" height="30" rx="9" fill="#2C2C2A"/>
+                    <text x="128" y="15" font-size="9" font-weight="800" fill="#FFC260" font-family="Arial">周四 · 6.2 KM</text>
+                    <text x="128" y="26" font-size="8" fill="#B9B4A8" font-family="Arial">每公里约 5'38"</text>
+                    <path d="M160 32 l5 6 5 -6 z" fill="#2C2C2A"/>
+                  </g>
+                  <g fill="#8D897E" font-size="8" font-family="Arial" text-anchor="middle">
+                    <text x="25" y="122">一</text><text x="71" y="122">二</text><text x="117" y="122">三</text><text x="163" y="122">四</text><text x="209" y="122">五</text><text x="255" y="122">六</text><text x="301" y="122">日</text>
+                  </g>
+                </svg>
+              </div>
+
+              <div class="comp-card">
+                <div class="p-hrow">
+                  <div><div class="p-eyebrow">Composition</div><div style="font-size:15px;font-weight:900;color:var(--ink);margin-top:2px">运动构成</div></div>
+                  <span style="font-size:9px;color:var(--dim);font-weight:700">按距离占比</span>
+                </div>
+                <div class="comp-bar">
+                  <div style="width:62%;background:#FFC260"></div>
+                  <div style="width:30%;background:#EF9F27"></div>
+                  <div style="width:8%;background:#8A5A00"></div>
+                </div>
+                <div class="comp-legend">
+                  <div class="c"><div class="row"><span class="pt" style="background:#FFC260"></span>慢走</div><div class="pct">62%</div></div>
+                  <div class="c"><div class="row"><span class="pt" style="background:#EF9F27"></span>常跑</div><div class="pct">30%</div></div>
+                  <div class="c"><div class="row"><span class="pt" style="background:#8A5A00"></span>远足</div><div class="pct">8%</div></div>
+                </div>
+              </div>
+
+              <div class="insight">
+                <div class="hd">
+                  <span style="width:22px;height:22px;border-radius:50%;background:var(--primary);color:var(--ink);display:flex;align-items:center;justify-content:center"><svg class="ic" width="11" height="11"><use href="#i-spark"/></svg></span>
+                  <span class="t">教练观察</span><span class="ai" style="margin-left:auto">AI INSIGHT</span>
+                </div>
+                <p>这周动了 5 天，比上周多 1 天。慢走占了大头，周四那次 6.2 KM 是本周最长的一次，节奏很舒服。</p>
+              </div>
+
+              <div class="rep-foot">每次跑步完成后，报告会自动更新</div>
+            </div>
+          </div>
+          <div style="height:8px"></div>
+        </div>
+        <div class="pfoot">
+          <div class="nav-demo" style="background:transparent;padding:0">
+            <span class="item"><svg class="ic" width="16" height="16"><use href="#i-bolt"/></svg>运动</span>
+            <span class="item on"><svg class="ic" width="16" height="16"><use href="#i-list"/></svg>记录</span>
+          </div>
+        </div>
+      </div></div>
+      <div class="cap">记录 · 历史 / 报告<small>月卡琥珀 tint · Tab 可点击切换 · 趋势图气泡深墨件</small></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ 05 自绘控件映射 ============ -->
+<section class="card" id="widgets">
+  <div class="sec-head"><span class="no">05</span><h2>自绘控件 · 硬编码色值映射</h2></div>
+  <p class="sec-sub">落地时需同步替换的 Kotlin 硬编码色值（2026-10-27 实测 grep，行号以当前分支 fix/home-live-ux 为准）。XML 侧 colors.xml 全量映射见 color-schemes.html 方案三；themes.xml 同步换 Theme.Material3.Light.NoActionBar + windowLightStatusBar=true。</p>
+
+  <h3 class="grp">TrendChartView.kt（报告趋势图 · 14 处）</h3>
+  <table class="spec">
+    <tr><th style="width:80px">行</th><th style="width:120px">旧值</th><th style="width:150px">新值（方案三）</th><th>用途</th></tr>
+    <tr><td>71</td><td><code>#D9FF43</code></td><td><span class="dot" style="background:#FFC260"></span><code>#FFC260</code> primary_soft</td><td>里程柱（常规）</td></tr>
+    <tr><td>72</td><td><code>#EAFF8A</code></td><td><span class="dot" style="background:#EF9F27"></span><code>#EF9F27</code> primary</td><td>里程柱（选中）</td></tr>
+    <tr><td>82 / 84</td><td><code>#FF5C35</code></td><td><span class="dot" style="background:#B45309"></span><code>#B45309</code> track</td><td>快慢折线 / 折线点</td></tr>
+    <tr><td>88</td><td><code>#111611</code></td><td><span class="dot" style="background:#2C2C2A"></span><code>#2C2C2A</code> ink</td><td>选中气泡底</td></tr>
+    <tr><td>98</td><td><code>#596459</code></td><td><span class="dot" style="background:#E3DFD2"></span><code>#E3DFD2</code> stroke</td><td>网格线</td></tr>
+    <tr><td>103 / 308</td><td><code>#6F7A6F</code></td><td><span class="dot" style="background:#8D897E"></span><code>#8D897E</code> dim</td><td>轴标签</td></tr>
+    <tr><td>110</td><td><code>#D9FF43</code></td><td><span class="dot" style="background:#FFC260"></span><code>#FFC260</code></td><td>气泡数值</td></tr>
+    <tr><td>113</td><td><code>#0B0F0B</code></td><td><span class="dot" style="background:#2C2C2A"></span><code>#2C2C2A</code> ink</td><td>tip 底</td></tr>
+    <tr><td>117</td><td><code>#D9FF43</code></td><td><span class="dot" style="background:#EF9F27"></span><code>#EF9F27</code> primary</td><td>tip 数值（墨底上 6.4:1）</td></tr>
+    <tr><td>121</td><td><code>#8C978C</code></td><td><span class="dot" style="background:#B9B4A8"></span><code>#B9B4A8</code></td><td>tip 副文本（墨底浅灰）</td></tr>
+    <tr><td>125</td><td><code>#DFFF4F</code></td><td><span class="dot" style="background:#FFC260"></span><code>#FFC260</code></td><td>气泡高亮</td></tr>
+    <tr><td>130</td><td><code>#FF8A6A</code></td><td><span class="dot" style="background:#FFB65C"></span><code>#FFB65C</code></td><td>暖强调（取图标金渐变中档）</td></tr>
+  </table>
+
+  <h3 class="grp">TrackThumbView.kt（列表缩略图 · 7 处）与 TrackCanvasView.kt（成绩路线图 · 6 处）</h3>
+  <table class="spec">
+    <tr><th style="width:170px">位置</th><th style="width:110px">旧值</th><th style="width:160px">新值</th><th>用途</th></tr>
+    <tr><td>Thumb 31</td><td><code>#E7EDE3</code></td><td><span class="dot" style="background:#F0EEE3"></span><code>#F0EEE3</code> paper</td><td>纸底</td></tr>
+    <tr><td>Thumb 40</td><td><code>#D6DED2</code></td><td><span class="dot" style="background:#DFDBCD"></span><code>#DFDBCD</code></td><td>路网格</td></tr>
+    <tr><td>Thumb 46 / Canvas 50</td><td><code>#FF5C35</code></td><td><span class="dot" style="background:#B45309"></span><code>#B45309</code> track</td><td>轨迹线</td></tr>
+    <tr><td>Thumb 49·58 / Canvas 53·60·67</td><td><code>#D9FF43</code></td><td><span class="dot" style="background:#EF9F27"></span><code>#EF9F27</code> primary</td><td>起点 / 终点内芯 / 旗</td></tr>
+    <tr><td>Thumb 52·55 / Canvas 59</td><td><code>#080B08</code></td><td><span class="dot" style="background:#2C2C2A"></span><code>#2C2C2A</code> ink</td><td>终点外圈 / 墨件</td></tr>
+    <tr><td>Canvas 61</td><td><code>#FF5C35</code></td><td><span class="dot" style="background:#B45309"></span><code>#B45309</code></td><td>成绩页终点标</td></tr>
+  </table>
+
+  <h3 class="grp">CityMapView.kt（local 变体手绘地图 · 常量 9 + 注记 4 色）</h3>
+  <table class="spec">
+    <tr><th style="width:190px">常量（32–40 行）</th><th style="width:110px">旧值</th><th style="width:160px">新值</th><th>说明</th></tr>
+    <tr><td>COLOR_BG</td><td><code>#E9EEE4</code></td><td><span class="dot" style="background:#F0EEE3"></span><code>#F0EEE3</code></td><td>纸底转暖（与缩略图统一）</td></tr>
+    <tr><td>COLOR_DOT</td><td><code>#C7D0C3</code></td><td><span class="dot" style="background:#DFDBCD"></span><code>#DFDBCD</code></td><td>点纹</td></tr>
+    <tr><td>COLOR_RIVER</td><td><code>#B9DAE3</code></td><td><span class="dot" style="background:#BFD6DB"></span><code>#BFD6DB</code></td><td>河流（保留水蓝、降饱和融暖底）</td></tr>
+    <tr><td>COLOR_PARK</td><td><code>#C9E4B4</code></td><td><span class="dot" style="background:#D8E2BC"></span><code>#D8E2BC</code></td><td>绿地转橄榄</td></tr>
+    <tr><td>COLOR_BLOCK_FILL / STROKE</td><td><code>#F7F8F3 / #D2DACD</code></td><td><span class="dot" style="background:#FAF8F1"></span><code>#FAF8F1 / #E0DACB</code></td><td>街区</td></tr>
+    <tr><td>COLOR_ROAD_OUTER / INNER / MINOR</td><td><code>#D0D8CB / #FCFCF8 / #E4E9DF</code></td><td><span class="dot" style="background:#DCD5C4"></span><code>#DCD5C4 / #FDFCF6 / #EDE9DC</code></td><td>道路三层</td></tr>
+    <tr><td>labels（130–138 行）</td><td><code>#7D897A / #9CA79A / #668259 / #7193A1</code></td><td><span class="dot" style="background:#8D897E"></span><code>#8D897E / #A5A093 / #7E8A5A / #7E97A0</code></td><td>路名 / RUN ST. / 绿地 / 河名</td></tr>
+  </table>
+
+  <h3 class="grp">PaceCurveView.kt · WeekBarsView.kt · ReportBuilder.kt · item_split.xml</h3>
+  <table class="spec">
+    <tr><th style="width:190px">位置</th><th style="width:110px">旧值</th><th style="width:160px">新值</th><th>说明</th></tr>
+    <tr><td>PaceCurve 28</td><td><code>#14FFFFFF</code></td><td><code>#142C2C2A</code></td><td>网格线 = 墨 8%（白透明阶梯反转）</td></tr>
+    <tr><td>PaceCurve 35 / 38</td><td><code>#D9FF43</code></td><td><span class="dot" style="background:#8A5A00"></span><code>#8A5A00</code> accent_deep</td><td>配速曲线 / 点——2.5dp 细线在白卡需 ≥3:1，primary 仅 2.4:1 故用 deep</td></tr>
+    <tr><td>PaceCurve 40</td><td><code>#5D685D</code></td><td><span class="dot" style="background:#6E6A61"></span><code>#6E6A61</code> muted</td><td>轴文字</td></tr>
+    <tr><td>WeekBars 39</td><td><code>#717C71</code></td><td><span class="dot" style="background:#6E6A61"></span><code>#6E6A61</code> muted</td><td>星期标签；控件整体按 02 节重构（dailyKm→dailyMinutes、七色方柱密排）</td></tr>
+    <tr><td>ReportBuilder 294–317</td><td><code>#D9FF43 / #FF5C35 / #5B675B</code></td><td><span class="dot" style="background:#FFC260"></span><code>#FFC260 / #EF9F27 / #8A5A00</code></td><td>构成三色：慢走 / 常跑 / 远足（同族三阶）</td></tr>
+    <tr><td>item_split.xml 19</td><td><code>#DCE4DC</code></td><td><span class="dot" style="background:#4A473F"></span><code>#4A473F</code> soft</td><td>分段名（布局内联色，建议顺手改资源引用）</td></tr>
+  </table>
+</section>
+
+<!-- ============ 06 交付说明 ============ -->
+<section class="card" id="deliver">
+  <div class="sec-head"><span class="no">06</span><h2>交付说明</h2></div>
+  <div class="demo-grid" style="grid-template-columns:repeat(auto-fill,minmax(300px,1fr))">
+    <div class="callout amber">
+      <b>状态：设计稿，未动任何代码。</b><br>
+      本文件位于 design/explore/（不参与构建），与 color-schemes.html 配套。colors.xml / themes.xml / Kotlin 硬编码 / 布局的全部改动，待你确认本页设计并明确同意后再实施（建议分支 feat/light-theme-warm，落地顺序见 color-schemes.html 附录 B）。
+    </div>
+    <div class="callout amber">
+      <b>验收方式。</b><br>
+      ① 周节奏卡：切换周一至周日，检查七色方柱密排、今日列高亮与日期数字是否与系统日期一致；② 四页整机预览与 design/prototype/ 逐页对照布局结构（仅换色，不改布局）；③ 文案均出自真实 strings.xml，可全文搜索核对；④ 对比度以 color-schemes.html 方案三 WCAG 实测表为准。
+    </div>
+    <div class="callout amber">
+      <b>已知取舍。</b><br>
+      ① 柱高口径改为「当日运动时长」，落地时 HomeActivity 取数与 WeekBarsView 属性需同步改（本页 02 节已列）；② PaceCurve 细线用 accent_deep 而非 primary（对比度 3:1 红线）；③ 河流/地图保留少量冷色（水的自然色），已降饱和融入暖底；④ 演示数据为样例，非真实记录。
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="page-foot">
+  <div class="wrap">
+    逐日 · SUNWARD — 组件样式可视化（方案三 · 蜜琥珀 HONEY AMBER）· 2026-10-27 ·<br>
+    <b>design/explore/component-styles.html</b> · 配套：design/explore/color-schemes.html（五案对比）· 开源参考：Endurain（AGPL）/ FitoTrack（GPL）/ RunnerUp（GPL）
+  </div>
+</footer>
+
+<script>
+/* ================= 周节奏卡 ================= */
+const WEEK_LABELS=['一','二','三','四','五','六','日'];
+const WEEK_COLORS=['#CB5A4E','#DF8A3E','#E0B23F','#8CA84F','#5EA79E','#5E80B8','#9070A6'];
+const THIS_MIN=[32,45,26,38,52,68,24];   // 演示数据：本周每日运动时长（分钟）
+const sysIdx=(new Date().getDay()+6)%7;  // 系统今天（周一=0）
+let todayIdx=sysIdx;
+
+function weekDates(){
+  const now=new Date(); const dow=(now.getDay()+6)%7;
+  const mon=new Date(now); mon.setDate(now.getDate()-dow);
+  const arr=[]; for(let i=0;i<7;i++){const d=new Date(mon); d.setDate(mon.getDate()+i); arr.push(d);} return arr;
+}
+function fmtMin(m){ if(m>=60){const h=Math.floor(m/60),r=m%60;return r?h+' 小时 '+r+' 分':h+' 小时';} return m+' 分'; }
+
+function renderWeek(el,cfg){
+  cfg=Object.assign({barH:150,colW:40,barW:28,gap:6,chip:true},cfg||{});
+  const dates=weekDates();
+  const visible=THIS_MIN.slice(0,todayIdx+1);
+  const maxScale=Math.max.apply(null,visible.concat([1]));
+  const active=visible.filter(v=>v>0).length;
+  let html='';
+  for(let i=0;i<7;i++){
+    const future=i>todayIdx, isToday=i===todayIdx;
+    const val=future?null:THIS_MIN[i];
+    const ch=val>0?Math.max(val/maxScale*cfg.barH,6):0;
+    html+='<div class="wk-col'+(isToday?' today':'')+(future?' future':'')+'" style="width:'+cfg.colW+'px">';
+    if(cfg.chip){
+      html+='<div class="wk-chip-slot">'+(isToday&&val>0?'<span class="wk-chip">'+val+' 分</span>':'')+'</div>';
+    }
+    html+='<div class="wk-bars" style="height:'+cfg.barH+'px;width:'+cfg.colW+'px">';
+    if(ch>0) html+='<div class="wk-bar" style="height:'+ch.toFixed(1)+'px;width:'+cfg.barW+'px;background:'+WEEK_COLORS[i]+'"></div>';
+    html+='</div>';
+    html+='<div class="wk-label">'+WEEK_LABELS[i]+'</div>';
+    html+='<div class="wk-date">'+dates[i].getDate()+'</div>';
+    html+='</div>';
+  }
+  const wkEl=el.querySelector('.wk');
+  wkEl.style.gap=cfg.gap+'px';
+  wkEl.innerHTML=html;
+  const chip=el.querySelector('[data-role=wk-chip]'); if(chip) chip.textContent='动了 '+active+' 天';
+  const note=el.querySelector('[data-role=wk-note]'); if(note) note.textContent='本周动了 '+active+' 天，共 7 天';
+  const enc=el.querySelector('[data-role=wk-enc]');
+  if(enc) enc.textContent= active===0?'今天还没动，出去走走吧':(active>=7?'这七天都动过了，很好':'明天也出门走走？');
+  const fill=el.querySelector('[data-role=wk-fill]'); if(fill) fill.style.width=(active/7*100).toFixed(1)+'%';
+  const pv=el.querySelector('[data-role=wk-pv]'); if(pv) pv.textContent=active+' / 7 天';
+}
+
+function renderAll(){
+  renderWeek(document.getElementById('weekBig'),{barH:150,colW:40,barW:28,gap:6,chip:true});
+  renderWeek(document.getElementById('weekHome'),{barH:92,colW:30,barW:20,gap:4,chip:true});
+  document.querySelectorAll('#dayBtns .daybtn').forEach((b,i)=>b.classList.toggle('on',i===todayIdx));
+}
+
+/* 工具栏：日期按钮 + 系统今天 */
+(function(){
+  const dates=weekDates();
+  const box=document.getElementById('dayBtns');
+  WEEK_LABELS.forEach((l,i)=>{
+    const b=document.createElement('button');
+    b.className='daybtn'; b.textContent=l+' '+dates[i].getDate();
+    b.addEventListener('click',()=>{todayIdx=i;renderAll();});
+    box.appendChild(b);
+  });
+  const now=new Date();
+  document.getElementById('sysToday').textContent=
+    '周'+WEEK_LABELS[(now.getDay()+6)%7]+' · '+(now.getMonth()+1)+'月'+now.getDate()+'日（自动识别）';
+  document.getElementById('btnReset').addEventListener('click',()=>{todayIdx=sysIdx;renderAll();});
+  renderAll();
+})();
+
+/* ================= 记录页 Tab ================= */
+function recTab(which){
+  const his=which==='his';
+  document.getElementById('panelHis').style.display=his?'':'none';
+  document.getElementById('panelRep').style.display=his?'none':'';
+  document.getElementById('tabHis').classList.toggle('on',his);
+  document.getElementById('tabRep').classList.toggle('on',!his);
+}
+</script>
+</body>
+</html>
