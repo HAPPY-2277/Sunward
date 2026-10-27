@@ -1,115 +1,140 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- 设计令牌，取自原型 design/prototype/*.html -->
-    <color name="bg_outer">#050705</color>
-    <color name="bg_base">#080B08</color>
-    <color name="bg_card">#111611</color>
-    <color name="bg_card_alt">#121712</color>
-    <color name="bg_chip">#151B15</color>
+    <!-- 设计令牌：方案三「蜜琥珀 HONEY AMBER」浅色暖底。
+         基线：design/explore/component-styles.html（取色参考 Endurain / FitoTrack / RunnerUp，
+         见 design/explore/color-schemes.html 方案三）。 -->
+    <color name="bg_outer">#E9E6DC</color>
+    <color name="bg_base">#F1EFE8</color>
+    <color name="bg_card">#FFFFFF</color>
+    <color name="bg_card_alt">#F7F5EF</color>
+    <color name="bg_chip">#EAE6DA</color>
 
-    <color name="accent_lime">#D9FF43</color>
-    <color name="accent_orange">#FF5C35</color>
+    <!-- accent_lime = 主色蜜琥珀；accent_orange = 辅助深琥珀。名字沿用历史，值已替换 -->
+    <color name="accent_lime">#EF9F27</color>
+    <color name="accent_orange">#854F0B</color>
+    <!-- 链接 / 进度 / 浅底强调文字专用（#F1EFE8 上 5.2:1） -->
+    <color name="accent_deep">#8A5A00</color>
+    <!-- 深墨：琥珀 / 深棕主色块上的文字与图标（bg_base 不再承担墨色语义） -->
+    <color name="ink">#2C2C2A</color>
 
-    <color name="text_primary">#FFFFFF</color>
-    <color name="text_muted">#8C978C</color>
-    <color name="text_dim">#6F7A6F</color>
-    <color name="text_dim2">#737E73</color>
-    <color name="text_soft">#C5CEC5</color>
-    <color name="text_soft2">#AAB4AA</color>
+    <color name="text_primary">#2C2C2A</color>
+    <color name="text_muted">#6E6A61</color>
+    <color name="text_dim">#8D897E</color>
+    <color name="text_dim2">#949084</color>
+    <color name="text_soft">#4A473F</color>
+    <color name="text_soft2">#57544B</color>
 
-    <color name="stroke_subtle">#1E261E</color>
-    <color name="divider">#1A211A</color>
+    <color name="stroke_subtle">#E3DFD2</color>
+    <color name="divider">#E9E5D9</color>
 
-    <color name="lime_08">#14D9FF43</color>
-    <color name="lime_16">#29D9FF43</color>
-    <color name="orange_16">#29FF5C35</color>
+    <color name="lime_08">#14EF9F27</color>
+    <color name="lime_16">#29EF9F27</color>
+    <color name="orange_16">#29854F0B</color>
 
-    <!-- 白色透明度阶梯（对应原型 Tailwind 的 white/[0.04] 等写法） -->
-    <color name="white_04">#0AFFFFFF</color>
-    <color name="white_06">#0FFFFFFF</color>
-    <color name="white_07">#12FFFFFF</color>
-    <color name="white_08">#14FFFFFF</color>
-    <color name="white_10">#1AFFFFFF</color>
-    <color name="white_15">#26FFFFFF</color>
-    <color name="white_45">#73FFFFFF</color>
-    <color name="white_60">#99FFFFFF</color>
-    <color name="white_90">#E6FFFFFF</color>
-    <color name="white_95">#F2FFFFFF</color>
+    <!-- 透明度阶梯。white_04…15 已反转为墨色透明（浅底上的分隔线 / 玻璃底 / 进度槽）；
+         white_45/60 是深墨底上的奶油色浅字（GO 钮提示、墨 pill eyebrow），white_90/95 是地图浮层白底 -->
+    <color name="white_04">#0A2C2C2A</color>
+    <color name="white_06">#0F2C2C2A</color>
+    <color name="white_07">#122C2C2A</color>
+    <color name="white_08">#142C2C2A</color>
+    <color name="white_10">#1A2C2C2A</color>
+    <color name="white_15">#262C2C2A</color>
+    <color name="white_45">#73F5F2E9</color>
+    <color name="white_60">#99F5F2E9</color>
+    <color name="white_90">#E6FAF8F1</color>
+    <color name="white_95">#FAF8F1</color>
 
-    <color name="lime_06">#0FD9FF43</color>
-    <color name="lime_10">#1AD9FF43</color>
-    <color name="lime_15">#26D9FF43</color>
-    <color name="lime_20">#33D9FF43</color>
-    <color name="lime_25">#40D9FF43</color>
-    <color name="lime_30">#4DD9FF43</color>
-    <color name="orange_15">#26FF5C35</color>
-    <color name="orange_20">#33FF5C35</color>
-    <color name="bg_card_month">#1A1410</color>
+    <color name="lime_06">#0FEF9F27</color>
+    <color name="lime_10">#1AEF9F27</color>
+    <color name="lime_15">#26EF9F27</color>
+    <color name="lime_20">#33EF9F27</color>
+    <color name="lime_25">#40EF9F27</color>
+    <color name="lime_30">#4DEF9F27</color>
+    <color name="lime_40">#66EF9F27</color>
+    <color name="orange_15">#26854F0B</color>
+    <color name="orange_20">#33854F0B</color>
+    <!-- 月度回顾卡底（琥珀浅 tint） -->
+    <color name="bg_card_month">#F8EAD1</color>
+    <color name="month_badge">#1FB45309</color>
 
-    <color name="white_05">#0DFFFFFF</color>
+    <color name="white_05">#0D2C2C2A</color>
 
     <!-- 记录页 / 报告页 -->
-    <color name="card_bg">#111611</color>
-    <color name="report_hero_bg">#141A14</color>
-    <color name="orange_light">#FF8465</color>
-    <color name="legend_gray">#5B675B</color>
-    <color name="text_tab_inactive">#879287</color>
-    <color name="text_period_inactive">#899489</color>
-    <color name="text_range">#687368</color>
-    <color name="text_report_dim">#6D786D</color>
-    <color name="text_km_olive">#B6C68A</color>
-    <color name="text_progress_dim">#737E73</color>
-    <color name="text_composition">#D9E1D9</color>
-    <color name="text_insight">#A2AEA2</color>
-    <color name="text_faint2">#525D52</color>
-    <color name="text_olive">#94A163</color>
+    <color name="card_bg">#FFFFFF</color>
+    <color name="report_hero_bg">#EDEBE1</color>
+    <!-- orange_light = 轨迹 / 实时标签用暖棕 -->
+    <color name="orange_light">#B45309</color>
+    <color name="legend_gray">#8D897E</color>
+    <color name="text_tab_inactive">#8D897E</color>
+    <color name="text_period_inactive">#8D897E</color>
+    <color name="text_range">#6E6A61</color>
+    <color name="text_report_dim">#8D897E</color>
+    <color name="text_km_olive">#A05E0A</color>
+    <color name="text_progress_dim">#8D897E</color>
+    <color name="text_composition">#4A473F</color>
+    <color name="text_insight">#4A473F</color>
+    <color name="text_faint2">#A5A093</color>
+    <color name="text_olive">#A05E0A</color>
 
-    <!-- 橙色月度卡上的深色文字 -->
-    <color name="ink_month">#1A0803</color>
-    <color name="ink_month_08">#141A0803</color>
-    <color name="ink_month_12">#1F1A0803</color>
-    <color name="ink_month_30">#4D1A0803</color>
-    <color name="ink_month_45">#731A0803</color>
-    <color name="ink_month_50">#801A0803</color>
-    <color name="ink_month_65">#A61A0803</color>
+    <!-- 月度卡上的深色文字（浅色 tint 底上用墨色透明阶梯） -->
+    <color name="ink_month">#2C2C2A</color>
+    <color name="ink_month_08">#142C2C2A</color>
+    <color name="ink_month_12">#1F2C2C2A</color>
+    <color name="ink_month_30">#4D2C2C2A</color>
+    <color name="ink_month_45">#732C2C2A</color>
+    <color name="ink_month_50">#802C2C2A</color>
+    <color name="ink_month_65">#A62C2C2A</color>
 
-    <!-- 荧光绿卡上的深色文字透明度阶梯 -->
-    <color name="ink_06">#0F080B08</color>
-    <color name="ink_08">#14080B08</color>
-    <color name="ink_40">#66080B08</color>
-    <color name="ink_45">#73080B08</color>
-    <color name="ink_50">#80080B08</color>
-    <color name="ink_55">#8C080B08</color>
-    <color name="ink_60">#99080B08</color>
-    <color name="ink_30">#4D080B08</color>
-    <color name="ink_orange">#160A06</color>
+    <!-- 深墨透明阶梯（GO 钮外环、遮罩、装饰圈等） -->
+    <color name="ink_06">#0F2C2C2A</color>
+    <color name="ink_08">#142C2C2A</color>
+    <color name="ink_18">#2E2C2C2A</color>
+    <color name="ink_30">#4D2C2C2A</color>
+    <color name="ink_40">#662C2C2A</color>
+    <color name="ink_45">#732C2C2A</color>
+    <color name="ink_50">#802C2C2A</color>
+    <color name="ink_55">#8C2C2C2A</color>
+    <color name="ink_60">#992C2C2A</color>
+    <color name="ink_orange">#1A2C2C2A</color>
 
-    <!-- 原型里的补充灰阶 -->
-    <color name="text_faint">#596359</color>
-    <color name="text_muted2">#7B867B</color>
-    <color name="text_gray">#8D998D</color>
-    <color name="text_place">#657065</color>
-    <color name="orange_soft">#FF7E5C</color>
+    <!-- 补充灰阶 -->
+    <color name="text_faint">#949084</color>
+    <color name="text_muted2">#6E6A61</color>
+    <color name="text_gray">#6E6A61</color>
+    <color name="text_place">#8D897E</color>
+    <!-- orange_soft = primary-soft 亮琥珀（图表浅柱 / 高亮填充） -->
+    <color name="orange_soft">#FFC260</color>
 
-    <!-- 地图上的文字色 -->
-    <color name="map_road_text">#7D897A</color>
-    <color name="map_road_text2">#9CA79A</color>
-    <color name="map_park_text">#668259</color>
-    <color name="map_river_text">#7193A1</color>
+    <!-- 地图上的文字色（暖灰系，河流保留冷色降饱和，见设计稿 §06 取舍） -->
+    <color name="map_road_text">#8D897E</color>
+    <color name="map_road_text2">#A5A093</color>
+    <color name="map_park_text">#7E8A5A</color>
+    <color name="map_river_text">#7E97A0</color>
 
-    <color name="scrim_dark">#E60B0F0B</color>
-    <!-- 覆盖层遮罩：实时页的结束确认卡等自绘弹层共用（原型 rgba(5,7,5,0.7)） -->
-    <color name="scrim_modal">#B3050705</color>
-    <color name="debug_panel_bg">#0F1410</color>
-    <color name="modal_bg">#151B15</color>
+    <!-- 暖黑遮罩（墨色 42% / 70%） -->
+    <color name="scrim_dark">#6B2C2C2A</color>
+    <color name="scrim_modal">#B32C2C2A</color>
+    <color name="debug_panel_bg">#F7F5EF</color>
+    <color name="modal_bg">#FFFFFF</color>
 
     <!-- 成绩页底部栏 -->
-    <color name="footer_bg">#0A0E0A</color>
-    <color name="text_dce4dc">#DCE4DC</color>
-    <color name="text_717c71">#717C71</color>
+    <color name="footer_bg">#E8E5DA</color>
+    <color name="text_dce4dc">#4A473F</color>
+    <color name="text_717c71">#6E6A61</color>
+
+    <!-- 周节奏卡：周一至周日七色（暖调和谐系，色相顺序红橙黄绿青蓝紫）+ 今日衬底 -->
+    <color name="week_day_1">#CB5A4E</color>
+    <color name="week_day_2">#DF8A3E</color>
+    <color name="week_day_3">#E0B23F</color>
+    <color name="week_day_4">#8CA84F</color>
+    <color name="week_day_5">#5EA79E</color>
+    <color name="week_day_6">#5E80B8</color>
+    <color name="week_day_7">#9070A6</color>
+    <color name="week_today_bg">#1AEF9F27</color>
+    <color name="week_faint">#B9B4A8</color>
 
     <!-- sunward 朝阳金品牌色（源：design/icon/sunward-icon.svg）
-         启动图标与首页品牌 logo 共用；界面其余部分仍是荧光绿 #D9FF43，后续替换 -->
+         启动图标与首页品牌 logo 共用；界面主色已替换为蜜琥珀 #EF9F27 -->
     <color name="sunward_ink">#1C1310</color>
     <color name="sunward_halo_16">#29FF8A3C</color>
 </resources>

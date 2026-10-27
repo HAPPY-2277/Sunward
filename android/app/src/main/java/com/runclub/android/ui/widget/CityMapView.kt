@@ -29,15 +29,15 @@ class CityMapView @JvmOverloads constructor(
         const val DESIGN_W = 393f
         const val DESIGN_H = 660f
 
-        const val COLOR_BG = "#E9EEE4"
-        const val COLOR_DOT = "#C7D0C3"
-        const val COLOR_RIVER = "#B9DAE3"
-        const val COLOR_PARK = "#C9E4B4"
-        const val COLOR_BLOCK_FILL = "#F7F8F3"
-        const val COLOR_BLOCK_STROKE = "#D2DACD"
-        const val COLOR_ROAD_OUTER = "#D0D8CB"
-        const val COLOR_ROAD_INNER = "#FCFCF8"
-        const val COLOR_ROAD_MINOR = "#E4E9DF"
+        const val COLOR_BG = "#F0EEE3"
+        const val COLOR_DOT = "#DFDBCD"
+        const val COLOR_RIVER = "#BFD6DB"
+        const val COLOR_PARK = "#D8E2BC"
+        const val COLOR_BLOCK_FILL = "#FAF8F1"
+        const val COLOR_BLOCK_STROKE = "#E0DACB"
+        const val COLOR_ROAD_OUTER = "#DCD5C4"
+        const val COLOR_ROAD_INNER = "#FDFCF6"
+        const val COLOR_ROAD_MINOR = "#EDE9DC"
 
         const val DOT_STEP = 22f
     }
@@ -128,13 +128,13 @@ class CityMapView @JvmOverloads constructor(
 
     /** (x, y, 文本, 旋转角度, 颜色) */
     private val labels = listOf(
-        Label(174f, 172f, "滨江大道", -1f, "#7D897A"),
-        Label(301f, 337f, "公园路", -1f, "#7D897A"),
-        Label(34f, 527f, "西岸绿道", -2f, "#7D897A"),
-        Label(69f, 98f, "RUN ST.", 84f, "#9CA79A"),
-        Label(246f, 255f, "河畔公园", 0f, "#668259"),
-        Label(333f, 235f, "城市体育场", 74f, "#668259"),
-        Label(135f, 32f, "城 市 河", 0f, "#7193A1")
+        Label(174f, 172f, "滨江大道", -1f, "#8D897E"),
+        Label(301f, 337f, "公园路", -1f, "#8D897E"),
+        Label(34f, 527f, "西岸绿道", -2f, "#8D897E"),
+        Label(69f, 98f, "RUN ST.", 84f, "#A5A093"),
+        Label(246f, 255f, "河畔公园", 0f, "#7E8A5A"),
+        Label(333f, 235f, "城市体育场", 74f, "#7E8A5A"),
+        Label(135f, 32f, "城 市 河", 0f, "#7E97A0")
     )
 
     private val blockRect = RectF()

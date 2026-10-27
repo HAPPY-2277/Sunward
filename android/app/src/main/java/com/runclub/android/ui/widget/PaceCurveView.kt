@@ -25,19 +25,19 @@ class PaceCurveView @JvmOverloads constructor(
     private var totalKm: Double = 0.0
 
     private val gridPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.parseColor("#14FFFFFF")
+        color = Color.parseColor("#142C2C2A")
         strokeWidth = 1f * density
     }
     private val linePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
         strokeCap = Paint.Cap.ROUND
         strokeJoin = Paint.Join.ROUND
-        color = Color.parseColor("#D9FF43")
+        color = Color.parseColor("#8A5A00")
         strokeWidth = 2.5f * density
     }
-    private val dotPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.parseColor("#D9FF43") }
+    private val dotPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.parseColor("#8A5A00") }
     private val labelPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.parseColor("#5D685D")
+        color = Color.parseColor("#6E6A61")
         textSize = 7f * density
     }
 

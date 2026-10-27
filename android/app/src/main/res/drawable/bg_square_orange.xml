@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- 弹窗/卡片图标方块：琥珀底 + 墨色图标（设计稿 dialog icbox） -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
-    <solid android:color="@color/accent_orange" />
+    <solid android:color="@color/accent_lime" />
     <corners android:radius="16dp" />
 </shape>

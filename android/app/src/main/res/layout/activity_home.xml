@@ -233,7 +233,7 @@
                                 android:letterSpacing="-0.07"
                                 android:lineSpacingExtra="-4dp"
                                 android:text="@string/home_title"
-                                android:textColor="@color/bg_base"
+                                android:textColor="@color/ink"
                                 android:textSize="38sp"
                                 android:textStyle="bold" />
 
@@ -266,7 +266,7 @@
                                         android:layout_height="wrap_content"
                                         android:layout_marginTop="4dp"
                                         android:text="@string/home_suggestion_value"
-                                        android:textColor="@color/bg_base"
+                                        android:textColor="@color/ink"
                                         android:textSize="17sp"
                                         android:textStyle="bold" />
 
@@ -537,7 +537,7 @@
                             android:paddingEnd="12dp"
                             android:paddingBottom="6dp"
                             android:text="@string/home_week_active_days_chip"
-                            android:textColor="@color/accent_lime"
+                            android:textColor="@color/accent_deep"
                             android:textSize="11sp"
                             android:textStyle="bold" />
                     </LinearLayout>
@@ -619,7 +619,7 @@
                             android:paddingEnd="4dp"
                             android:paddingBottom="4dp"
                             android:text="@string/home_all_records"
-                            android:textColor="@color/accent_lime"
+                            android:textColor="@color/accent_deep"
                             android:textSize="11sp"
                             android:textStyle="bold" />
 
@@ -628,7 +628,7 @@
                             android:layout_height="14dp"
                             android:contentDescription="@string/home_all_records"
                             android:src="@drawable/ic_chevron_right"
-                            android:tint="@color/accent_lime" />
+                            android:tint="@color/accent_deep" />
                     </LinearLayout>
 
                     <!-- 上次跑步卡片 -->
@@ -681,7 +681,7 @@
                                     android:paddingEnd="8dp"
                                     android:paddingBottom="1dp"
                                     android:text="@string/home_pb"
-                                    android:textColor="@color/orange_soft"
+                                    android:textColor="@color/accent_orange"
                                     android:textSize="11sp"
                                     android:textStyle="bold"
                                     android:visibility="gone" />
@@ -706,7 +706,7 @@
                                     android:id="@+id/tvLastRunDistance"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:textColor="@color/accent_lime"
+                                    android:textColor="@color/accent_deep"
                                     android:textSize="11sp"
                                     android:textStyle="bold" />
 
@@ -769,14 +769,14 @@
                     android:layout_height="20dp"
                     android:contentDescription="@string/tab_sport"
                     android:src="@drawable/ic_footprints"
-                    android:tint="@color/bg_base" />
+                    android:tint="@color/ink" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:text="@string/tab_sport"
-                    android:textColor="@color/bg_base"
+                    android:textColor="@color/ink"
                     android:textSize="12sp"
                     android:textStyle="bold" />
             </LinearLayout>

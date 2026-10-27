@@ -47,24 +47,24 @@ class TrackCanvasView @JvmOverloads constructor(
         style = Paint.Style.STROKE
         strokeCap = Paint.Cap.ROUND
         strokeJoin = Paint.Join.ROUND
-        color = Color.parseColor("#FF5C35")
+        color = Color.parseColor("#B45309")
         strokeWidth = 5.5f * density
     }
-    private val startPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.parseColor("#D9FF43") }
+    private val startPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.parseColor("#EF9F27") }
     private val startRingPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
         strokeWidth = 2.5f * density
         color = Color.WHITE
     }
-    private val endPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.parseColor("#080B08") }
-    private val endInnerPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.parseColor("#D9FF43") }
-    private val endResultPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.parseColor("#FF5C35") }
+    private val endPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.parseColor("#2C2C2A") }
+    private val endInnerPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.parseColor("#EF9F27") }
+    private val endResultPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.parseColor("#B45309") }
 
     /** 当前位置的脉冲圈（对应原型里 animate-pulse 的效果） */
     private val pulsePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
         strokeWidth = 2f * density
-        color = Color.parseColor("#D9FF43")
+        color = Color.parseColor("#EF9F27")
     }
     private var pulseProgress = 0f
     private var pulseAnimator: android.animation.ValueAnimator? = null

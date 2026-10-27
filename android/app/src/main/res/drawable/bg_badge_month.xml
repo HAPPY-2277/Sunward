@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 月度卡上的徽标：暖棕 12% tint 底 + 棕字（设计稿 month-card .mark） -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <solid android:color="@color/month_badge" />
+    <corners android:radius="999dp" />
+</shape>

@@ -170,16 +170,16 @@ class RecordsActivity : AppCompatActivity() {
             if (report) R.drawable.bg_nav_active else 0
         )
         findViewById<TextView>(R.id.tvTabHistory).setTextColor(
-            color(if (report) R.color.text_tab_inactive else R.color.bg_base)
+            color(if (report) R.color.text_tab_inactive else R.color.ink)
         )
         findViewById<TextView>(R.id.tvTabReport).setTextColor(
-            color(if (report) R.color.bg_base else R.color.text_tab_inactive)
+            color(if (report) R.color.ink else R.color.text_tab_inactive)
         )
         findViewById<android.widget.ImageView>(R.id.ivTabHistory).setColorFilter(
-            color(if (report) R.color.text_tab_inactive else R.color.bg_base)
+            color(if (report) R.color.text_tab_inactive else R.color.ink)
         )
         findViewById<android.widget.ImageView>(R.id.ivTabReport).setColorFilter(
-            color(if (report) R.color.bg_base else R.color.text_tab_inactive)
+            color(if (report) R.color.ink else R.color.text_tab_inactive)
         )
 
         if (report) {
@@ -196,7 +196,7 @@ class RecordsActivity : AppCompatActivity() {
             val view = findViewById<TextView>(id)
             val active = minKm == threshold
             view.setBackgroundResource(if (active) R.drawable.bg_nav_active else R.drawable.bg_chip_glass)
-            view.setTextColor(color(if (active) R.color.bg_base else R.color.text_dim))
+            view.setTextColor(color(if (active) R.color.ink else R.color.text_dim))
             view.setTextSize(android.util.TypedValue.COMPLEX_UNIT_SP, 12f)
         }
     }
@@ -212,7 +212,7 @@ class RecordsActivity : AppCompatActivity() {
             view.setBackgroundResource(
                 if (active) R.drawable.bg_period_active else R.drawable.bg_period_inactive
             )
-            view.setTextColor(color(if (active) R.color.bg_base else R.color.text_period_inactive))
+            view.setTextColor(color(if (active) R.color.ink else R.color.text_period_inactive))
         }
     }
 

@@ -110,7 +110,7 @@ class SunwardDialog private constructor(private val dialog: Dialog) {
             icon.imageTintList = ColorStateList.valueOf(
                 ContextCompat.getColor(
                     context,
-                    if (iconOnLime) R.color.bg_base else R.color.text_primary
+                    if (iconOnLime) R.color.ink else R.color.text_primary
                 )
             )
 
