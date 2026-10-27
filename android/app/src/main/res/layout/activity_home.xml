@@ -545,7 +545,7 @@
                     <com.runclub.android.ui.widget.WeekBarsView
                         android:id="@+id/weekBars"
                         android:layout_width="match_parent"
-                        android:layout_height="112dp"
+                        android:layout_height="168dp"
                         android:layout_marginTop="20dp" />
 
                     <FrameLayout

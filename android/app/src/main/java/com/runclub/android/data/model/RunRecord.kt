@@ -42,6 +42,7 @@ data class StoredTrackPoint(
 /**
  * 某一周的汇总（首页「本周节奏」用）。
  * @param dailyKm 周一→周日的每日里程，0 表示当天没动
+ * @param dailyMinutes 周一→周日的每日运动时长（分钟，不足 1 分钟按 1 分钟计），0 表示当天没动——柱状图口径
  * @param activeDays 本周动过的天数（同一天多次只算一天）——逐日的核心指标
  */
 data class WeeklyStats(
@@ -50,6 +51,7 @@ data class WeeklyStats(
     val totalCalories: Int,
     val runCount: Int,
     val dailyKm: List<Double>,
+    val dailyMinutes: List<Int>,
     val activeDays: Int,
     /** 本周可选天数，恒为 7 */
     val targetDays: Int = 7

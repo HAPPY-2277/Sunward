@@ -57,12 +57,15 @@ class RunRepository private constructor(context: Context) {
         val inWeek = all().filter { it.startTimeMs in weekStartMs until weekEndMs }
 
         val daily = ArrayList<Double>(7)
+        val dailyMinutes = ArrayList<Int>(7)
         for (i in 0..6) {
             val day = weekStart.plusDays(i.toLong())
-            val km = inWeek
+            val thatDay = inWeek
                 .filter { LocalDate.ofInstant(Instant.ofEpochMilli(it.startTimeMs), zoneId) == day }
-                .sumOf { it.distanceKm }
-            daily += km
+            daily += thatDay.sumOf { it.distanceKm }
+            // 分钟口径给「本周节奏」柱状图：动了几分钟，比跑了几个 0.x 公里更贴近「今天动了吗」
+            val ms = thatDay.sumOf { it.durationMs }
+            dailyMinutes += if (ms > 0) ((ms + 59_999) / 60_000).toInt() else 0
         }
 
         val activeDays = inWeek
@@ -75,6 +78,7 @@ class RunRepository private constructor(context: Context) {
             totalCalories = inWeek.sumOf { it.calories },
             runCount = inWeek.size,
             dailyKm = daily,
+            dailyMinutes = dailyMinutes,
             activeDays = activeDays,
             targetDays = 7
         )
