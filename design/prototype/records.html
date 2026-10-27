@@ -9,31 +9,31 @@
 <script src="https://modao.cc/agent-py/static/source/js/iconify-icon.min.js"></script>
 <script src="https://modao.cc/agent-py/static/source/js/echarts.min.js"></script>
 </head>
-<body class="w-full h-full m-0 overflow-hidden flex items-center justify-center bg-[#050705] text-white antialiased">
-<div class="relative flex h-full max-h-[852px] w-full max-w-[393px] flex-col overflow-hidden bg-[#080B08]">
+<body class="w-full h-full m-0 overflow-hidden flex items-center justify-center bg-[#E9E6DC] text-[#2C2C2A] antialiased">
+<div class="relative flex h-full max-h-[852px] w-full max-w-[393px] flex-col overflow-hidden bg-[#F1EFE8]">
 <header class="shrink-0 px-5 pt-5">
 <div class="flex items-start justify-between">
 <div>
 <div class="flex items-center gap-2">
-<span class="flex h-7 w-7 items-center justify-center rounded-[9px] bg-[#D9FF43] text-[#080B08]">
+<span class="flex h-7 w-7 items-center justify-center rounded-[9px] bg-[#EF9F27] text-[#2C2C2A]">
 <iconify-icon icon="lucide:chart-no-axes-column" width="16"></iconify-icon>
 </span>
-<p class="text-[9px] font-bold uppercase tracking-[0.26em] text-[#7E897E]">Run Log</p>
+<p class="text-[9px] font-bold uppercase tracking-[0.26em] text-[#6E6A61]">Run Log</p>
 </div>
 <h1 class="mt-3 text-[30px] font-black leading-none tracking-[-0.06em]">跑步记录</h1>
-<p class="mt-2 text-[11px] font-medium text-[#7F8A7F]">每一步，都值得被记住。</p>
+<p class="mt-2 text-[11px] font-medium text-[#6E6A61]">每一步，都值得被记住。</p>
 </div>
-<div class="rounded-[18px] border border-[#D9FF43]/20 bg-[#D9FF43]/[0.07] px-3.5 py-2.5 text-center">
-<p class="text-[19px] font-black leading-none text-[#D9FF43]">7<span class="ml-0.5 text-[8px] font-bold">天</span></p>
-<p class="mt-1.5 text-[8px] font-bold tracking-[0.06em] text-[#94A163]">连续运动</p>
+<div class="rounded-[18px] border border-[#EF9F27]/20 bg-[#EF9F27]/[0.07] px-3.5 py-2.5 text-center">
+<p class="text-[19px] font-black leading-none text-[#EF9F27]">7<span class="ml-0.5 text-[8px] font-bold">天</span></p>
+<p class="mt-1.5 text-[8px] font-bold tracking-[0.06em] text-[#A05E0A]">连续运动</p>
 </div>
 </div>
-<div class="mt-5 grid grid-cols-2 gap-1 rounded-full border border-white/[0.07] bg-[#111611] p-1">
-<button aria-selected="true" class="tab-button flex items-center justify-center gap-2 rounded-full bg-[#D9FF43] py-2.5 text-[11px] font-bold text-[#080B08] transition" id="historyTab" role="tab" type="button">
+<div class="mt-5 grid grid-cols-2 gap-1 rounded-full border border-[#E3DFD2] bg-[#FFFFFF] p-1">
+<button aria-selected="true" class="tab-button flex items-center justify-center gap-2 rounded-full bg-[#EF9F27] py-2.5 text-[11px] font-bold text-[#2C2C2A] transition" id="historyTab" role="tab" type="button">
 <iconify-icon icon="lucide:history" width="15"></iconify-icon>
           历史
         </button>
-<button aria-selected="false" class="tab-button flex items-center justify-center gap-2 rounded-full py-2.5 text-[11px] font-bold text-[#879287] transition" id="reportTab" role="tab" type="button">
+<button aria-selected="false" class="tab-button flex items-center justify-center gap-2 rounded-full py-2.5 text-[11px] font-bold text-[#8D897E] transition" id="reportTab" role="tab" type="button">
 <iconify-icon icon="lucide:chart-column" width="15"></iconify-icon>
           报告
         </button>
@@ -42,47 +42,47 @@
 <main class="mt-3 flex-1 min-h-0 overflow-y-auto overflow-x-hidden [scrollbar-width:none] [&amp;::-webkit-scrollbar]:hidden">
 <div id="historyPanel">
 <section class="px-5 pt-1">
-<div class="relative overflow-hidden rounded-[30px] bg-[#FF5C35] p-5 text-[#1A0803]">
-<div class="absolute -right-12 -top-14 h-40 w-40 rounded-full border-[20px] border-[#1A0803]/[0.08]"></div>
-<div class="absolute -bottom-12 left-12 h-24 w-24 rounded-full border-[12px] border-[#D9FF43]/30"></div>
-<div class="absolute right-3 top-4 rotate-90 text-[8px] font-black uppercase tracking-[0.32em] text-[#1A0803]/30">October 2026</div>
+<div class="relative overflow-hidden rounded-[30px] bg-[#F8EAD1] p-5 text-[#2C2C2A]">
+<div class="absolute -right-12 -top-14 h-40 w-40 rounded-full border-[20px] border-[#2C2C2A]/[0.08]"></div>
+<div class="absolute -bottom-12 left-12 h-24 w-24 rounded-full border-[12px] border-[#EF9F27]/30"></div>
+<div class="absolute right-3 top-4 rotate-90 text-[8px] font-black uppercase tracking-[0.32em] text-[#2C2C2A]/30">October 2026</div>
 <div class="relative">
 <div class="flex items-center justify-between">
-<span class="inline-flex items-center gap-1.5 rounded-full bg-[#1A0803] px-3 py-1.5 text-[8px] font-bold uppercase tracking-[0.16em] text-[#FF8D70]">
+<span class="inline-flex items-center gap-1.5 rounded-full bg-[#2C2C2A] px-3 py-1.5 text-[8px] font-bold uppercase tracking-[0.16em] text-[#EF9F27]">
                   Monthly recap
                 </span>
-<button class="flex items-center gap-1 text-[10px] font-black text-[#1A0803]/65" id="toReport" type="button">
+<button class="flex items-center gap-1 text-[10px] font-black text-[#2C2C2A]/65" id="toReport" type="button">
                   查看月报
                   <iconify-icon icon="lucide:arrow-up-right" width="13"></iconify-icon>
 </button>
 </div>
 <div class="mt-5 flex items-end justify-between">
 <div>
-<p class="text-[9px] font-bold uppercase tracking-[0.18em] text-[#1A0803]/45">本月累计</p>
+<p class="text-[9px] font-bold uppercase tracking-[0.18em] text-[#2C2C2A]/45">本月累计</p>
 <p class="mt-1 flex items-baseline gap-1.5">
 <span class="text-[45px] font-black leading-none tracking-[-0.07em]">98.4</span>
 <span class="text-[10px] font-black">KM</span>
 </p>
 </div>
 <div class="pb-1 text-right">
-<p class="text-[9px] font-semibold text-[#1A0803]/50">月度目标 120 KM</p>
+<p class="text-[9px] font-semibold text-[#2C2C2A]/50">月度目标 120 KM</p>
 <p class="mt-1 text-[14px] font-black">82%</p>
 </div>
 </div>
-<div class="mt-4 h-1.5 overflow-hidden rounded-full bg-[#1A0803]/15">
-<div class="h-full w-[82%] rounded-full bg-[#D9FF43]"></div>
+<div class="mt-4 h-1.5 overflow-hidden rounded-full bg-[#2C2C2A]/15">
+<div class="h-full w-[82%] rounded-full bg-[#EF9F27]"></div>
 </div>
-<div class="mt-4 grid grid-cols-3 divide-x divide-[#1A0803]/15 border-t border-[#1A0803]/15 pt-3.5">
+<div class="mt-4 grid grid-cols-3 divide-x divide-[#2C2C2A]/15 border-t border-[#2C2C2A]/15 pt-3.5">
 <div>
-<p class="text-[8px] font-bold uppercase tracking-[0.1em] text-[#1A0803]/45">跑步</p>
+<p class="text-[8px] font-bold uppercase tracking-[0.1em] text-[#2C2C2A]/45">跑步</p>
 <p class="mt-1 text-[14px] font-black">17 <span class="text-[8px]">次</span></p>
 </div>
 <div class="pl-3">
-<p class="text-[8px] font-bold uppercase tracking-[0.1em] text-[#1A0803]/45">总时长</p>
+<p class="text-[8px] font-bold uppercase tracking-[0.1em] text-[#2C2C2A]/45">总时长</p>
 <p class="mt-1 text-[14px] font-black">9<span class="text-[8px]">H</span>22<span class="text-[8px]">M</span></p>
 </div>
 <div class="pl-3">
-<p class="text-[8px] font-bold uppercase tracking-[0.1em] text-[#1A0803]/45">平均配速</p>
+<p class="text-[8px] font-bold uppercase tracking-[0.1em] text-[#2C2C2A]/45">平均配速</p>
 <p class="mt-1 text-[14px] font-black">5'44"</p>
 </div>
 </div>
@@ -92,369 +92,369 @@
 <section class="px-5 pt-5">
 <div class="flex items-center justify-between">
 <div>
-<p class="text-[9px] font-bold uppercase tracking-[0.18em] text-[#717C71]">October 2026</p>
-<h2 class="mt-1 text-[18px] font-bold tracking-[-0.02em]">最近跑步 <span class="ml-1 text-[10px] font-medium text-[#6D786D]">5 次</span></h2>
+<p class="text-[9px] font-bold uppercase tracking-[0.18em] text-[#6E6A61]">October 2026</p>
+<h2 class="mt-1 text-[18px] font-bold tracking-[-0.02em]">最近跑步 <span class="ml-1 text-[10px] font-medium text-[#8D897E]">5 次</span></h2>
 </div>
 <div class="flex items-center gap-1.5" id="historyFilters">
-<button class="filter-button rounded-full bg-[#D9FF43] px-2.5 py-1.5 text-[9px] font-bold text-[#080B08] transition" data-min="0" type="button">全部</button>
-<button class="filter-button rounded-full bg-white/[0.05] px-2.5 py-1.5 text-[9px] font-bold text-[#899489] transition" data-min="5" type="button">5 KM+</button>
-<button class="filter-button rounded-full bg-white/[0.05] px-2.5 py-1.5 text-[9px] font-bold text-[#899489] transition" data-min="10" type="button">10 KM+</button>
+<button class="filter-button rounded-full bg-[#EF9F27] px-2.5 py-1.5 text-[9px] font-bold text-[#2C2C2A] transition" data-min="0" type="button">全部</button>
+<button class="filter-button rounded-full bg-[rgba(44,44,42,0.05)] px-2.5 py-1.5 text-[9px] font-bold text-[#8D897E] transition" data-min="5" type="button">5 KM+</button>
+<button class="filter-button rounded-full bg-[rgba(44,44,42,0.05)] px-2.5 py-1.5 text-[9px] font-bold text-[#8D897E] transition" data-min="10" type="button">10 KM+</button>
 </div>
 </div>
 <div id="historyList">
-<article class="history-item mt-3 overflow-hidden rounded-[24px] border border-white/[0.08] bg-[#111611]" data-distance="2.41">
+<article class="history-item mt-3 overflow-hidden rounded-[24px] border border-[#E3DFD2] bg-[#FFFFFF]" data-distance="2.41">
 <button aria-expanded="false" class="history-toggle flex w-full items-center gap-3 p-3 text-left" type="button">
-<div class="relative h-[76px] w-[76px] shrink-0 overflow-hidden rounded-[18px] bg-[#E7EDE3]">
+<div class="relative h-[76px] w-[76px] shrink-0 overflow-hidden rounded-[18px] bg-[#F0EEE3]">
 <svg aria-hidden="true" class="h-full w-full" viewbox="0 0 76 76">
-<rect fill="#E7EDE3" height="76" width="76"></rect>
+<rect fill="#F0EEE3" height="76" width="76"></rect>
 <path d="M-4 18 L82 13" stroke="#FFFFFF" stroke-width="8"></path>
 <path d="M18 -4 L25 82" stroke="#FFFFFF" stroke-width="7"></path>
 <path d="M56 -4 L48 82" stroke="#FFFFFF" stroke-width="6"></path>
-<path d="M7 66 C18 51 19 35 31 32 C43 28 48 19 65 18" fill="none" stroke="#FF5C35" stroke-linecap="round" stroke-width="4"></path>
-<circle cx="7" cy="66" fill="#D9FF43" r="4" stroke="#080B08" stroke-width="2"></circle>
-<circle cx="65" cy="18" fill="#080B08" r="4" stroke="#D9FF43" stroke-width="2"></circle>
+<path d="M7 66 C18 51 19 35 31 32 C43 28 48 19 65 18" fill="none" stroke="#854F0B" stroke-linecap="round" stroke-width="4"></path>
+<circle cx="7" cy="66" fill="#EF9F27" r="4" stroke="#2C2C2A" stroke-width="2"></circle>
+<circle cx="65" cy="18" fill="#2C2C2A" r="4" stroke="#EF9F27" stroke-width="2"></circle>
 </svg>
-<span class="absolute left-1.5 top-1.5 rounded-full bg-[#080B08] px-1.5 py-0.5 text-[7px] font-bold text-[#D9FF43]">今日</span>
+<span class="absolute left-1.5 top-1.5 rounded-full bg-[#2C2C2A] px-1.5 py-0.5 text-[7px] font-bold text-[#EF9F27]">今日</span>
 </div>
 <div class="min-w-0 flex-1">
 <div class="flex items-center gap-2">
 <p class="truncate text-[12px] font-bold">晨跑 · 滨江绿道</p>
-<span class="rounded-full bg-[#FF5C35]/15 px-1.5 py-0.5 text-[7px] font-bold text-[#FF8666]">PB</span>
+<span class="rounded-full bg-[rgba(239,159,39,0.14)] px-1.5 py-0.5 text-[7px] font-bold text-[#854F0B]">PB</span>
 </div>
-<p class="mt-1 text-[9px] text-[#6F7A6F]">10月23日 06:42 · 户外跑</p>
+<p class="mt-1 text-[9px] text-[#8D897E]">10月23日 06:42 · 户外跑</p>
 <div class="mt-2.5 flex items-center gap-2.5 text-[10px]">
-<span class="font-black text-[#D9FF43]">2.41 KM</span>
-<span class="text-[#A9B3A9]">13:43</span>
-<span class="text-[#7F8A7F]">5'42"</span>
+<span class="font-black text-[#EF9F27]">2.41 KM</span>
+<span class="text-[#57544B]">13:43</span>
+<span class="text-[#6E6A61]">5'42"</span>
 </div>
 </div>
-<iconify-icon class="history-chevron shrink-0 text-[#5E695E] transition-transform" icon="lucide:chevron-down" width="16"></iconify-icon>
+<iconify-icon class="history-chevron shrink-0 text-[#8D897E] transition-transform" icon="lucide:chevron-down" width="16"></iconify-icon>
 </button>
-<div class="history-detail hidden border-t border-white/[0.07] px-4 py-3.5">
+<div class="history-detail hidden border-t border-[#E3DFD2] px-4 py-3.5">
 <div class="grid grid-cols-3 gap-2">
-<div class="rounded-xl bg-white/[0.035] px-2 py-2.5 text-center">
-<p class="text-[8px] text-[#6F7A6F]">消耗热量</p>
-<p class="mt-1 text-[11px] font-black">173 <span class="text-[7px] text-[#7B867B]">KCAL</span></p>
+<div class="rounded-xl bg-[rgba(44,44,42,0.04)] px-2 py-2.5 text-center">
+<p class="text-[8px] text-[#8D897E]">消耗热量</p>
+<p class="mt-1 text-[11px] font-black">173 <span class="text-[7px] text-[#6E6A61]">KCAL</span></p>
 </div>
-<div class="rounded-xl bg-white/[0.035] px-2 py-2.5 text-center">
-<p class="text-[8px] text-[#6F7A6F]">步数</p>
+<div class="rounded-xl bg-[rgba(44,44,42,0.04)] px-2 py-2.5 text-center">
+<p class="text-[8px] text-[#8D897E]">步数</p>
 <p class="mt-1 text-[11px] font-black">3,360</p>
 </div>
-<div class="rounded-xl bg-white/[0.035] px-2 py-2.5 text-center">
-<p class="text-[8px] text-[#6F7A6F]">平均步频</p>
-<p class="mt-1 text-[11px] font-black">172 <span class="text-[7px] text-[#7B867B]">SPM</span></p>
+<div class="rounded-xl bg-[rgba(44,44,42,0.04)] px-2 py-2.5 text-center">
+<p class="text-[8px] text-[#8D897E]">平均步频</p>
+<p class="mt-1 text-[11px] font-black">172 <span class="text-[7px] text-[#6E6A61]">SPM</span></p>
 </div>
 </div>
-<p class="mt-2.5 text-[8px] leading-4 text-[#6E796E]">分段：5'36" / 5'44" / 2'23" · 累计爬升 18 m · 平均心率 148 bpm</p>
+<p class="mt-2.5 text-[8px] leading-4 text-[#8D897E]">分段：5'36" / 5'44" / 2'23" · 累计爬升 18 m · 平均心率 148 bpm</p>
 </div>
 </article>
-<article class="history-item mt-3 overflow-hidden rounded-[24px] border border-white/[0.08] bg-[#111611]" data-distance="5.02">
+<article class="history-item mt-3 overflow-hidden rounded-[24px] border border-[#E3DFD2] bg-[#FFFFFF]" data-distance="5.02">
 <button aria-expanded="false" class="history-toggle flex w-full items-center gap-3 p-3 text-left" type="button">
-<div class="relative h-[76px] w-[76px] shrink-0 overflow-hidden rounded-[18px] bg-[#E7EDE3]">
+<div class="relative h-[76px] w-[76px] shrink-0 overflow-hidden rounded-[18px] bg-[#F0EEE3]">
 <svg aria-hidden="true" class="h-full w-full" viewbox="0 0 76 76">
-<rect fill="#E7EDE3" height="76" width="76"></rect>
+<rect fill="#F0EEE3" height="76" width="76"></rect>
 <path d="M-4 25 L82 18" stroke="#FFFFFF" stroke-width="7"></path>
-<path d="M-4 57 L82 49" stroke="#D6DED2" stroke-width="5"></path>
+<path d="M-4 57 L82 49" stroke="#DFDBCD" stroke-width="5"></path>
 <path d="M29 -4 L35 82" stroke="#FFFFFF" stroke-width="7"></path>
-<path d="M6 58 C15 42 37 46 42 31 C46 19 52 16 66 12" fill="none" stroke="#FF5C35" stroke-linecap="round" stroke-width="4"></path>
-<circle cx="6" cy="58" fill="#D9FF43" r="4" stroke="#080B08" stroke-width="2"></circle>
-<circle cx="66" cy="12" fill="#080B08" r="4" stroke="#D9FF43" stroke-width="2"></circle>
+<path d="M6 58 C15 42 37 46 42 31 C46 19 52 16 66 12" fill="none" stroke="#854F0B" stroke-linecap="round" stroke-width="4"></path>
+<circle cx="6" cy="58" fill="#EF9F27" r="4" stroke="#2C2C2A" stroke-width="2"></circle>
+<circle cx="66" cy="12" fill="#2C2C2A" r="4" stroke="#EF9F27" stroke-width="2"></circle>
 </svg>
-<span class="absolute left-1.5 top-1.5 rounded-full bg-[#080B08] px-1.5 py-0.5 text-[7px] font-bold text-[#D9FF43]">5K</span>
+<span class="absolute left-1.5 top-1.5 rounded-full bg-[#2C2C2A] px-1.5 py-0.5 text-[7px] font-bold text-[#EF9F27]">5K</span>
 </div>
 <div class="min-w-0 flex-1">
 <p class="truncate text-[12px] font-bold">节奏跑 · 城市公园</p>
-<p class="mt-1 text-[9px] text-[#6F7A6F]">10月21日 19:05 · 户外跑</p>
+<p class="mt-1 text-[9px] text-[#8D897E]">10月21日 19:05 · 户外跑</p>
 <div class="mt-2.5 flex items-center gap-2.5 text-[10px]">
-<span class="font-black text-[#D9FF43]">5.02 KM</span>
-<span class="text-[#A9B3A9]">28:16</span>
-<span class="text-[#7F8A7F]">5'38"</span>
+<span class="font-black text-[#EF9F27]">5.02 KM</span>
+<span class="text-[#57544B]">28:16</span>
+<span class="text-[#6E6A61]">5'38"</span>
 </div>
 </div>
-<iconify-icon class="history-chevron shrink-0 text-[#5E695E] transition-transform" icon="lucide:chevron-down" width="16"></iconify-icon>
+<iconify-icon class="history-chevron shrink-0 text-[#8D897E] transition-transform" icon="lucide:chevron-down" width="16"></iconify-icon>
 </button>
-<div class="history-detail hidden border-t border-white/[0.07] px-4 py-3.5">
+<div class="history-detail hidden border-t border-[#E3DFD2] px-4 py-3.5">
 <div class="grid grid-cols-3 gap-2">
-<div class="rounded-xl bg-white/[0.035] px-2 py-2.5 text-center">
-<p class="text-[8px] text-[#6F7A6F]">消耗热量</p>
-<p class="mt-1 text-[11px] font-black">344 <span class="text-[7px] text-[#7B867B]">KCAL</span></p>
+<div class="rounded-xl bg-[rgba(44,44,42,0.04)] px-2 py-2.5 text-center">
+<p class="text-[8px] text-[#8D897E]">消耗热量</p>
+<p class="mt-1 text-[11px] font-black">344 <span class="text-[7px] text-[#6E6A61]">KCAL</span></p>
 </div>
-<div class="rounded-xl bg-white/[0.035] px-2 py-2.5 text-center">
-<p class="text-[8px] text-[#6F7A6F]">步数</p>
+<div class="rounded-xl bg-[rgba(44,44,42,0.04)] px-2 py-2.5 text-center">
+<p class="text-[8px] text-[#8D897E]">步数</p>
 <p class="mt-1 text-[11px] font-black">6,980</p>
 </div>
-<div class="rounded-xl bg-white/[0.035] px-2 py-2.5 text-center">
-<p class="text-[8px] text-[#6F7A6F]">平均步频</p>
-<p class="mt-1 text-[11px] font-black">174 <span class="text-[7px] text-[#7B867B]">SPM</span></p>
+<div class="rounded-xl bg-[rgba(44,44,42,0.04)] px-2 py-2.5 text-center">
+<p class="text-[8px] text-[#8D897E]">平均步频</p>
+<p class="mt-1 text-[11px] font-black">174 <span class="text-[7px] text-[#6E6A61]">SPM</span></p>
 </div>
 </div>
-<p class="mt-2.5 text-[8px] leading-4 text-[#6E796E]">分段：5'41" / 5'36" / 5'35" / 5'38" / 5'40" · 累计爬升 24 m</p>
+<p class="mt-2.5 text-[8px] leading-4 text-[#8D897E]">分段：5'41" / 5'36" / 5'35" / 5'38" / 5'40" · 累计爬升 24 m</p>
 </div>
 </article>
-<article class="history-item mt-3 overflow-hidden rounded-[24px] border border-white/[0.08] bg-[#111611]" data-distance="3.60">
+<article class="history-item mt-3 overflow-hidden rounded-[24px] border border-[#E3DFD2] bg-[#FFFFFF]" data-distance="3.60">
 <button aria-expanded="false" class="history-toggle flex w-full items-center gap-3 p-3 text-left" type="button">
-<div class="relative h-[76px] w-[76px] shrink-0 overflow-hidden rounded-[18px] bg-[#E7EDE3]">
+<div class="relative h-[76px] w-[76px] shrink-0 overflow-hidden rounded-[18px] bg-[#F0EEE3]">
 <svg aria-hidden="true" class="h-full w-full" viewbox="0 0 76 76">
-<rect fill="#E7EDE3" height="76" width="76"></rect>
+<rect fill="#F0EEE3" height="76" width="76"></rect>
 <path d="M-4 38 L82 32" stroke="#FFFFFF" stroke-width="8"></path>
 <path d="M51 -4 L45 82" stroke="#FFFFFF" stroke-width="6"></path>
-<path d="M9 62 C12 47 29 48 36 39 C45 27 55 28 68 24" fill="none" stroke="#FF5C35" stroke-linecap="round" stroke-width="4"></path>
-<circle cx="9" cy="62" fill="#D9FF43" r="4" stroke="#080B08" stroke-width="2"></circle>
-<circle cx="68" cy="24" fill="#080B08" r="4" stroke="#D9FF43" stroke-width="2"></circle>
+<path d="M9 62 C12 47 29 48 36 39 C45 27 55 28 68 24" fill="none" stroke="#854F0B" stroke-linecap="round" stroke-width="4"></path>
+<circle cx="9" cy="62" fill="#EF9F27" r="4" stroke="#2C2C2A" stroke-width="2"></circle>
+<circle cx="68" cy="24" fill="#2C2C2A" r="4" stroke="#EF9F27" stroke-width="2"></circle>
 </svg>
 </div>
 <div class="min-w-0 flex-1">
 <p class="truncate text-[12px] font-bold">轻松跑 · 河畔环线</p>
-<p class="mt-1 text-[9px] text-[#6F7A6F]">10月18日 07:10 · 户外跑</p>
+<p class="mt-1 text-[9px] text-[#8D897E]">10月18日 07:10 · 户外跑</p>
 <div class="mt-2.5 flex items-center gap-2.5 text-[10px]">
-<span class="font-black text-[#D9FF43]">3.60 KM</span>
-<span class="text-[#A9B3A9]">21:04</span>
-<span class="text-[#7F8A7F]">5'51"</span>
+<span class="font-black text-[#EF9F27]">3.60 KM</span>
+<span class="text-[#57544B]">21:04</span>
+<span class="text-[#6E6A61]">5'51"</span>
 </div>
 </div>
-<iconify-icon class="history-chevron shrink-0 text-[#5E695E] transition-transform" icon="lucide:chevron-down" width="16"></iconify-icon>
+<iconify-icon class="history-chevron shrink-0 text-[#8D897E] transition-transform" icon="lucide:chevron-down" width="16"></iconify-icon>
 </button>
-<div class="history-detail hidden border-t border-white/[0.07] px-4 py-3.5">
+<div class="history-detail hidden border-t border-[#E3DFD2] px-4 py-3.5">
 <div class="grid grid-cols-3 gap-2">
-<div class="rounded-xl bg-white/[0.035] px-2 py-2.5 text-center">
-<p class="text-[8px] text-[#6F7A6F]">消耗热量</p>
-<p class="mt-1 text-[11px] font-black">246 <span class="text-[7px] text-[#7B867B]">KCAL</span></p>
+<div class="rounded-xl bg-[rgba(44,44,42,0.04)] px-2 py-2.5 text-center">
+<p class="text-[8px] text-[#8D897E]">消耗热量</p>
+<p class="mt-1 text-[11px] font-black">246 <span class="text-[7px] text-[#6E6A61]">KCAL</span></p>
 </div>
-<div class="rounded-xl bg-white/[0.035] px-2 py-2.5 text-center">
-<p class="text-[8px] text-[#6F7A6F]">步数</p>
+<div class="rounded-xl bg-[rgba(44,44,42,0.04)] px-2 py-2.5 text-center">
+<p class="text-[8px] text-[#8D897E]">步数</p>
 <p class="mt-1 text-[11px] font-black">5,020</p>
 </div>
-<div class="rounded-xl bg-white/[0.035] px-2 py-2.5 text-center">
-<p class="text-[8px] text-[#6F7A6F]">平均步频</p>
-<p class="mt-1 text-[11px] font-black">169 <span class="text-[7px] text-[#7B867B]">SPM</span></p>
+<div class="rounded-xl bg-[rgba(44,44,42,0.04)] px-2 py-2.5 text-center">
+<p class="text-[8px] text-[#8D897E]">平均步频</p>
+<p class="mt-1 text-[11px] font-black">169 <span class="text-[7px] text-[#6E6A61]">SPM</span></p>
 </div>
 </div>
-<p class="mt-2.5 text-[8px] leading-4 text-[#6E796E]">分段：5'49" / 5'53" / 5'51" · 累计爬升 12 m · 平均心率 136 bpm</p>
+<p class="mt-2.5 text-[8px] leading-4 text-[#8D897E]">分段：5'49" / 5'53" / 5'51" · 累计爬升 12 m · 平均心率 136 bpm</p>
 </div>
 </article>
-<article class="history-item mt-3 overflow-hidden rounded-[24px] border border-white/[0.08] bg-[#111611]" data-distance="8.24">
+<article class="history-item mt-3 overflow-hidden rounded-[24px] border border-[#E3DFD2] bg-[#FFFFFF]" data-distance="8.24">
 <button aria-expanded="false" class="history-toggle flex w-full items-center gap-3 p-3 text-left" type="button">
-<div class="relative h-[76px] w-[76px] shrink-0 overflow-hidden rounded-[18px] bg-[#E7EDE3]">
+<div class="relative h-[76px] w-[76px] shrink-0 overflow-hidden rounded-[18px] bg-[#F0EEE3]">
 <svg aria-hidden="true" class="h-full w-full" viewbox="0 0 76 76">
-<rect fill="#E7EDE3" height="76" width="76"></rect>
+<rect fill="#F0EEE3" height="76" width="76"></rect>
 <path d="M-4 17 L82 23" stroke="#FFFFFF" stroke-width="7"></path>
 <path d="M20 -4 L14 82" stroke="#FFFFFF" stroke-width="6"></path>
-<path d="M54 -4 L61 82" stroke="#D6DED2" stroke-width="5"></path>
-<path d="M8 67 C17 55 15 42 28 36 C41 30 44 20 62 13" fill="none" stroke="#FF5C35" stroke-linecap="round" stroke-width="4"></path>
-<circle cx="8" cy="67" fill="#D9FF43" r="4" stroke="#080B08" stroke-width="2"></circle>
-<circle cx="62" cy="13" fill="#080B08" r="4" stroke="#D9FF43" stroke-width="2"></circle>
+<path d="M54 -4 L61 82" stroke="#DFDBCD" stroke-width="5"></path>
+<path d="M8 67 C17 55 15 42 28 36 C41 30 44 20 62 13" fill="none" stroke="#854F0B" stroke-linecap="round" stroke-width="4"></path>
+<circle cx="8" cy="67" fill="#EF9F27" r="4" stroke="#2C2C2A" stroke-width="2"></circle>
+<circle cx="62" cy="13" fill="#2C2C2A" r="4" stroke="#EF9F27" stroke-width="2"></circle>
 </svg>
-<span class="absolute left-1.5 top-1.5 rounded-full bg-[#080B08] px-1.5 py-0.5 text-[7px] font-bold text-[#D9FF43]">LONG</span>
+<span class="absolute left-1.5 top-1.5 rounded-full bg-[#2C2C2A] px-1.5 py-0.5 text-[7px] font-bold text-[#EF9F27]">LONG</span>
 </div>
 <div class="min-w-0 flex-1">
 <p class="truncate text-[12px] font-bold">长距离 · 桥北绿道</p>
-<p class="mt-1 text-[9px] text-[#6F7A6F]">10月15日 06:30 · 户外跑</p>
+<p class="mt-1 text-[9px] text-[#8D897E]">10月15日 06:30 · 户外跑</p>
 <div class="mt-2.5 flex items-center gap-2.5 text-[10px]">
-<span class="font-black text-[#D9FF43]">8.24 KM</span>
-<span class="text-[#A9B3A9]">48:38</span>
-<span class="text-[#7F8A7F]">5'54"</span>
+<span class="font-black text-[#EF9F27]">8.24 KM</span>
+<span class="text-[#57544B]">48:38</span>
+<span class="text-[#6E6A61]">5'54"</span>
 </div>
 </div>
-<iconify-icon class="history-chevron shrink-0 text-[#5E695E] transition-transform" icon="lucide:chevron-down" width="16"></iconify-icon>
+<iconify-icon class="history-chevron shrink-0 text-[#8D897E] transition-transform" icon="lucide:chevron-down" width="16"></iconify-icon>
 </button>
-<div class="history-detail hidden border-t border-white/[0.07] px-4 py-3.5">
+<div class="history-detail hidden border-t border-[#E3DFD2] px-4 py-3.5">
 <div class="grid grid-cols-3 gap-2">
-<div class="rounded-xl bg-white/[0.035] px-2 py-2.5 text-center">
-<p class="text-[8px] text-[#6F7A6F]">消耗热量</p>
-<p class="mt-1 text-[11px] font-black">563 <span class="text-[7px] text-[#7B867B]">KCAL</span></p>
+<div class="rounded-xl bg-[rgba(44,44,42,0.04)] px-2 py-2.5 text-center">
+<p class="text-[8px] text-[#8D897E]">消耗热量</p>
+<p class="mt-1 text-[11px] font-black">563 <span class="text-[7px] text-[#6E6A61]">KCAL</span></p>
 </div>
-<div class="rounded-xl bg-white/[0.035] px-2 py-2.5 text-center">
-<p class="text-[8px] text-[#6F7A6F]">步数</p>
+<div class="rounded-xl bg-[rgba(44,44,42,0.04)] px-2 py-2.5 text-center">
+<p class="text-[8px] text-[#8D897E]">步数</p>
 <p class="mt-1 text-[11px] font-black">11,260</p>
 </div>
-<div class="rounded-xl bg-white/[0.035] px-2 py-2.5 text-center">
-<p class="text-[8px] text-[#6F7A6F]">平均步频</p>
-<p class="mt-1 text-[11px] font-black">171 <span class="text-[7px] text-[#7B867B]">SPM</span></p>
+<div class="rounded-xl bg-[rgba(44,44,42,0.04)] px-2 py-2.5 text-center">
+<p class="text-[8px] text-[#8D897E]">平均步频</p>
+<p class="mt-1 text-[11px] font-black">171 <span class="text-[7px] text-[#6E6A61]">SPM</span></p>
 </div>
 </div>
-<p class="mt-2.5 text-[8px] leading-4 text-[#6E796E]">分段：5'51" / 5'53" / 5'55" / 5'56" / 5'55" / 5'54" / 5'53" / 5'52" / 3'19"</p>
+<p class="mt-2.5 text-[8px] leading-4 text-[#8D897E]">分段：5'51" / 5'53" / 5'55" / 5'56" / 5'55" / 5'54" / 5'53" / 5'52" / 3'19"</p>
 </div>
 </article>
-<article class="history-item mt-3 overflow-hidden rounded-[24px] border border-white/[0.08] bg-[#111611]" data-distance="12.80">
+<article class="history-item mt-3 overflow-hidden rounded-[24px] border border-[#E3DFD2] bg-[#FFFFFF]" data-distance="12.80">
 <button aria-expanded="false" class="history-toggle flex w-full items-center gap-3 p-3 text-left" type="button">
-<div class="relative h-[76px] w-[76px] shrink-0 overflow-hidden rounded-[18px] bg-[#E7EDE3]">
+<div class="relative h-[76px] w-[76px] shrink-0 overflow-hidden rounded-[18px] bg-[#F0EEE3]">
 <svg aria-hidden="true" class="h-full w-full" viewbox="0 0 76 76">
-<rect fill="#E7EDE3" height="76" width="76"></rect>
+<rect fill="#F0EEE3" height="76" width="76"></rect>
 <path d="M-4 56 C18 43 29 49 48 36 C60 28 66 22 82 17" fill="none" stroke="#FFFFFF" stroke-width="8"></path>
 <path d="M34 -4 L27 82" stroke="#FFFFFF" stroke-width="5"></path>
-<path d="M7 65 C14 51 26 54 34 43 C42 31 52 37 58 25 C63 15 66 17 69 9" fill="none" stroke="#FF5C35" stroke-linecap="round" stroke-width="4"></path>
-<circle cx="7" cy="65" fill="#D9FF43" r="4" stroke="#080B08" stroke-width="2"></circle>
-<circle cx="69" cy="9" fill="#080B08" r="4" stroke="#D9FF43" stroke-width="2"></circle>
+<path d="M7 65 C14 51 26 54 34 43 C42 31 52 37 58 25 C63 15 66 17 69 9" fill="none" stroke="#854F0B" stroke-linecap="round" stroke-width="4"></path>
+<circle cx="7" cy="65" fill="#EF9F27" r="4" stroke="#2C2C2A" stroke-width="2"></circle>
+<circle cx="69" cy="9" fill="#2C2C2A" r="4" stroke="#EF9F27" stroke-width="2"></circle>
 </svg>
-<span class="absolute left-1.5 top-1.5 rounded-full bg-[#080B08] px-1.5 py-0.5 text-[7px] font-bold text-[#D9FF43]">12K</span>
+<span class="absolute left-1.5 top-1.5 rounded-full bg-[#2C2C2A] px-1.5 py-0.5 text-[7px] font-bold text-[#EF9F27]">12K</span>
 </div>
 <div class="min-w-0 flex-1">
 <p class="truncate text-[12px] font-bold">周末长距离 · 环城绿道</p>
-<p class="mt-1 text-[9px] text-[#6F7A6F]">10月09日 06:15 · 户外跑</p>
+<p class="mt-1 text-[9px] text-[#8D897E]">10月09日 06:15 · 户外跑</p>
 <div class="mt-2.5 flex items-center gap-2.5 text-[10px]">
-<span class="font-black text-[#D9FF43]">12.80 KM</span>
-<span class="text-[#A9B3A9]">1:16:20</span>
-<span class="text-[#7F8A7F]">5'58"</span>
+<span class="font-black text-[#EF9F27]">12.80 KM</span>
+<span class="text-[#57544B]">1:16:20</span>
+<span class="text-[#6E6A61]">5'58"</span>
 </div>
 </div>
-<iconify-icon class="history-chevron shrink-0 text-[#5E695E] transition-transform" icon="lucide:chevron-down" width="16"></iconify-icon>
+<iconify-icon class="history-chevron shrink-0 text-[#8D897E] transition-transform" icon="lucide:chevron-down" width="16"></iconify-icon>
 </button>
-<div class="history-detail hidden border-t border-white/[0.07] px-4 py-3.5">
+<div class="history-detail hidden border-t border-[#E3DFD2] px-4 py-3.5">
 <div class="grid grid-cols-3 gap-2">
-<div class="rounded-xl bg-white/[0.035] px-2 py-2.5 text-center">
-<p class="text-[8px] text-[#6F7A6F]">消耗热量</p>
-<p class="mt-1 text-[11px] font-black">874 <span class="text-[7px] text-[#7B867B]">KCAL</span></p>
+<div class="rounded-xl bg-[rgba(44,44,42,0.04)] px-2 py-2.5 text-center">
+<p class="text-[8px] text-[#8D897E]">消耗热量</p>
+<p class="mt-1 text-[11px] font-black">874 <span class="text-[7px] text-[#6E6A61]">KCAL</span></p>
 </div>
-<div class="rounded-xl bg-white/[0.035] px-2 py-2.5 text-center">
-<p class="text-[8px] text-[#6F7A6F]">步数</p>
+<div class="rounded-xl bg-[rgba(44,44,42,0.04)] px-2 py-2.5 text-center">
+<p class="text-[8px] text-[#8D897E]">步数</p>
 <p class="mt-1 text-[11px] font-black">17,600</p>
 </div>
-<div class="rounded-xl bg-white/[0.035] px-2 py-2.5 text-center">
-<p class="text-[8px] text-[#6F7A6F]">平均步频</p>
-<p class="mt-1 text-[11px] font-black">168 <span class="text-[7px] text-[#7B867B]">SPM</span></p>
+<div class="rounded-xl bg-[rgba(44,44,42,0.04)] px-2 py-2.5 text-center">
+<p class="text-[8px] text-[#8D897E]">平均步频</p>
+<p class="mt-1 text-[11px] font-black">168 <span class="text-[7px] text-[#6E6A61]">SPM</span></p>
 </div>
 </div>
-<p class="mt-2.5 text-[8px] leading-4 text-[#6E796E]">12.80 km 用时时长 1:16:20 · 累计爬升 86 m · 平均心率 152 bpm</p>
+<p class="mt-2.5 text-[8px] leading-4 text-[#8D897E]">12.80 km 用时时长 1:16:20 · 累计爬升 86 m · 平均心率 152 bpm</p>
 </div>
 </article>
 </div>
-<p class="pb-6 pt-4 text-center text-[9px] text-[#525D52]">已经到底啦 · 所有跑步数据仅保存在本机</p>
+<p class="pb-6 pt-4 text-center text-[9px] text-[#A5A093]">已经到底啦 · 所有跑步数据仅保存在本机</p>
 </section>
 </div>
 <div class="hidden" id="reportPanel">
 <section class="px-5 pt-1">
 <div class="flex items-center justify-between">
 <div>
-<p class="text-[9px] font-bold uppercase tracking-[0.18em] text-[#717C71]">Performance</p>
+<p class="text-[9px] font-bold uppercase tracking-[0.18em] text-[#6E6A61]">Performance</p>
 <h2 class="mt-1 text-[18px] font-bold tracking-[-0.02em]">跑步报告</h2>
 </div>
 <div class="flex items-center gap-1.5" id="periodSwitch">
-<button aria-pressed="true" class="period-button rounded-full bg-[#D9FF43] px-3 py-1.5 text-[9px] font-bold text-[#080B08] transition" data-period="week" type="button">周</button>
-<button aria-pressed="false" class="period-button rounded-full bg-white/[0.05] px-3 py-1.5 text-[9px] font-bold text-[#899489] transition" data-period="month" type="button">月</button>
-<button aria-pressed="false" class="period-button rounded-full bg-white/[0.05] px-3 py-1.5 text-[9px] font-bold text-[#899489] transition" data-period="year" type="button">年</button>
+<button aria-pressed="true" class="period-button rounded-full bg-[#EF9F27] px-3 py-1.5 text-[9px] font-bold text-[#2C2C2A] transition" data-period="week" type="button">周</button>
+<button aria-pressed="false" class="period-button rounded-full bg-[rgba(44,44,42,0.05)] px-3 py-1.5 text-[9px] font-bold text-[#8D897E] transition" data-period="month" type="button">月</button>
+<button aria-pressed="false" class="period-button rounded-full bg-[rgba(44,44,42,0.05)] px-3 py-1.5 text-[9px] font-bold text-[#8D897E] transition" data-period="year" type="button">年</button>
 </div>
 </div>
 </section>
 <section class="px-5 pt-4">
-<div class="relative overflow-hidden rounded-[30px] border border-white/[0.08] bg-[#141A14] p-5">
-<div class="absolute -right-10 -top-12 h-36 w-36 rounded-full border-[18px] border-[#D9FF43]/[0.06]"></div>
+<div class="relative overflow-hidden rounded-[30px] border border-[#E3DFD2] bg-[#EDEBE1] p-5">
+<div class="absolute -right-10 -top-12 h-36 w-36 rounded-full border-[18px] border-[#EF9F27]/[0.06]"></div>
 <div class="relative">
 <div class="flex items-center justify-between">
-<span class="inline-flex items-center gap-1.5 rounded-full bg-[#D9FF43] px-3 py-1.5 text-[8px] font-black uppercase tracking-[0.12em] text-[#080B08]" id="reportPeriodLabel">本周战报</span>
-<span class="text-[9px] font-medium text-[#687368]" id="reportRange">10.19 — 10.25</span>
+<span class="inline-flex items-center gap-1.5 rounded-full bg-[#EF9F27] px-3 py-1.5 text-[8px] font-black uppercase tracking-[0.12em] text-[#2C2C2A]" id="reportPeriodLabel">本周战报</span>
+<span class="text-[9px] font-medium text-[#6E6A61]" id="reportRange">10.19 — 10.25</span>
 </div>
 <div class="mt-5 flex items-end justify-between">
 <div>
-<p class="text-[9px] font-bold uppercase tracking-[0.18em] text-[#6D786D]">累计里程</p>
+<p class="text-[9px] font-bold uppercase tracking-[0.18em] text-[#8D897E]">累计里程</p>
 <p class="mt-1 flex items-baseline gap-1.5">
-<span class="text-[43px] font-black leading-none tracking-[-0.07em] text-[#D9FF43]" id="reportDistance">23.6</span>
-<span class="text-[10px] font-black text-[#B6C68A]">KM</span>
+<span class="text-[43px] font-black leading-none tracking-[-0.07em] text-[#2C2C2A]" id="reportDistance">23.6</span>
+<span class="text-[10px] font-black text-[#A05E0A]">KM</span>
 </p>
 </div>
-<span class="mb-1 rounded-full bg-[#FF5C35]/15 px-2.5 py-1 text-[9px] font-bold text-[#FF8465]" id="reportDelta">较上期 +12%</span>
+<span class="mb-1 rounded-full bg-[rgba(239,159,39,0.14)] px-2.5 py-1 text-[9px] font-bold text-[#B45309]" id="reportDelta">较上期 +12%</span>
 </div>
-<div class="mt-4 grid grid-cols-3 divide-x divide-white/[0.08] border-y border-white/[0.08] py-3">
+<div class="mt-4 grid grid-cols-3 divide-x divide-[#E9E5D9] border-y border-[#E3DFD2] py-3">
 <div>
-<p class="text-[8px] font-bold uppercase tracking-[0.1em] text-[#687368]">跑步次数</p>
-<p class="mt-1 text-[13px] font-black" id="reportCount">5 <span class="text-[8px] text-[#7B867B]">次</span></p>
+<p class="text-[8px] font-bold uppercase tracking-[0.1em] text-[#6E6A61]">跑步次数</p>
+<p class="mt-1 text-[13px] font-black" id="reportCount">5 <span class="text-[8px] text-[#6E6A61]">次</span></p>
 </div>
 <div class="pl-3">
-<p class="text-[8px] font-bold uppercase tracking-[0.1em] text-[#687368]">总时长</p>
+<p class="text-[8px] font-bold uppercase tracking-[0.1em] text-[#6E6A61]">总时长</p>
 <p class="mt-1 text-[13px] font-black" id="reportDuration">2H18M</p>
 </div>
 <div class="pl-3">
-<p class="text-[8px] font-bold uppercase tracking-[0.1em] text-[#687368]">平均配速</p>
+<p class="text-[8px] font-bold uppercase tracking-[0.1em] text-[#6E6A61]">平均配速</p>
 <p class="mt-1 text-[13px] font-black" id="reportPace">5'49"</p>
 </div>
 </div>
 <div class="mt-4">
-<div class="flex items-center justify-between text-[8px] font-medium text-[#737E73]">
-<span id="reportProgressText">距 30 km 周目标还差 6.4 km</span>
-<span class="font-black text-[#D9FF43]" id="reportProgressValue">79%</span>
+<div class="flex items-center justify-between text-[8px] font-medium text-[#949084]">
+<span id="reportProgressText">本周动了 5 天，共 7 天</span>
+<span class="font-black text-[#EF9F27]" id="reportProgressValue">79%</span>
 </div>
-<div class="mt-2 h-1.5 overflow-hidden rounded-full bg-white/[0.08]">
-<div class="h-full w-[79%] rounded-full bg-[#D9FF43]" id="reportProgressBar"></div>
+<div class="mt-2 h-1.5 overflow-hidden rounded-full bg-[rgba(44,44,42,0.05)]">
+<div class="h-full w-[79%] rounded-full bg-[#EF9F27]" id="reportProgressBar"></div>
 </div>
 </div>
 </div>
 </div>
 </section>
 <section class="px-5 pt-4">
-<div class="rounded-[28px] border border-white/[0.08] bg-[#111611] p-4">
+<div class="rounded-[28px] border border-[#E3DFD2] bg-[#FFFFFF] p-4">
 <div class="flex items-start justify-between">
 <div>
-<p class="text-[9px] font-bold uppercase tracking-[0.16em] text-[#717C71]">Trend</p>
+<p class="text-[9px] font-bold uppercase tracking-[0.16em] text-[#6E6A61]">Trend</p>
 <h2 class="mt-1 text-[16px] font-bold tracking-[-0.02em]" id="chartTitle">每日里程</h2>
-<p class="mt-1 text-[9px] text-[#6D786D]" id="chartSubtitle">本周共 5 次训练</p>
+<p class="mt-1 text-[9px] text-[#8D897E]" id="chartSubtitle">本周共 5 次训练</p>
 </div>
 <div class="flex flex-col items-end gap-1.5 pt-1">
-<span class="flex items-center gap-1 text-[8px] text-[#8C978C]"><span class="h-2 w-2 rounded-sm bg-[#D9FF43]"></span>里程</span>
-<span class="flex items-center gap-1 text-[8px] text-[#8C978C]"><span class="h-2 w-2 rounded-full bg-[#FF5C35]"></span>配速</span>
+<span class="flex items-center gap-1 text-[8px] text-[#6E6A61]"><span class="h-2 w-2 rounded-sm bg-[#EF9F27]"></span>里程</span>
+<span class="flex items-center gap-1 text-[8px] text-[#6E6A61]"><span class="h-2 w-2 rounded-full bg-[#854F0B]"></span>配速</span>
 </div>
 </div>
 <div class="mt-3 h-[210px] w-full" id="trendChart"></div>
 </div>
 </section>
 <section class="px-5 pt-4">
-<div class="rounded-[28px] border border-white/[0.08] bg-[#111611] p-4">
+<div class="rounded-[28px] border border-[#E3DFD2] bg-[#FFFFFF] p-4">
 <div class="flex items-center justify-between">
 <h2 class="text-[15px] font-bold tracking-[-0.02em]">训练构成</h2>
-<span class="text-[9px] font-medium text-[#687368]">按里程占比</span>
+<span class="text-[9px] font-medium text-[#6E6A61]">按里程占比</span>
 </div>
-<div class="mt-4 flex h-3 overflow-hidden rounded-full bg-white/[0.06]">
-<div class="h-full w-[58%] bg-[#D9FF43]"></div>
-<div class="h-full w-[26%] bg-[#FF5C35]"></div>
-<div class="h-full w-[16%] bg-[#5B675B]"></div>
+<div class="mt-4 flex h-3 overflow-hidden rounded-full bg-[rgba(44,44,42,0.05)]">
+<div class="h-full w-[58%] bg-[#EF9F27]"></div>
+<div class="h-full w-[26%] bg-[#854F0B]"></div>
+<div class="h-full w-[16%] bg-[#8D897E]"></div>
 </div>
 <div class="mt-4 grid grid-cols-3 gap-2">
 <div>
 <div class="flex items-center gap-1.5">
-<span class="h-2 w-2 rounded-full bg-[#D9FF43]"></span>
-<p class="text-[9px] font-bold text-[#D9E1D9]">轻松跑</p>
+<span class="h-2 w-2 rounded-full bg-[#EF9F27]"></span>
+<p class="text-[9px] font-bold text-[#4A473F]">轻松跑</p>
 </div>
-<p class="mt-1 text-[15px] font-black">58<span class="text-[8px] text-[#788378]">%</span></p>
-</div>
-<div>
-<div class="flex items-center gap-1.5">
-<span class="h-2 w-2 rounded-full bg-[#FF5C35]"></span>
-<p class="text-[9px] font-bold text-[#D9E1D9]">节奏跑</p>
-</div>
-<p class="mt-1 text-[15px] font-black">26<span class="text-[8px] text-[#788378]">%</span></p>
+<p class="mt-1 text-[15px] font-black">58<span class="text-[8px] text-[#6E6A61]">%</span></p>
 </div>
 <div>
 <div class="flex items-center gap-1.5">
-<span class="h-2 w-2 rounded-full bg-[#5B675B]"></span>
-<p class="text-[9px] font-bold text-[#D9E1D9]">长距离</p>
+<span class="h-2 w-2 rounded-full bg-[#854F0B]"></span>
+<p class="text-[9px] font-bold text-[#4A473F]">节奏跑</p>
 </div>
-<p class="mt-1 text-[15px] font-black">16<span class="text-[8px] text-[#788378]">%</span></p>
+<p class="mt-1 text-[15px] font-black">26<span class="text-[8px] text-[#6E6A61]">%</span></p>
+</div>
+<div>
+<div class="flex items-center gap-1.5">
+<span class="h-2 w-2 rounded-full bg-[#8D897E]"></span>
+<p class="text-[9px] font-bold text-[#4A473F]">长距离</p>
+</div>
+<p class="mt-1 text-[15px] font-black">16<span class="text-[8px] text-[#6E6A61]">%</span></p>
 </div>
 </div>
 </div>
 </section>
 <section class="px-5 pb-6 pt-4">
-<div class="flex items-start gap-3 rounded-[24px] border border-[#D9FF43]/15 bg-[#D9FF43]/[0.06] p-4">
-<div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[#D9FF43] text-[#080B08]">
+<div class="flex items-start gap-3 rounded-[24px] border border-[#EF9F27]/15 bg-[#EF9F27]/[0.06] p-4">
+<div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[#EF9F27] text-[#2C2C2A]">
 <iconify-icon icon="lucide:lightbulb" width="18"></iconify-icon>
 </div>
 <div>
 <div class="flex items-center gap-2">
 <p class="text-[12px] font-bold">教练观察</p>
-<span class="rounded-full bg-[#080B08]/40 px-2 py-0.5 text-[7px] font-bold text-[#D9FF43]">AI INSIGHT</span>
+<span class="rounded-full bg-[#2C2C2A] px-2 py-0.5 text-[7px] font-bold text-[#EF9F27]">AI INSIGHT</span>
 </div>
-<p class="mt-1.5 text-[9px] leading-4 text-[#A2AEA2]" id="insightText">周四的 6.1 km 节奏跑最稳定，平均步频 174 SPM。建议周日安排一次轻松跑，让身体充分恢复。</p>
+<p class="mt-1.5 text-[9px] leading-4 text-[#4A473F]" id="insightText">周四的 6.1 km 节奏跑最稳定，平均步频 174 SPM。建议周日安排一次轻松跑，让身体充分恢复。</p>
 </div>
 </div>
-<p class="pt-4 text-center text-[9px] text-[#525D52]">每次跑步完成后，报告会自动更新</p>
+<p class="pt-4 text-center text-[9px] text-[#A5A093]">每次跑步完成后，报告会自动更新</p>
 </section>
 </div>
 </main>
-<nav class="shrink-0 border-t border-white/[0.08] bg-[#0A0E0A] px-5 py-2.5">
+<nav class="shrink-0 border-t border-[#E3DFD2] bg-[#E8E5DA] px-5 py-2.5">
 <div class="grid grid-cols-2 gap-2">
-<a class="flex items-center justify-center gap-2 rounded-2xl px-3 py-2.5 text-[#737E73] transition hover:bg-white/[0.04] hover:text-white" href="activity.html">
+<a class="flex items-center justify-center gap-2 rounded-2xl px-3 py-2.5 text-[#949084] transition hover:bg-[rgba(44,44,42,0.05)] hover:text-[#2C2C2A]" href="activity.html">
 <iconify-icon icon="lucide:footprints" width="20"></iconify-icon>
 <span class="text-[12px] font-bold">运动</span>
 </a>
-<a class="flex items-center justify-center gap-2 rounded-2xl bg-[#D9FF43] px-3 py-2.5 text-[#080B08]" href="records.html">
+<a class="flex items-center justify-center gap-2 rounded-2xl bg-[#EF9F27] px-3 py-2.5 text-[#2C2C2A]" href="records.html">
 <iconify-icon icon="lucide:chart-no-axes-column" width="19"></iconify-icon>
 <span class="text-[12px] font-black">记录</span>
 </a>
@@ -478,8 +478,8 @@
         duration: '2H18M',
         pace: "5'49\"",
         delta: '较上期 +12%',
-        progress: 79,
-        progressText: '距 30 km 周目标还差 6.4 km',
+        progress: 71,
+        progressText: '本周动了 5 天，共 7 天',
         chartTitle: '每日里程',
         chartSubtitle: '本周共 5 次训练',
         labels: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
@@ -495,8 +495,8 @@
         duration: '9H22M',
         pace: "5'44\"",
         delta: '较上月 +8%',
-        progress: 82,
-        progressText: '距 120 km 月目标还差 21.6 km',
+        progress: 55,
+        progressText: '本月动了 17 天，共 31 天',
         chartTitle: '每周里程',
         chartSubtitle: '本月共 17 次训练',
         labels: ['第1周', '第2周', '第3周', '第4周', '第5周'],
@@ -512,8 +512,8 @@
         duration: '74H50M',
         pace: "5'52\"",
         delta: '同比 +18%',
-        progress: 86,
-        progressText: '距 1,000 km 年目标还差 138 km',
+        progress: 26,
+        progressText: '今年动了 96 天，共 365 天',
         chartTitle: '月度里程',
         chartSubtitle: '今年已完成 128 次跑步',
         labels: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
@@ -527,9 +527,9 @@
       [historyTab, reportTab].forEach(function (button) {
         const isActive = button === activeButton;
         button.setAttribute('aria-selected', isActive ? 'true' : 'false');
-        button.classList.toggle('bg-[#D9FF43]', isActive);
-        button.classList.toggle('text-[#080B08]', isActive);
-        button.classList.toggle('text-[#879287]', !isActive);
+        button.classList.toggle('bg-[#EF9F27]', isActive);
+        button.classList.toggle('text-[#2C2C2A]', isActive);
+        button.classList.toggle('text-[#8D897E]', !isActive);
       });
     }
 
@@ -568,10 +568,10 @@
       button.addEventListener('click', function () {
         filterButtons.forEach(function (item) {
           const isActive = item === button;
-          item.classList.toggle('bg-[#D9FF43]', isActive);
-          item.classList.toggle('text-[#080B08]', isActive);
-          item.classList.toggle('bg-white/[0.05]', !isActive);
-          item.classList.toggle('text-[#899489]', !isActive);
+          item.classList.toggle('bg-[#EF9F27]', isActive);
+          item.classList.toggle('text-[#2C2C2A]', isActive);
+          item.classList.toggle('bg-[rgba(44,44,42,0.05)]', !isActive);
+          item.classList.toggle('text-[#8D897E]', !isActive);
         });
 
         const threshold = Number(button.dataset.min || 0);
@@ -613,29 +613,29 @@
         },
         tooltip: {
           trigger: 'axis',
-          backgroundColor: '#0B0F0B',
-          borderColor: 'rgba(217,255,67,0.25)',
+          backgroundColor: '#2C2C2A',
+          borderColor: 'rgba(239,159,39,0.25)',
           borderWidth: 1,
           padding: [8, 10],
           textStyle: {
-            color: '#F5FAF4',
+            color: '#EAE6DA',
             fontSize: 10
           },
           axisPointer: {
             type: 'shadow',
             shadowStyle: {
-              color: 'rgba(217,255,67,0.04)'
+              color: 'rgba(239,159,39,0.04)'
             }
           },
           formatter: function (params) {
-            let html = '<div style="font-size:9px;color:#8C978C;margin-bottom:4px">' + params[0].axisValue + '</div>';
+            let html = '<div style="font-size:9px;color:#6E6A61;margin-bottom:4px">' + params[0].axisValue + '</div>';
             params.forEach(function (item) {
               if (item.value === null || item.value === 0) return;
               if (item.seriesName === '里程') {
-                html += '<div style="font-size:10px;font-weight:700;color:#DFFF4F">' + item.value + ' km</div>';
+                html += '<div style="font-size:10px;font-weight:700;color:#FFC260">' + item.value + ' km</div>';
               }
               if (item.seriesName === '配速' && item.value) {
-                html += '<div style="font-size:10px;color:#FF8A6A">配速 ' + formatPace(item.value) + '</div>';
+                html += '<div style="font-size:10px;color:#FFB65C">配速 ' + formatPace(item.value) + '</div>';
               }
             });
             return html;
@@ -647,7 +647,7 @@
           axisLine: { show: false },
           axisTick: { show: false },
           axisLabel: {
-            color: '#6F7A6F',
+            color: '#8D897E',
             fontSize: 9,
             interval: data.labels.length > 8 ? 1 : 0,
             margin: 10
@@ -661,13 +661,13 @@
             axisLine: { show: false },
             axisTick: { show: false },
             axisLabel: {
-              color: '#596459',
+              color: '#E3DFD2',
               fontSize: 8,
               formatter: '{value}'
             },
             splitLine: {
               lineStyle: {
-                color: 'rgba(255,255,255,0.06)',
+                color: 'rgba(44,44,42,0.06)',
                 type: 'dashed'
               }
             }
@@ -687,12 +687,12 @@
             data: data.mileage,
             barWidth: data.labels.length > 8 ? 7 : 14,
             itemStyle: {
-              color: '#D9FF43',
+              color: '#EF9F27',
               borderRadius: [6, 6, 2, 2]
             },
             emphasis: {
               itemStyle: {
-                color: '#EAFF8A'
+                color: '#FFC260'
               }
             }
           },
@@ -706,12 +706,12 @@
             symbol: 'circle',
             symbolSize: 4,
             lineStyle: {
-              color: '#FF5C35',
+              color: '#854F0B',
               width: 2
             },
             itemStyle: {
-              color: '#FF5C35',
-              borderColor: '#111611',
+              color: '#854F0B',
+              borderColor: '#FFFFFF',
               borderWidth: 2
             }
           }
@@ -739,16 +739,16 @@
       periodButtons.forEach(function (button) {
         const isActive = button.dataset.period === period;
         button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
-        button.classList.toggle('bg-[#D9FF43]', isActive);
-        button.classList.toggle('text-[#080B08]', isActive);
-        button.classList.toggle('bg-white/[0.05]', !isActive);
-        button.classList.toggle('text-[#899489]', !isActive);
+        button.classList.toggle('bg-[#EF9F27]', isActive);
+        button.classList.toggle('text-[#2C2C2A]', isActive);
+        button.classList.toggle('bg-[rgba(44,44,42,0.05)]', !isActive);
+        button.classList.toggle('text-[#8D897E]', !isActive);
       });
 
       document.getElementById('reportPeriodLabel').textContent = data.label;
       document.getElementById('reportRange').textContent = data.range;
       document.getElementById('reportDistance').textContent = data.distance;
-      document.getElementById('reportCount').innerHTML = data.count + ' <span class="text-[8px] text-[#7B867B]">次</span>';
+      document.getElementById('reportCount').innerHTML = data.count + ' <span class="text-[8px] text-[#6E6A61]">次</span>';
       document.getElementById('reportDuration').textContent = data.duration;
       document.getElementById('reportPace').textContent = data.pace;
       document.getElementById('reportDelta').textContent = data.delta;
