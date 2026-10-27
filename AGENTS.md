@@ -41,6 +41,7 @@
 | `android/app/src/test/` | JUnit4 纯 JVM 单元测试（tracking / data / util） |
 | `design/prototype/` | HTML 原型四个页面，视觉基线，不参与构建 |
 | `design/icon/` | 启动图标 sunward（SVG 源 + 1024 PNG） |
+| `design/explore/` | 探索性设计样稿（配色 / 组件多方案对比），非视觉基线，不参与构建 |
 | `docs/` | 产品理念、开发计划、调研报告、命名规则 `NAMING.md`、`acceptance-reports/`（分阶段验收报告）、`screenshots/` |
 | `tools/` | 本机工具链（SDK、Gradle、模拟器脚本、构建日志），不入库 |
 
@@ -80,6 +81,12 @@ $adb = 'D:\Sunward\tools\android-sdk\platform-tools\adb.exe'
 - 注释与 KDoc 用简短中文，优先解释「为什么」，可引用调研报告章节号或记录真实踩过的坑（现有注释即此风格）；不逐行复述实现。
 - 界面文案遵守 `docs/产品理念.md` 原则三「说人话」：配速→「每公里约」、分段配速→「每公里用时」、训练构成→「运动构成」、轻松跑/节奏跑/长距离→「慢走/常跑/远足」、连续运动→「累计运动」。全站字号下限 11sp，不新增更小的标签。
 - 色值、圆角、字号使用 `colors.xml` / `dimens.xml` / `themes.xml` 中的设计令牌（深色底 `#080B08`、荧光绿 `#D9FF43`、橙 `#FF5C35`）；视觉以 `design/prototype/` 对应页面为基线，差异需说明原因。
+- 新建文件夹 / 文件的命名与分类（全仓通用）：
+  - 目录与文件名默认小写英文 kebab-case（如 `live-run.html`、`gpx-export/`），不用空格、大写字母或拼音；`android/` 源码与资源遵循既有包结构和 Kotlin / Android 命名规范，不另造风格。
+  - `docs/` 是唯一的中文命名例外：顶层文档用中文名，验收报告与截图的序号分配按 `docs/NAMING.md`。
+  - `design/` 分三类：`prototype/` 放与实现同步的 HTML 原型（视觉基线，文件名对应页面）；`explore/` 放探索性设计样稿（多方案对比、未定稿视觉，只是探索记录，不作验收基线，落地实施前须经用户明确确认）；`icon/` 放品牌图标资产。设计说明类 Markdown 放 `design/` 顶层，英文 kebab-case 命名；产品层面的文档仍归 `docs/`。
+  - 探索方案定稿落地后：更新 `prototype/` 基线与设计令牌，原样稿留在 `explore/` 作探索记录，不删除。
+  - 临时文件放 `tools/` 或 `tmp/`（均不入库），不散落在仓库根目录或 `design/` 顶层。
 - 依赖确有必要才增加，并同步 `build.gradle.kts` 与 README；不添加任何会上传数据的 SDK（统计、崩溃上报、广告、推送）——「无账号、无云同步、数据只存本机」是产品承诺，网络权限仅用于高德瓦片下载。
 - 完成重要功能或修复后，在 `docs/acceptance-reports/` 单独新建一份验收报告：每个新功能分支 / 修复轮一份，格式沿用现有阶段文件，命名与序号按 `docs/NAMING.md` 递增，并同步更新该目录 `README.md` 的索引与完成度表；行为、命令、目录变化同步更新 `README.md` 和相关文档；不要把计划中的目标写成已验收的事实。
 
