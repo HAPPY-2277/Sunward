@@ -114,6 +114,7 @@
 
   /* 第二轮 · 脉冲环候选方案对比 */
   .cand-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:12px}
+  .cand-grid.one{grid-template-columns:minmax(0,560px)}
   @media(max-width:1040px){.cand-grid{grid-template-columns:repeat(2,1fr)}}
   @media(max-width:720px){.cand-grid{grid-template-columns:1fr}}
   .cand{border:1px solid var(--stroke);border-radius:18px;background:var(--card);padding:14px 14px 12px}
@@ -134,7 +135,22 @@
   .bar{display:inline-block;width:76px;height:7px;border-radius:999px;background:rgba(44,44,42,.10);flex:none}
   .bar i{display:block;height:100%;border-radius:999px;background:var(--amber-link)}
   .cand-ft code{font-size:10.5px}
+  .cand-ft .hint{font-size:10.5px;color:var(--dim);line-height:1.6;margin-top:2px}
   .cand .newtag{display:inline-block;font-size:10px;font-weight:800;color:#8A5A00;background:rgba(138,90,0,.12);border-radius:999px;padding:1px 8px}
+  .cand.picked{border:2px solid var(--ink);box-shadow:0 10px 26px rgba(44,44,42,.16);position:relative}
+  .cand-hd .picked-tag{
+    font-size:10px;font-weight:800;color:var(--amber);background:var(--ink);
+    border-radius:999px;padding:1px 8px;letter-spacing:.04em}
+  .final-bar{
+    margin-top:14px;border:1px solid var(--stroke);border-left:4px solid var(--ink);
+    border-radius:14px;background:var(--paper);padding:14px 16px;
+    font-size:12px;color:var(--muted);line-height:1.75}
+  .final-bar b{color:var(--ink)}
+  .final-bar .kv{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:10px 0 4px}
+  @media(max-width:720px){.final-bar .kv{grid-template-columns:repeat(2,1fr)}}
+  .final-bar .kv div{background:var(--card);border:1px solid var(--stroke);border-radius:11px;padding:8px 10px}
+  .final-bar .kv span{display:block;font-size:10px;font-weight:700;color:var(--dim);letter-spacing:.04em}
+  .final-bar .kv b{display:block;font-size:13.5px;margin-top:2px}
   .base-strip{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px}
   @media(max-width:720px){.base-strip{grid-template-columns:1fr}}
   .base{border:1px dashed var(--stroke);border-radius:16px;background:var(--paper);padding:12px 14px;font-size:11.5px;color:var(--muted);line-height:1.6}
@@ -203,8 +219,8 @@
     <div class="meta">
       <span class="tag">基线分支 feat/light-theme-warm</span>
       <span class="tag">第一轮已落地 · 2026-10-28</span>
-      <span class="tag">脉冲环候选待拍板 · 2026-10-28</span>
-      <span class="tag line">验收报告 13（第二 / 三轮）</span>
+      <span class="tag">脉冲环已定稿 · 墨 85% + 1.5dp</span>
+      <span class="tag line">验收报告 13（第二 / 三 / 四轮）</span>
       <span class="tag line">预览取 App 现有设计令牌</span>
       <span class="tag line">不改数据层与算法</span>
     </div>
@@ -306,22 +322,22 @@
         <tr>
           <td><code>android/app/src/main/res/drawable/bg_go_ping.xml</code></td>
           <td>stroke width</td>
-          <td><code>1dp</code> → <code>1.5dp</code></td>
+          <td><code>1dp</code> → <code>1.5dp</code>（第 1 轮落地后保持不变）</td>
         </tr>
         <tr>
           <td><code>android/app/src/main/res/drawable/bg_go_ping.xml</code></td>
           <td>stroke color</td>
-          <td><code>@color/ink_18</code> → <code>@color/ink_40</code>（<code>#662C2C2A</code>，40% 墨色）</td>
+          <td><code>@color/ink_18</code> → <code>@color/ink_40</code> → <b><code>@color/ink_85</code></b>（<code>#D92C2C2A</code>，85% 墨色）</td>
         </tr>
         <tr>
           <td><code>android/app/src/main/res/values/colors.xml</code></td>
           <td>令牌</td>
-          <td><b>不新增</b>：<code>ink_40</code> 已存在于 <code>colors.xml:93</code>，直接复用</td>
+          <td>第 1 轮<b>不新增</b>（<code>ink_40</code> 已存在，<code>colors.xml:93</code>）；第 4 轮新增一行 <code>ink_85</code>（<code>#D92C2C2A</code>，紧邻 <code>ink_60</code>，沿用「alpha 阶梯」命名法）</td>
         </tr>
         <tr>
           <td><code>design/prototype/activity.html</code></td>
           <td>GO 环</td>
-          <td>第 58 行 <code>border-[#F1EFE8]/40</code> → <code>border-[#2C2C2A]/40 border-[1.5px]</code></td>
+          <td>第 58 行 <code>border-[#F1EFE8]/40</code> → <code>border-[#2C2C2A]/[0.85] border-[1.5px]</code>（原型用任意不透明度写法 <code>/[0.85]</code>，因为 Tailwind 默认刻度里没有 85）</td>
         </tr>
         <tr class="keep">
           <td><code>ui/HomeActivity.kt</code> <code>startGoPing()</code></td>
@@ -344,12 +360,16 @@
     <div class="note">
       <b>为什么提亮墨色而不是换成奶油色。</b>
       脉冲环落在琥珀 hero 卡（<code>#EF9F27</code>）上，用奶油色描边反而会消失在亮底里；
-      墨色 40% 既能提亮轮廓，又与 <code>design/explore/component-styles.html:240</code>
+      墨色既能提亮轮廓，又与 <code>design/explore/component-styles.html:240</code>
       的 <code>rgba(44,44,42,.18)</code> 墨色系保持同源。同时保留「细描边」形制，
       不重演历史上「实心圆盘 + 描边」放大后变成一圈甩不掉黑边的老问题。
+      <br/><br/>
+      <b>定稿为 85% 墨（<code>ink_85</code>）</b>：色相比实心墨只差 15%，肉眼几乎等同，
+      但保留了「淡墨描边」的质感，不会像 100% 实墨那样与 GO 墨盘糊成一团。
+      描边粗细按用户拍板保持 <b>1.5dp</b>（沿用第 1 轮），不跟着 C 方案加粗到 2dp。
     </div>
 
-    <h3>第二轮 · 脉冲环候选方案（待你拍板）</h3>
+    <h3>第二轮 · 脉冲环候选方案（6 组，已拍板）</h3>
     <p class="sec-desc" style="margin-bottom:12px">
       第一轮落地的是 <code>ink_40</code> + 1.5dp，你的反馈是「<b>还是太淡</b>」。
       这一轮把<b>颜色深浅（= 不透明度）× 描边粗细</b>摆成 6 组并列，每组标出与琥珀底的对比度。
@@ -506,6 +526,10 @@
           <td><b>F</b></td><td><code>@color/white_90</code></td><td><code>#E6FAF8F1</code></td><td>2dp</td>
           <td class="num">1.91:1</td><td class="num">1.43:1</td><td>否</td>
         </tr>
+        <tr style="background:rgba(44,44,42,.06)">
+          <td><b>★ 定稿</b></td><td><code>@color/ink_85</code></td><td><code>#D92C2C2A</code></td><td>1.5dp</td>
+          <td class="num"><b>4.87:1</b></td><td class="num"><b>2.24:1</b></td><td><b>是</b>（<code>colors.xml</code> 增一行）</td>
+        </tr>
       </tbody>
     </table>
 
@@ -521,15 +545,59 @@
       <b>保守选 B（墨 75% + 2dp）</b>：峰值 3.95:1，越过 3:1 参考线但仍保留「淡墨」气质，代价是要在 <code>colors.xml</code> 增一个 <code>ink_75</code>。
       <b>C 与 D 的差别只在描边粗细</b>（对比度相同），D 更粗更实、离「细描边」形制更远。
       E 深琥珀最贴主题气质但数值低于 A，F 近白奶只留作对照。
+      <br/><br/>
+      <b>→ 最终拍板：取 C 的深墨方向，不透明度定 85%、描边保持 1.5dp</b>
+      （即上表「★ 定稿」行）。理由与落地清单见下方第三轮小节。
     </div>
 
     <div class="note">
-      <b>拍板后的落地清单（等你选一组再动代码）。</b>
-      改 <code>android/app/src/main/res/drawable/bg_go_ping.xml</code> 的 <code>stroke</code> 颜色与宽度；
-      若选 B 再在 <code>android/app/src/main/res/values/colors.xml</code> 增 <code>ink_75</code>；
-      同步 <code>design/prototype/activity.html</code> 的 GO 环。
-      <b>本轮暂不改代码</b>——按 AGENTS「不要把计划中的目标写成已验收的事实」，
-      方案定稿后再落地并补第 13 号报告的下一轮记录。
+      <b>拍板结论（2026-10-28）。</b>
+      用户选 <b>C（实心墨 100% + 2dp）</b>，但把不透明度改成 <b>85%</b>、描边改回 <b>1.5dp</b>
+      —— 即「取 C 的深墨方向，不取 C 的粗描边」。定稿见下方第三轮小节。
+    </div>
+
+    <h3>第三轮 · 定稿：墨 85% + 1.5dp</h3>
+    <div class="final-bar">
+      <b>拍板</b>：用户选 C（实心墨 100% + 2dp），并指定改为
+      <b>85% 不透明度、1.5dp 描边</b> —— 取 C 的「深墨」方向，不取它的粗描边。
+      <div class="kv">
+        <div><span>最终令牌</span><b><code>ink_85</code> · #D92C2C2A</b></div>
+        <div><span>描边粗细</span><b>1.5dp（沿用第 1 轮）</b></div>
+        <div><span>峰值对比度</span><b>4.87:1 <span style="font-weight:600;color:var(--muted)">（第 1 轮 1.97:1）</span></b></div>
+        <div><span>中段对比度</span><b>2.24:1 <span style="font-weight:600;color:var(--muted)">（第 1 轮 1.43:1）</span></b></div>
+      </div>
+      <b>为什么 85% 而不是 100%</b>：85% 与 100% 肉眼几乎同深（差 15% 墨），
+      但 100% 实墨会与 GO 墨盘糊成一体、失去「一圈淡墨描边向外扩散」的心智；
+      85% 保留描边质感，同时把峰值对比度从第 1 轮的 1.97:1 提到 4.87:1 —— 已越过 3:1 非文本参考线。
+      <b>描边保持 1.5dp</b>：粗描边在 scale 2.0 时会变成一条实边，与历史上「甩不掉的黑边」问题同源。
+      <br/><br/>
+      <b>落地改动（已在 2026-10-28 提交）</b>：<code>colors.xml</code> 新增一行
+      <code>ink_85</code>（沿用 <code>ink_06…ink_60</code> 的 alpha 阶梯命名法）；
+      <code>bg_go_ping.xml</code> 的 <code>stroke</code> 颜色改 <code>@color/ink_85</code>、宽度保持 <code>1.5dp</code>；
+      <code>design/prototype/activity.html</code> 第 58 行改 <code>border-[#2C2C2A]/[0.85] border-[1.5px]</code>。
+      <br/><br/>
+      <b>落地后的实拍</b>：模拟器（local 变体）重装后连拍 8 帧，第 6 帧刚好抓到扩散中段的弧线
+      —— 弧线在琥珀底上清晰可辨，入库为 <code>docs/screenshots/132-go-ping-ink85.png</code>。
+      <b>仍不动的</b>：动画参数（2.4s / <code>cubic-bezier(0,0,.2,1)</code> / scale 1→2 / alpha 1→0）。
+    </div>
+
+    <div class="cand-grid one">
+      <div class="cand picked">
+        <div class="cand-hd"><span class="cid">★</span><span>墨 85% · 1.5dp</span><span class="picked-tag">已定稿</span><span class="tid">ink_85</span></div>
+        <div class="stage">
+          <div class="frames">
+            <div class="frame"><div class="box"><span class="ring" style="border-color:#D92C2C2A;border-width:1.5px;transform:scale(1);opacity:1"></span><span class="word">GO</span></div><div class="cap">1.00<br/>α 1.00</div></div>
+            <div class="frame"><div class="box"><span class="ring" style="border-color:#D92C2C2A;border-width:1.5px;transform:scale(1.45);opacity:.55"></span><span class="word">GO</span></div><div class="cap">1.45<br/>α 0.55</div></div>
+            <div class="frame"><div class="box"><span class="ring" style="border-color:#D92C2C2A;border-width:1.5px;transform:scale(1.8);opacity:.2"></span><span class="word">GO</span></div><div class="cap">1.80<br/>α 0.20</div></div>
+          </div>
+        </div>
+        <div class="cand-ft">
+          <div class="row"><span class="bar"><i style="width:58px"></i></span><span>峰值 <b>4.87:1</b> · 中段 <b>2.24:1</b></span></div>
+          <div><code>@color/ink_85</code> <code>#D92C2C2A</code> · <span class="newtag">新增一行令牌</span></div>
+          <div>深墨方向 + 细描边：深到能看清，细到还是一圈线</div>
+          <div class="hint">注：scale 1.00 时环与墨盘同径、被墨盘盖住 —— 环真正露脸是在向外扩散之后（对应模拟器实拍的第 6 帧）。</div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -733,21 +801,23 @@
     <table>
       <thead><tr><th style="width:8%">序</th><th style="width:44%">文件</th><th>动作</th></tr></thead>
       <tbody>
-        <tr><td>1</td><td><code>android/app/src/main/res/drawable/bg_go_ping.xml</code></td><td>描边 1dp → 1.5dp；<code>ink_18</code> → <code>ink_40</code>（<b>第 1 轮已落地</b>；第 2 轮待拍板）</td></tr>
+        <tr><td>1</td><td><code>android/app/src/main/res/drawable/bg_go_ping.xml</code></td><td>描边 1dp → 1.5dp；<code>ink_18</code> → <code>ink_40</code> → <b><code>ink_85</code></b>（第 1、4 轮已落地）</td></tr>
         <tr><td>2</td><td><code>android/app/src/main/java/com/runclub/android/ui/widget/WeekBarsView.kt</code></td><td>删除 <code>barWidth</code> 常量；新增 <code>minBarWidth</code>；排布改等分 7 列；今日衬底加宽</td></tr>
-        <tr><td>3</td><td><code>design/prototype/activity.html</code></td><td>GO 环改墨色 40% + 1.5px；周节奏 7 列改 flex 等分铺满</td></tr>
-        <tr><td>4</td><td><code>android/app/src/main/res/values/colors.xml</code></td><td>第 1 轮不新增令牌（<code>ink_40</code> 已有）；第 2 轮若选 B 需新增 <code>ink_75</code></td></tr>
+        <tr><td>3</td><td><code>design/prototype/activity.html</code></td><td>GO 环改墨色 <b>85%</b> + 1.5px；周节奏 7 列改 flex 等分铺满</td></tr>
+        <tr><td>4</td><td><code>android/app/src/main/res/values/colors.xml</code></td><td>第 1 轮不新增令牌（<code>ink_40</code> 已有）；第 4 轮新增一行 <code>ink_85</code> <code>#D92C2C2A</code></td></tr>
         <tr><td>5</td><td><code>docs/acceptance-reports/13-*.md</code> + 其 <code>README.md</code></td><td>原第 14 份报告已并入第 13 份（同分支一份报告），索引与完成度表同步</td></tr>
         <tr><td>6</td><td><code>docs/NAMING.md</code> + <code>AGENTS.md</code></td><td>序号改「已用 1–13，下一份从 14 开始」；补「一个分支一份验收报告」规则</td></tr>
         <tr><td>7</td><td><code>docs/screenshots/130-week-bars.png</code> / <code>131-go-ping.png</code></td><td>由原 140 / 141 改名（<code>git mv</code>），号段随报告 13 调整</td></tr>
+        <tr><td>8</td><td><code>docs/screenshots/132-go-ping-ink85.png</code></td><td>第 4 轮模拟器实拍：连拍 8 帧取到扩散中段的弧线</td></tr>
       </tbody>
     </table>
     <p class="note">
-      <b>状态：第 1 轮的 6 项已全部落地</b>（2026-10-28），证据见验收报告
-      <code>docs/acceptance-reports/13-主题重设计方案三蜜琥珀浅色暖底.md</code>（§7–§13）与
-      <code>docs/screenshots/130-week-bars.png</code>、<code>131-go-ping.png</code>。
+      <b>状态：第 1 轮 6 项 + 第 4 轮 3 项已全部落地</b>（2026-10-28），证据见验收报告
+      <code>docs/acceptance-reports/13-主题重设计方案三蜜琥珀浅色暖底.md</code>（§7–§13、§14–§16）与
+      <code>docs/screenshots/130-week-bars.png</code>、<code>131-go-ping.png</code>、<code>132-go-ping-ink85.png</code>。
       提交信息按 <code>docs/开发计划.md</code> §9 约定，<code>类型: 中文一句话描述</code>，≤50 字，句末无句号：
-      <code>fix: GO 脉冲环提亮与周节奏卡铺满密排</code>。本轮不推送远端（推送需明确授权）。
+      <code>fix: GO 脉冲环提亮与周节奏卡铺满密排</code>、<code>fix: GO 脉冲环改墨 85% 描边 1.5dp</code>。
+      本轮不推送远端（推送需明确授权）。
     </p>
   </section>
 
@@ -761,7 +831,9 @@
       <li><b>双变体构建</b>：<code>.\gradlew.bat assembleLocalDebug</code> 与 <code>.\gradlew.bat assembleAmapDebug</code> —— ✅ 均 BUILD SUCCESSFUL（资源改动，两个变体都过）</li>
       <li><b>界面走查</b>：模拟器（local 变体，AVD <code>runclub36</code>）实测 —— ✅ GO 环在琥珀底上轮廓清楚；周节奏 7 列左右贴到卡片内容区两侧、间距均匀、今日列 chip 与日期圆位置正确、未来日无假柱。截图 <code>docs/screenshots/131-go-ping.png</code>、<code>130-week-bars.png</code></li>
       <li><b>窄屏复核</b>：360dp 屏上柱宽 ≈36dp，不得被压成细条（<code>minBarWidth 16dp</code> 兜底）—— ⚠️ 本轮未在 360dp 真机上复核，真机（amap 变体）观感亦待验</li>
-      <li><b>第 2 轮（脉冲环候选）</b>：<b>尚未改代码</b>，因此<b>未跑测试、未构建</b>；对比度数值为按 WCAG 公式对琥珀底 <code>#EF9F27</code> 的离线计算（脚本口径见 §01 表下说明），非仪器实测</li>
+      <li><b>第 4 轮（脉冲环定稿 · 墨 85% + 1.5dp）</b>：<code>.\gradlew.bat testLocalDebugUnitTest assembleLocalDebug assembleAmapDebug</code> —— ✅ BUILD SUCCESSFUL（<b>85 个用例全绿，failures=0、errors=0</b>），2026-10-28 15:10 实测</li>
+      <li><b>第 4 轮实拍</b>：模拟器（local 变体）重装 APK 后连拍 8 帧，第 6 帧抓到扩散中段的弧线 —— ✅ 弧线在琥珀底上清晰可辨，入库 <code>docs/screenshots/132-go-ping-ink85.png</code></li>
+      <li><b>对比度数值</b>：按 WCAG 公式对琥珀底 <code>#EF9F27</code> 离线计算（<b>非仪器实测</b>）：峰值 4.87:1、中段 2.24:1</li>
     </ul>
 
 
@@ -787,7 +859,11 @@
         </tr>
         <tr>
           <td>动画淡出会稀释颜色</td>
-          <td>环的<b>有效不透明度 = 颜色 alpha × 动画 alpha</b>；动画 2.4s 内 alpha 1→0，中段（scale 1.45）只剩 0.55，再乘颜色 alpha 后实测对比度普遍偏低。选 C / D（实心墨）也只能把中段拉到 2.63:1 —— 这是<b>动画节奏</b>的问题，不是颜色的问题；本轮按约定不把淡出节奏列为变量</td>
+          <td>环的<b>有效不透明度 = 颜色 alpha × 动画 alpha</b>；动画 2.4s 内 alpha 1→0，中段（scale 1.45）只剩 0.55，再乘颜色 alpha 后对比度普遍偏低。定稿的 85% 墨把峰值推到 4.87:1，但中段仍只有 2.24:1 —— 这是<b>动画节奏</b>的问题，不是颜色的问题；按约定不把淡出节奏列为变量</td>
+        </tr>
+        <tr>
+          <td>85% 与 100% 肉眼几乎一样</td>
+          <td>定稿取 85% 而非 100%，差别很小；真正的增益来自「第 1 轮 40% → 85%」这一跳（峰值 1.97:1 → 4.87:1）。若仍嫌淡，下一步该动的是<b>动画节奏</b>（拉长不透明度平台期），而不是继续加深的颜色</td>
         </tr>
       </tbody>
     </table>
@@ -796,7 +872,8 @@
       <b>本次明确不做。</b>
       不改柱区高度与控件总高；不改脉冲环动画参数；不改 <code>dailyMinutes</code> 数据口径与报告聚合；
       不碰数据库、权限、地图；不新增依赖；不动主题令牌体系。
-      第 2 轮在拍板前<b>不动任何代码</b>（含 <code>colors.xml</code>、<code>bg_go_ping.xml</code>、原型基线）。
+      第 2 轮（候选对比）只出方案不动代码，<b>第 4 轮拍板后才动</b>
+      <code>colors.xml</code>、<code>bg_go_ping.xml</code> 与原型基线。
     </div>
   </section>
 
