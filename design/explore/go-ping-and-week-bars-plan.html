@@ -12,16 +12,20 @@
     --amber:#EF9F27;      /* accent_lime 主色蜜琥珀 */
     --amber-deep:#854F0B; /* accent_orange 深琥珀 */
     --amber-link:#8A5A00; /* accent_deep */
+    /* 注意：Android colors.xml 用 #AARRGGBB 记法（alpha 在最前），
+       CSS 的 8 位 #RRGGBBAA 是 alpha 在最后，直接照抄会把颜色画错 ——
+       所以下面一律用 rgba() 表达「墨色/琥珀 + 不透明度」。 */
     --ink:#2C2C2A;        /* ink */
     --muted:#6E6A61;      /* text_muted */
     --dim:#8D897E;        /* text_dim */
     --faint:#B9B4A8;      /* week_faint */
     --stroke:#E3DFD2;     /* stroke_subtle */
     --divider:#E9E5D9;    /* divider */
-    --ink40:#662C2C2A;    /* ink_40 */
-    --ink18:#2E2C2C2A;    /* ink_18 */
-    --lime40:#66EF9F27;   /* lime_40 */
-    --todaybg:#1AEF9F27;  /* week_today_bg */
+    --ink40:rgba(44,44,42,.40);    /* ink_40 */
+    --ink85:rgba(44,44,42,.85);    /* ink_85 —— 第 4 轮定稿 */
+    --ink18:rgba(44,44,42,.18);    /* ink_18 */
+    --lime40:rgba(239,159,39,.40);   /* lime_40 */
+    --todaybg:rgba(239,159,39,.10);  /* week_today_bg */
     --d1:#CB5A4E; --d2:#DF8A3E; --d3:#E0B23F; --d4:#8CA84F;
     --d5:#5EA79E; --d6:#5E80B8; --d7:#9070A6;
   }
@@ -43,6 +47,9 @@
   h2{font-size:21px;font-weight:900;letter-spacing:-.02em;margin:6px 0 4px}
   .sec-desc{font-size:13px;color:var(--muted);margin-bottom:22px;max-width:76ch}
   h3{font-size:14px;font-weight:800;margin:26px 0 10px;display:flex;align-items:center;gap:8px}
+  .sub-note{font-size:12px;color:var(--muted);margin:-4px 0 10px;line-height:1.7}
+  .sub-note code{font-size:11px}
+  .sub-note b{color:var(--ink)}
   h3::before{content:"";width:3px;height:14px;border-radius:2px;background:var(--amber)}
   .grid2{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
   .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
@@ -85,12 +92,17 @@
     display:flex;flex-direction:column;align-items:center;justify-content:center;
   }
   .go .ping{
-    position:absolute;inset:0;border-radius:50%;border:1.5px solid var(--ink40);
+    position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+    border-radius:50%;border:1.5px solid var(--ink85);
+    width:100%;height:100%;
     animation:ping 2.4s cubic-bezier(0,0,.2,1) infinite;
   }
+  /* 与原型 animate-ping 等价：环放大到 2 倍、alpha 1 -> 0；
+     用 width/height 动画而不是 transform:scale()，是为了描边随环一起变粗，
+     不被浏览器的缩放栅格化削薄（实测 transform:scale 会把 1.5px 描边画成发丝线）。 */
   @keyframes ping{
-    0%{transform:scale(1);opacity:1}
-    100%{transform:scale(2);opacity:0}
+    0%{width:100%;height:100%;border-width:1.5px;opacity:1}
+    100%{width:200%;height:200%;border-width:3px;opacity:0}
   }
   .go .inner{position:absolute;inset:7px;border-radius:50%;border:1.5px solid var(--lime40)}
   .go .word{font-size:32px;font-weight:900;font-style:italic;letter-spacing:-.08em;line-height:1;color:var(--amber)}
@@ -104,10 +116,11 @@
     box-shadow:0 14px 30px rgba(44,44,42,.25);display:flex;align-items:center;justify-content:center
   }
   .frame .ring{
-    position:absolute;inset:0;border-radius:50%;border:1.5px solid var(--ink40);
-    transform-origin:center;pointer-events:none
+    position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+    border-radius:50%;border-style:solid;border-color:var(--ink85);
+    width:100%;height:100%;border-width:1.5px;pointer-events:none
   }
-  .frame .ring.old{border-color:var(--ink18);border-width:1px}
+  .frame .ring.old{border-color:var(--ink18)}
   .frame .cap{font-size:11px;color:var(--muted);margin-top:8px;font-weight:700}
   .frame .cap b{color:var(--ink);font-weight:800}
   .frame .cap i{font-style:normal;color:var(--dim);font-weight:600}
@@ -232,12 +245,14 @@
     <h2>GO 按钮外脉冲环提亮</h2>
     <p class="sec-desc">
       现状是「1dp 描边 + 18% 墨色」，压在饱和琥珀 hero 卡上几乎看不见。改法：描边加粗到 1.5dp、
-      颜色提到 40% 墨色，仍然是「一圈细描边向外扩散并淡出」的形制，不动动画本身。
+      颜色提到 <b>85% 墨色（ink_85）</b>，仍然是「一圈细描边向外扩散并淡出」的形制，不动动画本身。
+      <br/>四轮过程：第 1 轮 40% 墨（仍嫌淡）→ 第 2 轮出 6 组候选 → 第 3 轮用户拍板
+      「C 的深墨方向、但不透明度 85%、描边 1.5dp」→ <b>第 4 轮定稿即本文与代码现状</b>。
     </p>
 
     <div class="grid2">
       <div>
-        <h3>改后效果 · 动效</h3>
+        <h3>最终效果 · 动效</h3>
         <div class="phone">
           <div class="phone-top"></div>
           <div class="phone-body">
@@ -265,52 +280,52 @@
         </div>
         <p class="note">
           脉冲环参数与现状<b>完全一致</b>：2.4s 一轮、<code>cubic-bezier(0,0,.2,1)</code>、
-          放大到 2 倍、opacity 1 → 0。本次只加粗描边并提亮底色。
+          放大到 2 倍、opacity 1 → 0。本次只把描边从 1dp 加粗到 1.5dp，并把颜色从 18% 墨提到 <b>85% 墨</b>。
         </p>
       </div>
 
       <div>
-        <h3>改后效果 · 扩散静帧</h3>
+        <h3>最终效果 · 扩散静帧</h3>
         <div class="frames">
           <div class="frame">
             <div class="box">
-              <span class="ring old" style="transform:scale(1);opacity:1"></span>
+              <span class="ring old" style="width:100%;height:100%;border-width:1px;opacity:1"></span>
               <span class="word" style="font-size:32px;font-weight:900;font-style:italic;letter-spacing:-.08em;color:var(--amber);position:relative">GO</span>
             </div>
-            <div class="cap"><b>改前</b> scale 1.00<br/><i>ink_18 / 1dp</i></div>
+            <div class="cap"><b>原始</b> scale 1.00<br/><i>ink_18 / 1dp</i></div>
           </div>
           <div class="frame">
             <div class="box">
-              <span class="ring old" style="transform:scale(1.45);opacity:.62"></span>
+              <span class="ring old" style="width:145%;height:145%;border-width:1.45px;opacity:.62"></span>
               <span class="word" style="font-size:32px;font-weight:900;font-style:italic;letter-spacing:-.08em;color:var(--amber);position:relative">GO</span>
             </div>
-            <div class="cap"><b>改前</b> scale 1.45<br/><i>ink_18 / 1dp</i></div>
+            <div class="cap"><b>原始</b> scale 1.45<br/><i>ink_18 / 1dp</i></div>
           </div>
           <div class="frame">
             <div class="box">
-              <span class="ring" style="transform:scale(1);opacity:1"></span>
+              <span class="ring" style="width:100%;height:100%;border-width:1.5px;opacity:1"></span>
               <span class="word" style="font-size:32px;font-weight:900;font-style:italic;letter-spacing:-.08em;color:var(--amber);position:relative">GO</span>
             </div>
-            <div class="cap"><b>改后</b> scale 1.00<br/><i>ink_40 / 1.5dp</i></div>
+            <div class="cap"><b>定稿</b> scale 1.00<br/><i>ink_85 / 1.5dp</i></div>
           </div>
           <div class="frame">
             <div class="box">
-              <span class="ring" style="transform:scale(1.45);opacity:.62"></span>
+              <span class="ring" style="width:145%;height:145%;border-width:2.175px;opacity:.62"></span>
               <span class="word" style="font-size:32px;font-weight:900;font-style:italic;letter-spacing:-.08em;color:var(--amber);position:relative">GO</span>
             </div>
-            <div class="cap"><b>改后</b> scale 1.45<br/><i>ink_40 / 1.5dp</i></div>
+            <div class="cap"><b>定稿</b> scale 1.45<br/><i>ink_85 / 1.5dp</i></div>
           </div>
           <div class="frame">
             <div class="box">
-              <span class="ring" style="transform:scale(1.8);opacity:.26"></span>
+              <span class="ring" style="width:180%;height:180%;border-width:2.7px;opacity:.26"></span>
               <span class="word" style="font-size:32px;font-weight:900;font-style:italic;letter-spacing:-.08em;color:var(--amber);position:relative">GO</span>
             </div>
-            <div class="cap"><b>改后</b> scale 1.80<br/><i>ink_40 / 1.5dp</i></div>
+            <div class="cap"><b>定稿</b> scale 1.80<br/><i>ink_85 / 1.5dp</i></div>
           </div>
         </div>
         <p class="note">
-          左两帧是<b>改前</b>（ink_18 = <code>#2E2C2C2A</code>，1dp）：在琥珀底上几乎分辨不出轮廓。
-          右三帧是<b>改后</b>（ink_40 = <code>#662C2C2A</code>，1.5dp）：整段扩散过程都保持可辨。
+          左两帧是<b>原始</b>（ink_18 = <code>#2E2C2C2A</code>，1dp）：在琥珀底上几乎分辨不出轮廓。
+          右三帧是<b>定稿</b>（ink_85 = <code>#D92C2C2A</code>，1.5dp）：整段扩散过程都保持可辨。
         </p>
       </div>
     </div>
@@ -396,9 +411,9 @@
         <div class="cand-hd"><span class="cid">A</span><span>墨 60% · 1.5dp</span><span class="tid">ink_60</span></div>
         <div class="stage">
           <div class="frames">
-            <div class="frame"><div class="box"><span class="ring" style="border-color:#992C2C2A;border-width:1.5px;transform:scale(1);opacity:1"></span><span class="word">GO</span></div><div class="cap">1.00<br/>α 1.00</div></div>
-            <div class="frame"><div class="box"><span class="ring" style="border-color:#992C2C2A;border-width:1.5px;transform:scale(1.45);opacity:.55"></span><span class="word">GO</span></div><div class="cap">1.45<br/>α 0.55</div></div>
-            <div class="frame"><div class="box"><span class="ring" style="border-color:#992C2C2A;border-width:1.5px;transform:scale(1.8);opacity:.2"></span><span class="word">GO</span></div><div class="cap">1.80<br/>α 0.20</div></div>
+            <div class="frame"><div class="box"><span class="ring" style="width:100%;height:100%;border-width:1.5px;border-color:rgba(44,44,42,.60);opacity:1"></span><span class="word">GO</span></div><div class="cap">1.00<br/>α 1.00</div></div>
+            <div class="frame"><div class="box"><span class="ring" style="width:145%;height:145%;border-width:2.175px;border-color:rgba(44,44,42,.60);opacity:.55"></span><span class="word">GO</span></div><div class="cap">1.45<br/>α 0.55</div></div>
+            <div class="frame"><div class="box"><span class="ring" style="width:180%;height:180%;border-width:2.7px;border-color:rgba(44,44,42,.60);opacity:.2"></span><span class="word">GO</span></div><div class="cap">1.80<br/>α 0.20</div></div>
           </div>
         </div>
         <div class="cand-ft">
@@ -412,9 +427,9 @@
         <div class="cand-hd"><span class="cid">B</span><span>墨 75% · 2dp</span><span class="tid">ink_75</span></div>
         <div class="stage">
           <div class="frames">
-            <div class="frame"><div class="box"><span class="ring" style="border-color:#BF2C2C2A;border-width:2px;transform:scale(1);opacity:1"></span><span class="word">GO</span></div><div class="cap">1.00<br/>α 1.00</div></div>
-            <div class="frame"><div class="box"><span class="ring" style="border-color:#BF2C2C2A;border-width:2px;transform:scale(1.45);opacity:.55"></span><span class="word">GO</span></div><div class="cap">1.45<br/>α 0.55</div></div>
-            <div class="frame"><div class="box"><span class="ring" style="border-color:#BF2C2C2A;border-width:2px;transform:scale(1.8);opacity:.2"></span><span class="word">GO</span></div><div class="cap">1.80<br/>α 0.20</div></div>
+            <div class="frame"><div class="box"><span class="ring" style="width:100%;height:100%;border-width:2px;border-color:rgba(44,44,42,.75);opacity:1"></span><span class="word">GO</span></div><div class="cap">1.00<br/>α 1.00</div></div>
+            <div class="frame"><div class="box"><span class="ring" style="width:145%;height:145%;border-width:2.9px;border-color:rgba(44,44,42,.75);opacity:.55"></span><span class="word">GO</span></div><div class="cap">1.45<br/>α 0.55</div></div>
+            <div class="frame"><div class="box"><span class="ring" style="width:180%;height:180%;border-width:3.6px;border-color:rgba(44,44,42,.75);opacity:.2"></span><span class="word">GO</span></div><div class="cap">1.80<br/>α 0.20</div></div>
           </div>
         </div>
         <div class="cand-ft">
@@ -428,9 +443,9 @@
         <div class="cand-hd"><span class="cid">C</span><span>实心墨 100% · 2dp</span><span class="tid">ink</span></div>
         <div class="stage">
           <div class="frames">
-            <div class="frame"><div class="box"><span class="ring" style="border-color:#2C2C2A;border-width:2px;transform:scale(1);opacity:1"></span><span class="word">GO</span></div><div class="cap">1.00<br/>α 1.00</div></div>
-            <div class="frame"><div class="box"><span class="ring" style="border-color:#2C2C2A;border-width:2px;transform:scale(1.45);opacity:.55"></span><span class="word">GO</span></div><div class="cap">1.45<br/>α 0.55</div></div>
-            <div class="frame"><div class="box"><span class="ring" style="border-color:#2C2C2A;border-width:2px;transform:scale(1.8);opacity:.2"></span><span class="word">GO</span></div><div class="cap">1.80<br/>α 0.20</div></div>
+            <div class="frame"><div class="box"><span class="ring" style="width:100%;height:100%;border-width:2px;border-color:#2C2C2A;opacity:1"></span><span class="word">GO</span></div><div class="cap">1.00<br/>α 1.00</div></div>
+            <div class="frame"><div class="box"><span class="ring" style="width:145%;height:145%;border-width:2.9px;border-color:#2C2C2A;opacity:.55"></span><span class="word">GO</span></div><div class="cap">1.45<br/>α 0.55</div></div>
+            <div class="frame"><div class="box"><span class="ring" style="width:180%;height:180%;border-width:3.6px;border-color:#2C2C2A;opacity:.2"></span><span class="word">GO</span></div><div class="cap">1.80<br/>α 0.20</div></div>
           </div>
         </div>
         <div class="cand-ft">
@@ -444,9 +459,9 @@
         <div class="cand-hd"><span class="cid">D</span><span>实心墨 100% · 2.5dp</span><span class="tid">ink</span></div>
         <div class="stage">
           <div class="frames">
-            <div class="frame"><div class="box"><span class="ring" style="border-color:#2C2C2A;border-width:2.5px;transform:scale(1);opacity:1"></span><span class="word">GO</span></div><div class="cap">1.00<br/>α 1.00</div></div>
-            <div class="frame"><div class="box"><span class="ring" style="border-color:#2C2C2A;border-width:2.5px;transform:scale(1.45);opacity:.55"></span><span class="word">GO</span></div><div class="cap">1.45<br/>α 0.55</div></div>
-            <div class="frame"><div class="box"><span class="ring" style="border-color:#2C2C2A;border-width:2.5px;transform:scale(1.8);opacity:.2"></span><span class="word">GO</span></div><div class="cap">1.80<br/>α 0.20</div></div>
+            <div class="frame"><div class="box"><span class="ring" style="width:100%;height:100%;border-width:2.5px;border-color:#2C2C2A;opacity:1"></span><span class="word">GO</span></div><div class="cap">1.00<br/>α 1.00</div></div>
+            <div class="frame"><div class="box"><span class="ring" style="width:145%;height:145%;border-width:3.625px;border-color:#2C2C2A;opacity:.55"></span><span class="word">GO</span></div><div class="cap">1.45<br/>α 0.55</div></div>
+            <div class="frame"><div class="box"><span class="ring" style="width:180%;height:180%;border-width:4.5px;border-color:#2C2C2A;opacity:.2"></span><span class="word">GO</span></div><div class="cap">1.80<br/>α 0.20</div></div>
           </div>
         </div>
         <div class="cand-ft">
@@ -460,9 +475,9 @@
         <div class="cand-hd"><span class="cid">E</span><span>深琥珀 100% · 2dp</span><span class="tid">accent_deep</span></div>
         <div class="stage">
           <div class="frames">
-            <div class="frame"><div class="box"><span class="ring" style="border-color:#8A5A00;border-width:2px;transform:scale(1);opacity:1"></span><span class="word">GO</span></div><div class="cap">1.00<br/>α 1.00</div></div>
-            <div class="frame"><div class="box"><span class="ring" style="border-color:#8A5A00;border-width:2px;transform:scale(1.45);opacity:.55"></span><span class="word">GO</span></div><div class="cap">1.45<br/>α 0.55</div></div>
-            <div class="frame"><div class="box"><span class="ring" style="border-color:#8A5A00;border-width:2px;transform:scale(1.8);opacity:.2"></span><span class="word">GO</span></div><div class="cap">1.80<br/>α 0.20</div></div>
+            <div class="frame"><div class="box"><span class="ring" style="width:100%;height:100%;border-width:2px;border-color:#8A5A00;opacity:1"></span><span class="word">GO</span></div><div class="cap">1.00<br/>α 1.00</div></div>
+            <div class="frame"><div class="box"><span class="ring" style="width:145%;height:145%;border-width:2.9px;border-color:#8A5A00;opacity:.55"></span><span class="word">GO</span></div><div class="cap">1.45<br/>α 0.55</div></div>
+            <div class="frame"><div class="box"><span class="ring" style="width:180%;height:180%;border-width:3.6px;border-color:#8A5A00;opacity:.2"></span><span class="word">GO</span></div><div class="cap">1.80<br/>α 0.20</div></div>
           </div>
         </div>
         <div class="cand-ft">
@@ -476,9 +491,9 @@
         <div class="cand-hd"><span class="cid">F</span><span>近白奶 90% · 2dp</span><span class="tid">white_90</span></div>
         <div class="stage">
           <div class="frames">
-            <div class="frame"><div class="box"><span class="ring" style="border-color:#E6FAF8F1;border-width:2px;transform:scale(1);opacity:1"></span><span class="word">GO</span></div><div class="cap">1.00<br/>α 1.00</div></div>
-            <div class="frame"><div class="box"><span class="ring" style="border-color:#E6FAF8F1;border-width:2px;transform:scale(1.45);opacity:.55"></span><span class="word">GO</span></div><div class="cap">1.45<br/>α 0.55</div></div>
-            <div class="frame"><div class="box"><span class="ring" style="border-color:#E6FAF8F1;border-width:2px;transform:scale(1.8);opacity:.2"></span><span class="word">GO</span></div><div class="cap">1.80<br/>α 0.20</div></div>
+            <div class="frame"><div class="box"><span class="ring" style="width:100%;height:100%;border-width:2px;border-color:rgba(250,248,241,.90);opacity:1"></span><span class="word">GO</span></div><div class="cap">1.00<br/>α 1.00</div></div>
+            <div class="frame"><div class="box"><span class="ring" style="width:145%;height:145%;border-width:2.9px;border-color:rgba(250,248,241,.90);opacity:.55"></span><span class="word">GO</span></div><div class="cap">1.45<br/>α 0.55</div></div>
+            <div class="frame"><div class="box"><span class="ring" style="width:180%;height:180%;border-width:3.6px;border-color:rgba(250,248,241,.90);opacity:.2"></span><span class="word">GO</span></div><div class="cap">1.80<br/>α 0.20</div></div>
           </div>
         </div>
         <div class="cand-ft">
@@ -491,8 +506,9 @@
     </div>
 
     <h3>候选方案参数对照</h3>
+    <p class="sub-note">「实际值」一列是 <code>colors.xml</code> 里的 <b>Android ARGB 记法（#AARRGGBB，alpha 在最前）</b>；本页预览用 CSS <code>rgba()</code> 渲染同一颜色（CSS 8 位十六进制是 #RRGGBBAA，alpha 在最后，直接照抄会画错）。</p>
     <table>
-      <thead><tr><th style="width:8%">方案</th><th style="width:20%">颜色令牌</th><th style="width:16%">实际值</th><th style="width:12%">描边</th><th style="width:14%">峰值对比度</th><th style="width:16%">中段对比度</th><th>是否新增令牌</th></tr></thead>
+      <thead><tr><th style="width:8%">方案</th><th style="width:20%">颜色令牌</th><th style="width:16%">实际值（ARGB）</th><th style="width:12%">描边</th><th style="width:14%">峰值对比度</th><th style="width:16%">中段对比度</th><th>是否新增令牌</th></tr></thead>
       <tbody>
         <tr>
           <td>改前</td><td><code>@color/ink_18</code></td><td><code>#2E2C2C2A</code></td><td>1dp</td>
@@ -586,9 +602,9 @@
         <div class="cand-hd"><span class="cid">★</span><span>墨 85% · 1.5dp</span><span class="picked-tag">已定稿</span><span class="tid">ink_85</span></div>
         <div class="stage">
           <div class="frames">
-            <div class="frame"><div class="box"><span class="ring" style="border-color:#D92C2C2A;border-width:1.5px;transform:scale(1);opacity:1"></span><span class="word">GO</span></div><div class="cap">1.00<br/>α 1.00</div></div>
-            <div class="frame"><div class="box"><span class="ring" style="border-color:#D92C2C2A;border-width:1.5px;transform:scale(1.45);opacity:.55"></span><span class="word">GO</span></div><div class="cap">1.45<br/>α 0.55</div></div>
-            <div class="frame"><div class="box"><span class="ring" style="border-color:#D92C2C2A;border-width:1.5px;transform:scale(1.8);opacity:.2"></span><span class="word">GO</span></div><div class="cap">1.80<br/>α 0.20</div></div>
+            <div class="frame"><div class="box"><span class="ring" style="width:100%;height:100%;border-width:1.5px;border-color:rgba(44,44,42,.85);opacity:1"></span><span class="word">GO</span></div><div class="cap">1.00<br/>α 1.00</div></div>
+            <div class="frame"><div class="box"><span class="ring" style="width:145%;height:145%;border-width:2.175px;border-color:rgba(44,44,42,.85);opacity:.55"></span><span class="word">GO</span></div><div class="cap">1.45<br/>α 0.55</div></div>
+            <div class="frame"><div class="box"><span class="ring" style="width:180%;height:180%;border-width:2.7px;border-color:rgba(44,44,42,.85);opacity:.2"></span><span class="word">GO</span></div><div class="cap">1.80<br/>α 0.20</div></div>
           </div>
         </div>
         <div class="cand-ft">
