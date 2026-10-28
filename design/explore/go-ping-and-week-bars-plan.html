@@ -112,6 +112,40 @@
   .frame .cap b{color:var(--ink);font-weight:800}
   .frame .cap i{font-style:normal;color:var(--dim);font-weight:600}
 
+  /* 第二轮 · 脉冲环候选方案对比 */
+  .cand-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:12px}
+  @media(max-width:1040px){.cand-grid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:720px){.cand-grid{grid-template-columns:1fr}}
+  .cand{border:1px solid var(--stroke);border-radius:18px;background:var(--card);padding:14px 14px 12px}
+  .cand-hd{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:800;color:var(--ink)}
+  .cand-hd .cid{
+    width:22px;height:22px;border-radius:7px;background:var(--ink);color:var(--amber);flex:none;
+    display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:900
+  }
+  .cand-hd .tid{margin-left:auto;font-size:10.5px;font-weight:700;color:var(--dim);font-family:Consolas,Monaco,monospace}
+  .cand .stage{margin-top:10px;background:var(--amber);border-radius:14px;padding:16px 6px 8px;display:flex;justify-content:center}
+  .cand .frames{gap:26px}
+  .cand .box{width:76px;height:76px;box-shadow:0 8px 18px rgba(44,44,42,.22)}
+  .cand .word{font-size:22px;font-weight:900;font-style:italic;letter-spacing:-.08em;line-height:1;color:var(--amber);position:relative}
+  .cand .cap{font-size:10px;color:rgba(44,44,42,.62);margin-top:6px;font-weight:700;line-height:1.3}
+  .cand-ft{margin-top:10px;font-size:11px;color:var(--muted);line-height:1.65}
+  .cand-ft b{color:var(--ink)}
+  .cand-ft .row{display:flex;align-items:center;gap:6px}
+  .bar{display:inline-block;width:76px;height:7px;border-radius:999px;background:rgba(44,44,42,.10);flex:none}
+  .bar i{display:block;height:100%;border-radius:999px;background:var(--amber-link)}
+  .cand-ft code{font-size:10.5px}
+  .cand .newtag{display:inline-block;font-size:10px;font-weight:800;color:#8A5A00;background:rgba(138,90,0,.12);border-radius:999px;padding:1px 8px}
+  .base-strip{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px}
+  @media(max-width:720px){.base-strip{grid-template-columns:1fr}}
+  .base{border:1px dashed var(--stroke);border-radius:16px;background:var(--paper);padding:12px 14px;font-size:11.5px;color:var(--muted);line-height:1.6}
+  .base b{color:var(--ink);font-size:12.5px}
+  .base .row{display:flex;align-items:center;gap:8px;margin-top:4px}
+  .base .sw{width:26px;height:26px;border-radius:50%;background:var(--ink);position:relative;flex:none}
+  .base .sw span{position:absolute;inset:0;border-radius:50%}
+  .rec{background:rgba(239,159,39,.10);border:1px solid rgba(239,159,39,.40);border-radius:14px;padding:14px 16px;margin-top:16px;font-size:12.5px;color:var(--muted);line-height:1.7}
+  .rec b{color:var(--ink)}
+  .rec .t{font-size:12px;font-weight:800;color:var(--amber-link);letter-spacing:.06em;display:block;margin-bottom:6px}
+
   /* 周节奏卡 */
   .week-card{background:var(--card);border:1px solid var(--stroke);border-radius:28px;padding:20px;width:353px;max-width:100%}
   .week-hd{display:flex;align-items:flex-start;justify-content:space-between}
@@ -164,12 +198,13 @@
     <h1>GO 脉冲环提亮 · 周节奏卡铺满密排</h1>
     <p class="sub">
       逐日 · SUNWARD 首页两处视觉问题的落地修改方案。先给改后效果预览，再逐项列出对应的
-      Kotlin / XML / 原型改动与取值。
+      Kotlin / XML / 原型改动与取值；脉冲环第二轮（第 1 轮落地后仍反馈「太淡」）追加 6 组候选对比方案。
     </p>
     <div class="meta">
       <span class="tag">基线分支 feat/light-theme-warm</span>
-      <span class="tag">已落地 · 2026-10-28</span>
-      <span class="tag line">验收报告 14</span>
+      <span class="tag">第一轮已落地 · 2026-10-28</span>
+      <span class="tag">脉冲环候选待拍板 · 2026-10-28</span>
+      <span class="tag line">验收报告 13（第二 / 三轮）</span>
       <span class="tag line">预览取 App 现有设计令牌</span>
       <span class="tag line">不改数据层与算法</span>
     </div>
@@ -312,6 +347,189 @@
       墨色 40% 既能提亮轮廓，又与 <code>design/explore/component-styles.html:240</code>
       的 <code>rgba(44,44,42,.18)</code> 墨色系保持同源。同时保留「细描边」形制，
       不重演历史上「实心圆盘 + 描边」放大后变成一圈甩不掉黑边的老问题。
+    </div>
+
+    <h3>第二轮 · 脉冲环候选方案（待你拍板）</h3>
+    <p class="sec-desc" style="margin-bottom:12px">
+      第一轮落地的是 <code>ink_40</code> + 1.5dp，你的反馈是「<b>还是太淡</b>」。
+      这一轮把<b>颜色深浅（= 不透明度）× 描边粗细</b>摆成 6 组并列，每组标出与琥珀底的对比度。
+      <b>动画节奏本轮不动</b>（2.4s / <code>cubic-bezier(0,0,.2,1)</code> / scale 1→2 / alpha 1→0），
+      所以差异只来自颜色与描边两个变量。
+    </p>
+
+    <div class="base-strip">
+      <div class="base">
+        <b>改前现状</b> · <code>@color/ink_18</code> <code>#2E2C2C2A</code> · 1dp
+        <div class="row"><span class="bar"><i style="width:13px"></i></span><span>峰值 <b>1.12:1</b> · 中段 <b>1.06:1</b></span></div>
+        <div style="margin-top:4px">18% 墨几乎等于没画 —— 这就是「太淡」的原始状态</div>
+      </div>
+      <div class="base">
+        <b>第 1 轮已落地</b> · <code>@color/ink_40</code> <code>#662C2C2A</code> · 1.5dp
+        <div class="row"><span class="bar"><i style="width:23px"></i></span><span>峰值 <b>1.97:1</b> · 中段 <b>1.43:1</b></span></div>
+        <div style="margin-top:4px">比改前清楚，但仍偏淡 —— 你的反馈指向这里</div>
+      </div>
+    </div>
+
+    <div class="cand-grid">
+
+      <div class="cand">
+        <div class="cand-hd"><span class="cid">A</span><span>墨 60% · 1.5dp</span><span class="tid">ink_60</span></div>
+        <div class="stage">
+          <div class="frames">
+            <div class="frame"><div class="box"><span class="ring" style="border-color:#992C2C2A;border-width:1.5px;transform:scale(1);opacity:1"></span><span class="word">GO</span></div><div class="cap">1.00<br/>α 1.00</div></div>
+            <div class="frame"><div class="box"><span class="ring" style="border-color:#992C2C2A;border-width:1.5px;transform:scale(1.45);opacity:.55"></span><span class="word">GO</span></div><div class="cap">1.45<br/>α 0.55</div></div>
+            <div class="frame"><div class="box"><span class="ring" style="border-color:#992C2C2A;border-width:1.5px;transform:scale(1.8);opacity:.2"></span><span class="word">GO</span></div><div class="cap">1.80<br/>α 0.20</div></div>
+          </div>
+        </div>
+        <div class="cand-ft">
+          <div class="row"><span class="bar"><i style="width:34px"></i></span><span>峰值 <b>2.91:1</b> · 中段 <b>1.73:1</b></span></div>
+          <div><code>@color/ink_60</code> <code>#992C2C2A</code> · 沿用现有令牌，<b>不新增</b></div>
+          <div>最小步：在第 1 轮基础上再提一档透明度</div>
+        </div>
+      </div>
+
+      <div class="cand">
+        <div class="cand-hd"><span class="cid">B</span><span>墨 75% · 2dp</span><span class="tid">ink_75</span></div>
+        <div class="stage">
+          <div class="frames">
+            <div class="frame"><div class="box"><span class="ring" style="border-color:#BF2C2C2A;border-width:2px;transform:scale(1);opacity:1"></span><span class="word">GO</span></div><div class="cap">1.00<br/>α 1.00</div></div>
+            <div class="frame"><div class="box"><span class="ring" style="border-color:#BF2C2C2A;border-width:2px;transform:scale(1.45);opacity:.55"></span><span class="word">GO</span></div><div class="cap">1.45<br/>α 0.55</div></div>
+            <div class="frame"><div class="box"><span class="ring" style="border-color:#BF2C2C2A;border-width:2px;transform:scale(1.8);opacity:.2"></span><span class="word">GO</span></div><div class="cap">1.80<br/>α 0.20</div></div>
+          </div>
+        </div>
+        <div class="cand-ft">
+          <div class="row"><span class="bar"><i style="width:47px"></i></span><span>峰值 <b>3.95:1</b> · 中段 <b>2.01:1</b></span></div>
+          <div><code>@color/ink_75</code> <code>#BF2C2C2A</code> · <span class="newtag">需新增令牌</span></div>
+          <div>峰值越过 3:1（非文本对比度参考线），中段仍偏柔</div>
+        </div>
+      </div>
+
+      <div class="cand">
+        <div class="cand-hd"><span class="cid">C</span><span>实心墨 100% · 2dp</span><span class="tid">ink</span></div>
+        <div class="stage">
+          <div class="frames">
+            <div class="frame"><div class="box"><span class="ring" style="border-color:#2C2C2A;border-width:2px;transform:scale(1);opacity:1"></span><span class="word">GO</span></div><div class="cap">1.00<br/>α 1.00</div></div>
+            <div class="frame"><div class="box"><span class="ring" style="border-color:#2C2C2A;border-width:2px;transform:scale(1.45);opacity:.55"></span><span class="word">GO</span></div><div class="cap">1.45<br/>α 0.55</div></div>
+            <div class="frame"><div class="box"><span class="ring" style="border-color:#2C2C2A;border-width:2px;transform:scale(1.8);opacity:.2"></span><span class="word">GO</span></div><div class="cap">1.80<br/>α 0.20</div></div>
+          </div>
+        </div>
+        <div class="cand-ft">
+          <div class="row"><span class="bar"><i style="width:76px"></i></span><span>峰值 <b>6.44:1</b> · 中段 <b>2.63:1</b></span></div>
+          <div><code>@color/ink</code> <code>#2C2C2A</code> · 令牌已有，<b>不新增</b></div>
+          <div>与 GO 墨盘同色 —— 环读起来像圆盘自己的回声</div>
+        </div>
+      </div>
+
+      <div class="cand">
+        <div class="cand-hd"><span class="cid">D</span><span>实心墨 100% · 2.5dp</span><span class="tid">ink</span></div>
+        <div class="stage">
+          <div class="frames">
+            <div class="frame"><div class="box"><span class="ring" style="border-color:#2C2C2A;border-width:2.5px;transform:scale(1);opacity:1"></span><span class="word">GO</span></div><div class="cap">1.00<br/>α 1.00</div></div>
+            <div class="frame"><div class="box"><span class="ring" style="border-color:#2C2C2A;border-width:2.5px;transform:scale(1.45);opacity:.55"></span><span class="word">GO</span></div><div class="cap">1.45<br/>α 0.55</div></div>
+            <div class="frame"><div class="box"><span class="ring" style="border-color:#2C2C2A;border-width:2.5px;transform:scale(1.8);opacity:.2"></span><span class="word">GO</span></div><div class="cap">1.80<br/>α 0.20</div></div>
+          </div>
+        </div>
+        <div class="cand-ft">
+          <div class="row"><span class="bar"><i style="width:76px"></i></span><span>峰值 <b>6.44:1</b> · 中段 <b>2.63:1</b></span></div>
+          <div><code>@color/ink</code> <code>#2C2C2A</code> · 令牌已有，<b>不新增</b></div>
+          <div>与 C 同色，只把描边加粗到 2.5dp（对比度不再提升，靠「线更实」加强）</div>
+        </div>
+      </div>
+
+      <div class="cand">
+        <div class="cand-hd"><span class="cid">E</span><span>深琥珀 100% · 2dp</span><span class="tid">accent_deep</span></div>
+        <div class="stage">
+          <div class="frames">
+            <div class="frame"><div class="box"><span class="ring" style="border-color:#8A5A00;border-width:2px;transform:scale(1);opacity:1"></span><span class="word">GO</span></div><div class="cap">1.00<br/>α 1.00</div></div>
+            <div class="frame"><div class="box"><span class="ring" style="border-color:#8A5A00;border-width:2px;transform:scale(1.45);opacity:.55"></span><span class="word">GO</span></div><div class="cap">1.45<br/>α 0.55</div></div>
+            <div class="frame"><div class="box"><span class="ring" style="border-color:#8A5A00;border-width:2px;transform:scale(1.8);opacity:.2"></span><span class="word">GO</span></div><div class="cap">1.80<br/>α 0.20</div></div>
+          </div>
+        </div>
+        <div class="cand-ft">
+          <div class="row"><span class="bar"><i style="width:32px"></i></span><span>峰值 <b>2.73:1</b> · 中段 <b>1.67:1</b></span></div>
+          <div><code>@color/accent_deep</code> <code>#8A5A00</code> · 令牌已有，<b>不新增</b></div>
+          <div>暖调同系、不破坏主题气质，但对比度低于墨 60% —— 可能仍偏淡</div>
+        </div>
+      </div>
+
+      <div class="cand">
+        <div class="cand-hd"><span class="cid">F</span><span>近白奶 90% · 2dp</span><span class="tid">white_90</span></div>
+        <div class="stage">
+          <div class="frames">
+            <div class="frame"><div class="box"><span class="ring" style="border-color:#E6FAF8F1;border-width:2px;transform:scale(1);opacity:1"></span><span class="word">GO</span></div><div class="cap">1.00<br/>α 1.00</div></div>
+            <div class="frame"><div class="box"><span class="ring" style="border-color:#E6FAF8F1;border-width:2px;transform:scale(1.45);opacity:.55"></span><span class="word">GO</span></div><div class="cap">1.45<br/>α 0.55</div></div>
+            <div class="frame"><div class="box"><span class="ring" style="border-color:#E6FAF8F1;border-width:2px;transform:scale(1.8);opacity:.2"></span><span class="word">GO</span></div><div class="cap">1.80<br/>α 0.20</div></div>
+          </div>
+        </div>
+        <div class="cand-ft">
+          <div class="row"><span class="bar"><i style="width:23px"></i></span><span>峰值 <b>1.91:1</b> · 中段 <b>1.43:1</b></span></div>
+          <div><code>@color/white_90</code> <code>#E6FAF8F1</code> · 令牌已有，<b>不新增</b></div>
+          <div>亮环「发光」方向：数值最低，只作对照参考</div>
+        </div>
+      </div>
+
+    </div>
+
+    <h3>候选方案参数对照</h3>
+    <table>
+      <thead><tr><th style="width:8%">方案</th><th style="width:20%">颜色令牌</th><th style="width:16%">实际值</th><th style="width:12%">描边</th><th style="width:14%">峰值对比度</th><th style="width:16%">中段对比度</th><th>是否新增令牌</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>改前</td><td><code>@color/ink_18</code></td><td><code>#2E2C2C2A</code></td><td>1dp</td>
+          <td class="num">1.12:1</td><td class="num">1.06:1</td><td>—</td>
+        </tr>
+        <tr>
+          <td>第 1 轮</td><td><code>@color/ink_40</code></td><td><code>#662C2C2A</code></td><td>1.5dp</td>
+          <td class="num">1.97:1</td><td class="num">1.43:1</td><td>—</td>
+        </tr>
+        <tr>
+          <td><b>A</b></td><td><code>@color/ink_60</code></td><td><code>#992C2C2A</code></td><td>1.5dp</td>
+          <td class="num">2.91:1</td><td class="num">1.73:1</td><td>否</td>
+        </tr>
+        <tr>
+          <td><b>B</b></td><td><code>@color/ink_75</code></td><td><code>#BF2C2C2A</code></td><td>2dp</td>
+          <td class="num">3.95:1</td><td class="num">2.01:1</td><td><b>是</b>（<code>colors.xml</code> 增一行）</td>
+        </tr>
+        <tr>
+          <td><b>C</b></td><td><code>@color/ink</code></td><td><code>#2C2C2A</code></td><td>2dp</td>
+          <td class="num"><b>6.44:1</b></td><td class="num"><b>2.63:1</b></td><td>否</td>
+        </tr>
+        <tr>
+          <td><b>D</b></td><td><code>@color/ink</code></td><td><code>#2C2C2A</code></td><td>2.5dp</td>
+          <td class="num"><b>6.44:1</b></td><td class="num"><b>2.63:1</b></td><td>否</td>
+        </tr>
+        <tr>
+          <td><b>E</b></td><td><code>@color/accent_deep</code></td><td><code>#8A5A00</code></td><td>2dp</td>
+          <td class="num">2.73:1</td><td class="num">1.67:1</td><td>否</td>
+        </tr>
+        <tr>
+          <td><b>F</b></td><td><code>@color/white_90</code></td><td><code>#E6FAF8F1</code></td><td>2dp</td>
+          <td class="num">1.91:1</td><td class="num">1.43:1</td><td>否</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="rec">
+      <span class="t">怎么读这些数字 · 我的建议</span>
+      <b>对比度</b> = 环的实际颜色（颜色 alpha 叠在琥珀底上）与琥珀底 <code>#EF9F27</code> 的亮度比，WCAG 公式。
+      <b>峰值</b> 对应 scale 1.00（环刚离开墨盘、动画 alpha 仍是 1）；<b>中段</b> 对应 scale 1.45（动画 alpha 已降到 0.55）。
+      两者差得远，是因为<b>有效不透明度 = 颜色 alpha × 动画 alpha</b>：动画自己一直在把环淡掉，
+      颜色再深也会被乘一遍 —— 这就是「明明换了颜色还是偏淡」的原因，也是本轮<b>不把淡出节奏当变量</b>的原因。
+      <br/><br/>
+      <b>建议 C（实心墨 100% + 2dp）</b>：峰值 6.44:1，是唯一一眼能看清的档位，且不需要新增令牌；
+      环与 GO 墨盘同色，视觉上像圆盘自己的回声，不会显得脏。
+      <b>保守选 B（墨 75% + 2dp）</b>：峰值 3.95:1，越过 3:1 参考线但仍保留「淡墨」气质，代价是要在 <code>colors.xml</code> 增一个 <code>ink_75</code>。
+      <b>C 与 D 的差别只在描边粗细</b>（对比度相同），D 更粗更实、离「细描边」形制更远。
+      E 深琥珀最贴主题气质但数值低于 A，F 近白奶只留作对照。
+    </div>
+
+    <div class="note">
+      <b>拍板后的落地清单（等你选一组再动代码）。</b>
+      改 <code>android/app/src/main/res/drawable/bg_go_ping.xml</code> 的 <code>stroke</code> 颜色与宽度；
+      若选 B 再在 <code>android/app/src/main/res/values/colors.xml</code> 增 <code>ink_75</code>；
+      同步 <code>design/prototype/activity.html</code> 的 GO 环。
+      <b>本轮暂不改代码</b>——按 AGENTS「不要把计划中的目标写成已验收的事实」，
+      方案定稿后再落地并补第 13 号报告的下一轮记录。
     </div>
   </section>
 
@@ -515,18 +733,19 @@
     <table>
       <thead><tr><th style="width:8%">序</th><th style="width:44%">文件</th><th>动作</th></tr></thead>
       <tbody>
-        <tr><td>1</td><td><code>android/app/src/main/res/drawable/bg_go_ping.xml</code></td><td>描边 1dp → 1.5dp；<code>ink_18</code> → <code>ink_40</code></td></tr>
+        <tr><td>1</td><td><code>android/app/src/main/res/drawable/bg_go_ping.xml</code></td><td>描边 1dp → 1.5dp；<code>ink_18</code> → <code>ink_40</code>（<b>第 1 轮已落地</b>；第 2 轮待拍板）</td></tr>
         <tr><td>2</td><td><code>android/app/src/main/java/com/runclub/android/ui/widget/WeekBarsView.kt</code></td><td>删除 <code>barWidth</code> 常量；新增 <code>minBarWidth</code>；排布改等分 7 列；今日衬底加宽</td></tr>
         <tr><td>3</td><td><code>design/prototype/activity.html</code></td><td>GO 环改墨色 40% + 1.5px；周节奏 7 列改 flex 等分铺满</td></tr>
-        <tr><td>4</td><td><code>android/app/src/main/res/values/colors.xml</code></td><td>不新增令牌（<code>ink_40</code> 已有）</td></tr>
-        <tr><td>5</td><td><code>docs/acceptance-reports/14-*.md</code> + 其 <code>README.md</code></td><td>新建第 14 份验收报告并补索引与完成度表</td></tr>
-        <tr><td>6</td><td><code>docs/NAMING.md</code></td><td>「当前已用 1–13」更新为「1–14」，下一份从 15 开始</td></tr>
+        <tr><td>4</td><td><code>android/app/src/main/res/values/colors.xml</code></td><td>第 1 轮不新增令牌（<code>ink_40</code> 已有）；第 2 轮若选 B 需新增 <code>ink_75</code></td></tr>
+        <tr><td>5</td><td><code>docs/acceptance-reports/13-*.md</code> + 其 <code>README.md</code></td><td>原第 14 份报告已并入第 13 份（同分支一份报告），索引与完成度表同步</td></tr>
+        <tr><td>6</td><td><code>docs/NAMING.md</code> + <code>AGENTS.md</code></td><td>序号改「已用 1–13，下一份从 14 开始」；补「一个分支一份验收报告」规则</td></tr>
+        <tr><td>7</td><td><code>docs/screenshots/130-week-bars.png</code> / <code>131-go-ping.png</code></td><td>由原 140 / 141 改名（<code>git mv</code>），号段随报告 13 调整</td></tr>
       </tbody>
     </table>
     <p class="note">
-      <b>状态：以上 6 项已全部落地</b>（2026-10-28），证据见验收报告
-      <code>docs/acceptance-reports/14-GO脉冲环提亮与周节奏卡铺满密排.md</code> 与
-      <code>docs/screenshots/140-week-bars.png</code>、<code>141-go-ping.png</code>。
+      <b>状态：第 1 轮的 6 项已全部落地</b>（2026-10-28），证据见验收报告
+      <code>docs/acceptance-reports/13-主题重设计方案三蜜琥珀浅色暖底.md</code>（§7–§13）与
+      <code>docs/screenshots/130-week-bars.png</code>、<code>131-go-ping.png</code>。
       提交信息按 <code>docs/开发计划.md</code> §9 约定，<code>类型: 中文一句话描述</code>，≤50 字，句末无句号：
       <code>fix: GO 脉冲环提亮与周节奏卡铺满密排</code>。本轮不推送远端（推送需明确授权）。
     </p>
@@ -540,8 +759,9 @@
     <ul class="tick">
       <li><b>单元测试</b>：<code>.\gradlew.bat testLocalDebugUnitTest</code> —— ✅ <b>85 个用例全绿（11 个测试类，failures=0、errors=0）</b>，2026-10-28 12:05 实测</li>
       <li><b>双变体构建</b>：<code>.\gradlew.bat assembleLocalDebug</code> 与 <code>.\gradlew.bat assembleAmapDebug</code> —— ✅ 均 BUILD SUCCESSFUL（资源改动，两个变体都过）</li>
-      <li><b>界面走查</b>：模拟器（local 变体，AVD <code>runclub36</code>）实测 —— ✅ GO 环在琥珀底上轮廓清楚；周节奏 7 列左右贴到卡片内容区两侧、间距均匀、今日列 chip 与日期圆位置正确、未来日无假柱。截图 <code>docs/screenshots/141-go-ping.png</code>、<code>140-week-bars.png</code></li>
+      <li><b>界面走查</b>：模拟器（local 变体，AVD <code>runclub36</code>）实测 —— ✅ GO 环在琥珀底上轮廓清楚；周节奏 7 列左右贴到卡片内容区两侧、间距均匀、今日列 chip 与日期圆位置正确、未来日无假柱。截图 <code>docs/screenshots/131-go-ping.png</code>、<code>130-week-bars.png</code></li>
       <li><b>窄屏复核</b>：360dp 屏上柱宽 ≈36dp，不得被压成细条（<code>minBarWidth 16dp</code> 兜底）—— ⚠️ 本轮未在 360dp 真机上复核，真机（amap 变体）观感亦待验</li>
+      <li><b>第 2 轮（脉冲环候选）</b>：<b>尚未改代码</b>，因此<b>未跑测试、未构建</b>；对比度数值为按 WCAG 公式对琥珀底 <code>#EF9F27</code> 的离线计算（脚本口径见 §01 表下说明），非仪器实测</li>
     </ul>
 
 
@@ -563,7 +783,11 @@
         </tr>
         <tr>
           <td>模拟器可用性</td>
-          <td>报告 13 §6 记录的宿主机虚拟化故障本轮<b>不再复现</b>；模拟器（local 变体）已实测留档。真机（amap 变体，含高德底图）本轮未验证，脉冲环叠底色需真机复核</td>
+          <td>验收报告 13 §6 记录的宿主机虚拟化故障本轮<b>不再复现</b>；模拟器（local 变体）已实测留档。真机（amap 变体，含高德底图）本轮未验证，脉冲环叠底色需真机复核</td>
+        </tr>
+        <tr>
+          <td>动画淡出会稀释颜色</td>
+          <td>环的<b>有效不透明度 = 颜色 alpha × 动画 alpha</b>；动画 2.4s 内 alpha 1→0，中段（scale 1.45）只剩 0.55，再乘颜色 alpha 后实测对比度普遍偏低。选 C / D（实心墨）也只能把中段拉到 2.63:1 —— 这是<b>动画节奏</b>的问题，不是颜色的问题；本轮按约定不把淡出节奏列为变量</td>
         </tr>
       </tbody>
     </table>
@@ -572,6 +796,7 @@
       <b>本次明确不做。</b>
       不改柱区高度与控件总高；不改脉冲环动画参数；不改 <code>dailyMinutes</code> 数据口径与报告聚合；
       不碰数据库、权限、地图；不新增依赖；不动主题令牌体系。
+      第 2 轮在拍板前<b>不动任何代码</b>（含 <code>colors.xml</code>、<code>bg_go_ping.xml</code>、原型基线）。
     </div>
   </section>
 
