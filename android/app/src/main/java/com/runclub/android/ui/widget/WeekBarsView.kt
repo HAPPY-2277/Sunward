@@ -53,8 +53,17 @@ class WeekBarsView @JvmOverloads constructor(
     // §02 紧凑版规格（首页卡内）
     private val barMaxHeight = 92f * density
     private val barMinHeight = 6f * density   // 有值最小可见高度
-    private val barWidth = 20f * density
-    private val barGap = 4f * density
+    private val barGap = 4f * density          // 柱间固定间隙
+    private val minBarWidth = 16f * density    // 窄屏兜底：柱宽再小也要看得见
+
+    /**
+     * 柱宽不写死：七列等分铺满卡片内容区宽度，柱子在列内居中，间隙恒定 [barGap]。
+     *
+     * 旧版固定 20dp 柱宽 + 4dp 间隙，7 根共 164dp，在 393dp 屏上只占卡片内容区（313dp）的一半，
+     * 左右各空一大片，柱子和柱子是「排在一起的一小撮」而不是「铺满一周」。
+     */
+    private fun barWidthFor(columnWidth: Float): Float =
+        (columnWidth - barGap).coerceAtLeast(minBarWidth)
 
     private val barPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val backingPaint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -108,18 +117,18 @@ class WeekBarsView @JvmOverloads constructor(
         val chartBottom = height - weekdayLine - dateLine
         val chartTop = chipZone
 
-        // 七列密排居中：柱间距 barGap，列中心距固定
-        val step = barWidth + barGap
-        val totalWidth = 7 * barWidth + 6 * barGap
-        val startX = (width - totalWidth) / 2f
-        fun centerX(i: Int) = startX + i * step + barWidth / 2f
+        // 七列等分铺满卡片内容区：列宽 = 可用宽 ÷ 7，柱子在列内居中，间隙恒定 barGap
+        val columnWidth = width / 7f
+        val barWidth = barWidthFor(columnWidth)
+        fun centerX(i: Int) = columnWidth * i + columnWidth / 2f
 
         val maxMin = dailyMinutes.maxOrNull() ?: 0
 
         // 今日整列衬底（画在最底层，覆盖 chip 区到日期行）
         if (todayIndex in 0..6) {
             backingPaint.color = ContextCompat.getColor(context, R.color.week_today_bg)
-            val half = step / 2f
+            // 衬底按整列宽度铺（列内左右各留 1dp），不是只衬柱宽
+            val half = columnWidth / 2f - 1f * density
             rect.set(
                 centerX(todayIndex) - half, chartTop - 6f * density,
                 centerX(todayIndex) + half, height - 2f * density
