@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>GO 脉冲环提亮 · 周节奏卡铺满密排 · 修改方案</title>
+<style>
+  :root{
+    --paper:#F1EFE8;      /* App 屏底 bg_base */
+    --card:#FFFFFF;       /* bg_card */
+    --chip:#EAE6DA;       /* bg_chip */
+    --amber:#EF9F27;      /* accent_lime 主色蜜琥珀 */
+    --amber-deep:#854F0B; /* accent_orange 深琥珀 */
+    --amber-link:#8A5A00; /* accent_deep */
+    /* 注意：Android colors.xml 用 #AARRGGBB 记法（alpha 在最前），
+       CSS 的 8 位 #RRGGBBAA 是 alpha 在最后，直接照抄会把颜色画错 ——
+       所以下面一律用 rgba() 表达「墨色/琥珀 + 不透明度」。 */
+    --ink:#2C2C2A;        /* ink */
+    --muted:#6E6A61;      /* text_muted */
+    --dim:#8D897E;        /* text_dim */
+    --faint:#B9B4A8;      /* week_faint */
+    --stroke:#E3DFD2;     /* stroke_subtle */
+    --divider:#E9E5D9;    /* divider */
+    --ink40:rgba(44,44,42,.40);    /* ink_40 */
+    --ink85:rgba(44,44,42,.85);    /* ink_85 —— 第 4 轮定稿 */
+    --ink18:rgba(44,44,42,.18);    /* ink_18 */
+    --lime40:rgba(239,159,39,.40);   /* lime_40 */
+    --todaybg:rgba(239,159,39,.10);  /* week_today_bg */
+    --d1:#CB5A4E; --d2:#DF8A3E; --d3:#E0B23F; --d4:#8CA84F;
+    --d5:#5EA79E; --d6:#5E80B8; --d7:#9070A6;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:#E9E6DC; color:var(--ink); line-height:1.6; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1120px;margin:0 auto;padding:40px 24px 80px}
+  header.page{margin-bottom:40px}
+  .eyebrow{font-size:11px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--dim)}
+  h1{font-size:30px;font-weight:900;letter-spacing:-.03em;margin:8px 0 10px}
+  .sub{font-size:13px;color:var(--muted)}
+  .meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+  .tag{font-size:11px;font-weight:700;padding:5px 10px;border-radius:999px;background:var(--chip);color:var(--amber-link)}
+  .tag.line{background:transparent;border:1px solid var(--stroke);color:var(--muted)}
+  section{margin-bottom:44px;background:var(--card);border:1px solid var(--stroke);border-radius:24px;padding:28px 30px}
+  .sec-no{font-size:11px;font-weight:800;letter-spacing:.2em;color:var(--amber)}
+  h2{font-size:21px;font-weight:900;letter-spacing:-.02em;margin:6px 0 4px}
+  .sec-desc{font-size:13px;color:var(--muted);margin-bottom:22px;max-width:76ch}
+  h3{font-size:14px;font-weight:800;margin:26px 0 10px;display:flex;align-items:center;gap:8px}
+  .sub-note{font-size:12px;color:var(--muted);margin:-4px 0 10px;line-height:1.7}
+  .sub-note code{font-size:11px}
+  .sub-note b{color:var(--ink)}
+  h3::before{content:"";width:3px;height:14px;border-radius:2px;background:var(--amber)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  @media(max-width:900px){.grid2,.grid3{grid-template-columns:1fr}}
+
+  /* 手机预览框 */
+  .phone{
+    width:393px;max-width:100%;background:var(--paper);border:1px solid var(--stroke);
+    border-radius:28px;overflow:hidden;box-shadow:0 18px 44px rgba(44,44,42,.10)
+  }
+  .phone-top{height:26px;background:var(--paper);display:flex;align-items:center;justify-content:center}
+  .phone-body{padding:0 20px 20px}
+  .hero{
+    position:relative;overflow:hidden;border-radius:32px;background:var(--amber);
+    padding:20px;color:var(--ink)
+  }
+  .hero .deco-a{position:absolute;-right:64px;-top:80px;width:192px;height:192px;border-radius:50%;border:24px solid rgba(241,239,232,.08)}
+  .hero .deco-b{position:absolute;-bottom:56px;right:96px;width:112px;height:112px;border-radius:50%;border:12px solid rgba(241,239,232,.06)}
+  .hero .eyebrow-ink{
+    position:absolute;right:16px;top:20px;transform:rotate(90deg);transform-origin:center;
+    font-size:9px;font-weight:900;letter-spacing:.32em;text-transform:uppercase;color:rgba(44,44,42,.40)
+  }
+  .ready{
+    display:inline-flex;align-items:center;gap:8px;border-radius:999px;background:var(--ink);
+    padding:6px 12px;font-size:10px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--amber)
+  }
+  .ready i{width:6px;height:6px;border-radius:50%;background:var(--amber-deep);display:block}
+  .hero h3{font-size:38px;font-weight:900;line-height:.96;letter-spacing:-.07em;margin:16px 0 0;max-width:220px}
+  .hero h3::before{display:none}
+  .hero h3 em{font-style:normal;color:var(--amber-deep)}
+  .hero-row{display:flex;align-items:flex-end;justify-content:space-between;margin-top:20px}
+  .sug-l{font-size:10px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:rgba(44,44,42,.50)}
+  .sug-v{font-size:17px;font-weight:800;margin-top:4px}
+  .sug-e{font-size:11px;font-weight:600;margin-top:4px;color:rgba(44,44,42,.60)}
+
+  /* GO 按钮 */
+  .go{
+    position:relative;width:112px;height:112px;flex:none;border-radius:50%;
+    background:var(--ink);box-shadow:0 14px 30px rgba(44,44,42,.25);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+  }
+  .go .ping{
+    position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+    border-radius:50%;border:1.5px solid var(--ink85);
+    width:100%;height:100%;
+    animation:ping 2.4s cubic-bezier(0,0,.2,1) infinite;
+  }
+  /* 与原型 animate-ping 等价：环放大到 2 倍、alpha 1 -> 0；
+     用 width/height 动画而不是 transform:scale()，是为了描边随环一起变粗，
+     不被浏览器的缩放栅格化削薄（实测 transform:scale 会把 1.5px 描边画成发丝线）。 */
+  @keyframes ping{
+    0%{width:100%;height:100%;border-width:1.5px;opacity:1}
+    100%{width:200%;height:200%;border-width:3px;opacity:0}
+  }
+  .go .inner{position:absolute;inset:7px;border-radius:50%;border:1.5px solid var(--lime40)}
+  .go .word{font-size:32px;font-weight:900;font-style:italic;letter-spacing:-.08em;line-height:1;color:var(--amber)}
+  .go .hint{margin-top:8px;font-size:9px;font-weight:800;letter-spacing:.16em;color:rgba(245,242,233,.62)}
+
+  /* 静帧（演示扩散过程可见度） */
+  .frames{display:flex;gap:18px;flex-wrap:wrap}
+  .frame{text-align:center}
+  .frame .box{
+    position:relative;width:112px;height:112px;border-radius:50%;background:var(--ink);
+    box-shadow:0 14px 30px rgba(44,44,42,.25);display:flex;align-items:center;justify-content:center
+  }
+  .frame .ring{
+    position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+    border-radius:50%;border-style:solid;border-color:var(--ink85);
+    width:100%;height:100%;border-width:1.5px;pointer-events:none
+  }
+  .frame .ring.old{border-color:var(--ink18)}
+  .frame .cap{font-size:11px;color:var(--muted);margin-top:8px;font-weight:700}
+  .frame .cap b{color:var(--ink);font-weight:800}
+  .frame .cap i{font-style:normal;color:var(--dim);font-weight:600}
+
+  /* 第二轮 · 脉冲环候选方案对比 */
+  .cand-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:12px}
+  .cand-grid.one{grid-template-columns:minmax(0,560px)}
+  @media(max-width:1040px){.cand-grid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:720px){.cand-grid{grid-template-columns:1fr}}
+  .cand{border:1px solid var(--stroke);border-radius:18px;background:var(--card);padding:14px 14px 12px}
+  .cand-hd{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:800;color:var(--ink)}
+  .cand-hd .cid{
+    width:22px;height:22px;border-radius:7px;background:var(--ink);color:var(--amber);flex:none;
+    display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:900
+  }
+  .cand-hd .tid{margin-left:auto;font-size:10.5px;font-weight:700;color:var(--dim);font-family:Consolas,Monaco,monospace}
+  .cand .stage{margin-top:10px;background:var(--amber);border-radius:14px;padding:16px 6px 8px;display:flex;justify-content:center}
+  .cand .frames{gap:26px}
+  .cand .box{width:76px;height:76px;box-shadow:0 8px 18px rgba(44,44,42,.22)}
+  .cand .word{font-size:22px;font-weight:900;font-style:italic;letter-spacing:-.08em;line-height:1;color:var(--amber);position:relative}
+  .cand .cap{font-size:10px;color:rgba(44,44,42,.62);margin-top:6px;font-weight:700;line-height:1.3}
+  .cand-ft{margin-top:10px;font-size:11px;color:var(--muted);line-height:1.65}
+  .cand-ft b{color:var(--ink)}
+  .cand-ft .row{display:flex;align-items:center;gap:6px}
+  .bar{display:inline-block;width:76px;height:7px;border-radius:999px;background:rgba(44,44,42,.10);flex:none}
+  .bar i{display:block;height:100%;border-radius:999px;background:var(--amber-link)}
+  .cand-ft code{font-size:10.5px}
+  .cand-ft .hint{font-size:10.5px;color:var(--dim);line-height:1.6;margin-top:2px}
+  .cand .newtag{display:inline-block;font-size:10px;font-weight:800;color:#8A5A00;background:rgba(138,90,0,.12);border-radius:999px;padding:1px 8px}
+  .cand.picked{border:2px solid var(--ink);box-shadow:0 10px 26px rgba(44,44,42,.16);position:relative}
+  .cand-hd .picked-tag{
+    font-size:10px;font-weight:800;color:var(--amber);background:var(--ink);
+    border-radius:999px;padding:1px 8px;letter-spacing:.04em}
+  .final-bar{
+    margin-top:14px;border:1px solid var(--stroke);border-left:4px solid var(--ink);
+    border-radius:14px;background:var(--paper);padding:14px 16px;
+    font-size:12px;color:var(--muted);line-height:1.75}
+  .final-bar b{color:var(--ink)}
+  .final-bar .kv{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:10px 0 4px}
+  @media(max-width:720px){.final-bar .kv{grid-template-columns:repeat(2,1fr)}}
+  .final-bar .kv div{background:var(--card);border:1px solid var(--stroke);border-radius:11px;padding:8px 10px}
+  .final-bar .kv span{display:block;font-size:10px;font-weight:700;color:var(--dim);letter-spacing:.04em}
+  .final-bar .kv b{display:block;font-size:13.5px;margin-top:2px}
+  .base-strip{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px}
+  @media(max-width:720px){.base-strip{grid-template-columns:1fr}}
+  .base{border:1px dashed var(--stroke);border-radius:16px;background:var(--paper);padding:12px 14px;font-size:11.5px;color:var(--muted);line-height:1.6}
+  .base b{color:var(--ink);font-size:12.5px}
+  .base .row{display:flex;align-items:center;gap:8px;margin-top:4px}
+  .base .sw{width:26px;height:26px;border-radius:50%;background:var(--ink);position:relative;flex:none}
+  .base .sw span{position:absolute;inset:0;border-radius:50%}
+  .rec{background:rgba(239,159,39,.10);border:1px solid rgba(239,159,39,.40);border-radius:14px;padding:14px 16px;margin-top:16px;font-size:12.5px;color:var(--muted);line-height:1.7}
+  .rec b{color:var(--ink)}
+  .rec .t{font-size:12px;font-weight:800;color:var(--amber-link);letter-spacing:.06em;display:block;margin-bottom:6px}
+
+  /* 周节奏卡 */
+  .week-card{background:var(--card);border:1px solid var(--stroke);border-radius:28px;padding:20px;width:353px;max-width:100%}
+  .week-hd{display:flex;align-items:flex-start;justify-content:space-between}
+  .week-hd .k{font-size:10px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+  .week-hd .t{font-size:18px;font-weight:800;letter-spacing:-.02em;margin-top:4px}
+  .week-hd .chip{font-size:11px;font-weight:800;color:var(--amber-link);background:rgba(239,159,39,.14);border-radius:999px;padding:6px 12px}
+  .wk{display:flex;margin-top:16px;height:168px}
+  .wk-col{position:relative;flex:1 1 0;display:flex;flex-direction:column;align-items:center;min-width:0}
+  .wk-col.today{background:var(--todaybg);border-radius:10px}
+  .wk-chip-slot{height:18px;display:flex;align-items:center}
+  .wk-chip{font-size:9px;font-weight:900;color:var(--ink);background:var(--amber);border-radius:999px;padding:3px 8px;white-space:nowrap}
+  .wk-bars{flex:1;display:flex;align-items:flex-end;justify-content:center;width:100%}
+  .wk-bar{width:calc(100% - 4px);border-radius:0;box-shadow:0 2px 6px rgba(44,44,42,.14)}
+  .wk-label{font-size:10px;font-weight:600;color:var(--muted);margin-top:6px;line-height:1}
+  .wk-col.today .wk-label{color:var(--amber-link);font-weight:800}
+  .wk-col.future .wk-label{color:var(--faint)}
+  .wk-date{font-size:9px;font-weight:600;color:var(--muted);margin-top:5px;line-height:1;width:18px;height:18px;display:flex;align-items:center;justify-content:center;border-radius:50%}
+  .wk-col.today .wk-date{background:var(--amber);color:var(--ink);font-weight:900}
+  .wk-col.future .wk-date{color:var(--faint)}
+  .wk-track{height:6px;border-radius:999px;background:rgba(44,44,42,.10);margin-top:12px;overflow:hidden}
+  .wk-track i{display:block;height:100%;border-radius:999px;background:var(--amber-link)}
+  .wk-foot{display:flex;justify-content:space-between;margin-top:8px;font-size:10px;font-weight:600;color:var(--muted)}
+
+  /* 表格 */
+  table{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:6px}
+  th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--divider);vertical-align:top}
+  th{font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);background:var(--paper)}
+  td code,code{font-family:Consolas,Monaco,monospace;font-size:12px;background:var(--paper);padding:1px 5px;border-radius:4px}
+  .keep td{background:rgba(142,167,158,.08)}
+  .keep td:first-child{box-shadow:inset 3px 0 0 #5EA79E}
+  .num{font-variant-numeric:tabular-nums;white-space:nowrap}
+  .note{font-size:12.5px;color:var(--muted);background:var(--paper);border-left:3px solid var(--amber);border-radius:0 10px 10px 0;padding:12px 16px;margin-top:14px}
+  .note b{color:var(--ink)}
+  ul.tick{list-style:none;margin-top:8px}
+  ul.tick li{position:relative;padding-left:20px;font-size:13px;color:var(--muted);margin-bottom:6px}
+  ul.tick li::before{content:"";position:absolute;left:2px;top:8px;width:6px;height:6px;border-radius:50%;background:var(--amber)}
+  ul.tick li b{color:var(--ink)}
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:10px}
+  @media(max-width:900px){.split{grid-template-columns:1fr}}
+  .mini{background:var(--paper);border:1px solid var(--stroke);border-radius:16px;padding:16px}
+  .mini h4{font-size:12px;font-weight:800;margin-bottom:8px;letter-spacing:.02em}
+  footer{font-size:12px;color:var(--dim);text-align:center;padding-top:8px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="page">
+    <div class="eyebrow">修改方案 · Design Change Plan</div>
+    <h1>GO 脉冲环提亮 · 周节奏卡铺满密排</h1>
+    <p class="sub">
+      逐日 · SUNWARD 首页两处视觉问题的落地修改方案。先给改后效果预览，再逐项列出对应的
+      Kotlin / XML / 原型改动与取值；脉冲环第二轮（第 1 轮落地后仍反馈「太淡」）追加 6 组候选对比方案。
+    </p>
+    <div class="meta">
+      <span class="tag">基线分支 feat/light-theme-warm</span>
+      <span class="tag">第一轮已落地 · 2026-10-28</span>
+      <span class="tag">脉冲环已定稿 · 墨 85% + 1.5dp</span>
+      <span class="tag line">验收报告 13（第二 / 三 / 四轮）</span>
+      <span class="tag line">预览取 App 现有设计令牌</span>
+      <span class="tag line">不改数据层与算法</span>
+    </div>
+  </header>
+
+  <!-- ================= §01 GO 脉冲环 ================= -->
+  <section>
+    <div class="sec-no">SECTION 01</div>
+    <h2>GO 按钮外脉冲环提亮</h2>
+    <p class="sec-desc">
+      现状是「1dp 描边 + 18% 墨色」，压在饱和琥珀 hero 卡上几乎看不见。改法：描边加粗到 1.5dp、
+      颜色提到 <b>85% 墨色（ink_85）</b>，仍然是「一圈细描边向外扩散并淡出」的形制，不动动画本身。
+      <br/>四轮过程：第 1 轮 40% 墨（仍嫌淡）→ 第 2 轮出 6 组候选 → 第 3 轮用户拍板
+      「C 的深墨方向、但不透明度 85%、描边 1.5dp」→ <b>第 4 轮定稿即本文与代码现状</b>。
+    </p>
+
+    <div class="grid2">
+      <div>
+        <h3>最终效果 · 动效</h3>
+        <div class="phone">
+          <div class="phone-top"></div>
+          <div class="phone-body">
+            <div class="hero">
+              <div class="deco-a"></div>
+              <div class="deco-b"></div>
+              <div class="eyebrow-ink">Morning Run</div>
+              <div class="ready"><i></i>Ready to move</div>
+              <h3>今天，跑出<br/>你的节奏<em>。</em></h3>
+              <div class="hero-row">
+                <div>
+                  <div class="sug-l">今日建议</div>
+                  <div class="sug-v">轻松跑 · 5.0 KM</div>
+                  <div class="sug-e">预计 30 分钟 · 心率区间 2</div>
+                </div>
+                <div class="go">
+                  <span class="ping"></span>
+                  <span class="inner"></span>
+                  <span class="word">GO</span>
+                  <span class="hint">起跑</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="note">
+          脉冲环参数与现状<b>完全一致</b>：2.4s 一轮、<code>cubic-bezier(0,0,.2,1)</code>、
+          放大到 2 倍、opacity 1 → 0。本次只把描边从 1dp 加粗到 1.5dp，并把颜色从 18% 墨提到 <b>85% 墨</b>。
+        </p>
+      </div>
+
+      <div>
+        <h3>最终效果 · 扩散静帧</h3>
+        <div class="frames">
+          <div class="frame">
+            <div class="box">
+              <span class="ring old" style="width:100%;height:100%;border-width:1px;opacity:1"></span>
+              <span class="word" style="font-size:32px;font-weight:900;font-style:italic;letter-spacing:-.08em;color:var(--amber);position:relative">GO</span>
+            </div>
+            <div class="cap"><b>原始</b> scale 1.00<br/><i>ink_18 / 1dp</i></div>
+          </div>
+          <div class="frame">
+            <div class="box">
+              <span class="ring old" style="width:145%;height:145%;border-width:1.45px;opacity:.62"></span>
+              <span class="word" style="font-size:32px;font-weight:900;font-style:italic;letter-spacing:-.08em;color:var(--amber);position:relative">GO</span>
+            </div>
+            <div class="cap"><b>原始</b> scale 1.45<br/><i>ink_18 / 1dp</i></div>
+          </div>
+          <div class="frame">
+            <div class="box">
+              <span class="ring" style="width:100%;height:100%;border-width:1.5px;opacity:1"></span>
+              <span class="word" style="font-size:32px;font-weight:900;font-style:italic;letter-spacing:-.08em;color:var(--amber);position:relative">GO</span>
+            </div>
+            <div class="cap"><b>定稿</b> scale 1.00<br/><i>ink_85 / 1.5dp</i></div>
+          </div>
+          <div class="frame">
+            <div class="box">
+              <span class="ring" style="width:145%;height:145%;border-width:2.175px;opacity:.62"></span>
+              <span class="word" style="font-size:32px;font-weight:900;font-style:italic;letter-spacing:-.08em;color:var(--amber);position:relative">GO</span>
+            </div>
+            <div class="cap"><b>定稿</b> scale 1.45<br/><i>ink_85 / 1.5dp</i></div>
+          </div>
+          <div class="frame">
+            <div class="box">
+              <span class="ring" style="width:180%;height:180%;border-width:2.7px;opacity:.26"></span>
+              <span class="word" style="font-size:32px;font-weight:900;font-style:italic;letter-spacing:-.08em;color:var(--amber);position:relative">GO</span>
+            </div>
+            <div class="cap"><b>定稿</b> scale 1.80<br/><i>ink_85 / 1.5dp</i></div>
+          </div>
+        </div>
+        <p class="note">
+          左两帧是<b>原始</b>（ink_18 = <code>#2E2C2C2A</code>，1dp）：在琥珀底上几乎分辨不出轮廓。
+          右三帧是<b>定稿</b>（ink_85 = <code>#D92C2C2A</code>，1.5dp）：整段扩散过程都保持可辨。
+        </p>
+      </div>
+    </div>
+
+    <h3>改动清单</h3>
+    <table>
+      <thead><tr><th style="width:34%">文件</th><th style="width:20%">项</th><th>改动</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><code>android/app/src/main/res/drawable/bg_go_ping.xml</code></td>
+          <td>stroke width</td>
+          <td><code>1dp</code> → <code>1.5dp</code>（第 1 轮落地后保持不变）</td>
+        </tr>
+        <tr>
+          <td><code>android/app/src/main/res/drawable/bg_go_ping.xml</code></td>
+          <td>stroke color</td>
+          <td><code>@color/ink_18</code> → <code>@color/ink_40</code> → <b><code>@color/ink_85</code></b>（<code>#D92C2C2A</code>，85% 墨色）</td>
+        </tr>
+        <tr>
+          <td><code>android/app/src/main/res/values/colors.xml</code></td>
+          <td>令牌</td>
+          <td>第 1 轮<b>不新增</b>（<code>ink_40</code> 已存在，<code>colors.xml:93</code>）；第 4 轮新增一行 <code>ink_85</code>（<code>#D92C2C2A</code>，紧邻 <code>ink_60</code>，沿用「alpha 阶梯」命名法）</td>
+        </tr>
+        <tr>
+          <td><code>design/prototype/activity.html</code></td>
+          <td>GO 环</td>
+          <td>第 58 行 <code>border-[#F1EFE8]/40</code> → <code>border-[#2C2C2A]/[0.85] border-[1.5px]</code>（原型用任意不透明度写法 <code>/[0.85]</code>，因为 Tailwind 默认刻度里没有 85）</td>
+        </tr>
+        <tr class="keep">
+          <td><code>ui/HomeActivity.kt</code> <code>startGoPing()</code></td>
+          <td>动画</td>
+          <td>不动：2.4s、<code>PathInterpolator(0f,0f,.2f,1f)</code>、scale 1→2、alpha 1→0</td>
+        </tr>
+        <tr class="keep">
+          <td><code>drawable/bg_go_disc.xml</code></td>
+          <td>圆盘本体</td>
+          <td>不动：深墨实心 <code>@color/ink</code></td>
+        </tr>
+        <tr class="keep">
+          <td><code>drawable/bg_go_inner_ring.xml</code></td>
+          <td>内圈</td>
+          <td>不动：<code>lime_40</code> 琥珀描边</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="note">
+      <b>为什么提亮墨色而不是换成奶油色。</b>
+      脉冲环落在琥珀 hero 卡（<code>#EF9F27</code>）上，用奶油色描边反而会消失在亮底里；
+      墨色既能提亮轮廓，又与 <code>design/explore/component-styles.html:240</code>
+      的 <code>rgba(44,44,42,.18)</code> 墨色系保持同源。同时保留「细描边」形制，
+      不重演历史上「实心圆盘 + 描边」放大后变成一圈甩不掉黑边的老问题。
+      <br/><br/>
+      <b>定稿为 85% 墨（<code>ink_85</code>）</b>：色相比实心墨只差 15%，肉眼几乎等同，
+      但保留了「淡墨描边」的质感，不会像 100% 实墨那样与 GO 墨盘糊成一团。
+      描边粗细按用户拍板保持 <b>1.5dp</b>（沿用第 1 轮），不跟着 C 方案加粗到 2dp。
+    </div>
+
+    <h3>第二轮 · 脉冲环候选方案（6 组，已拍板）</h3>
+    <p class="sec-desc" style="margin-bottom:12px">
+      第一轮落地的是 <code>ink_40</code> + 1.5dp，你的反馈是「<b>还是太淡</b>」。
+      这一轮把<b>颜色深浅（= 不透明度）× 描边粗细</b>摆成 6 组并列，每组标出与琥珀底的对比度。
+      <b>动画节奏本轮不动</b>（2.4s / <code>cubic-bezier(0,0,.2,1)</code> / scale 1→2 / alpha 1→0），
+      所以差异只来自颜色与描边两个变量。
+    </p>
+
+    <div class="base-strip">
+      <div class="base">
+        <b>改前现状</b> · <code>@color/ink_18</code> <code>#2E2C2C2A</code> · 1dp
+        <div class="row"><span class="bar"><i style="width:13px"></i></span><span>峰值 <b>1.12:1</b> · 中段 <b>1.06:1</b></span></div>
+        <div style="margin-top:4px">18% 墨几乎等于没画 —— 这就是「太淡」的原始状态</div>
+      </div>
+      <div class="base">
+        <b>第 1 轮已落地</b> · <code>@color/ink_40</code> <code>#662C2C2A</code> · 1.5dp
+        <div class="row"><span class="bar"><i style="width:23px"></i></span><span>峰值 <b>1.97:1</b> · 中段 <b>1.43:1</b></span></div>
+        <div style="margin-top:4px">比改前清楚，但仍偏淡 —— 你的反馈指向这里</div>
+      </div>
+    </div>
+
+    <div class="cand-grid">
+
+      <div class="cand">
+        <div class="cand-hd"><span class="cid">A</span><span>墨 60% · 1.5dp</span><span class="tid">ink_60</span></div>
+        <div class="stage">
+          <div class="frames">
+            <div class="frame"><div class="box"><span class="ring" style="width:100%;height:100%;border-width:1.5px;border-color:rgba(44,44,42,.60);opacity:1"></span><span class="word">GO</span></div><div class="cap">1.00<br/>α 1.00</div></div>
+            <div class="frame"><div class="box"><span class="ring" style="width:145%;height:145%;border-width:2.175px;border-color:rgba(44,44,42,.60);opacity:.55"></span><span class="word">GO</span></div><div class="cap">1.45<br/>α 0.55</div></div>
+            <div class="frame"><div class="box"><span class="ring" style="width:180%;height:180%;border-width:2.7px;border-color:rgba(44,44,42,.60);opacity:.2"></span><span class="word">GO</span></div><div class="cap">1.80<br/>α 0.20</div></div>
+          </div>
+        </div>
+        <div class="cand-ft">
+          <div class="row"><span class="bar"><i style="width:34px"></i></span><span>峰值 <b>2.91:1</b> · 中段 <b>1.73:1</b></span></div>
+          <div><code>@color/ink_60</code> <code>#992C2C2A</code> · 沿用现有令牌，<b>不新增</b></div>
+          <div>最小步：在第 1 轮基础上再提一档透明度</div>
+        </div>
+      </div>
+
+      <div class="cand">
+        <div class="cand-hd"><span class="cid">B</span><span>墨 75% · 2dp</span><span class="tid">ink_75</span></div>
+        <div class="stage">
+          <div class="frames">
+            <div class="frame"><div class="box"><span class="ring" style="width:100%;height:100%;border-width:2px;border-color:rgba(44,44,42,.75);opacity:1"></span><span class="word">GO</span></div><div class="cap">1.00<br/>α 1.00</div></div>
+            <div class="frame"><div class="box"><span class="ring" style="width:145%;height:145%;border-width:2.9px;border-color:rgba(44,44,42,.75);opacity:.55"></span><span class="word">GO</span></div><div class="cap">1.45<br/>α 0.55</div></div>
+            <div class="frame"><div class="box"><span class="ring" style="width:180%;height:180%;border-width:3.6px;border-color:rgba(44,44,42,.75);opacity:.2"></span><span class="word">GO</span></div><div class="cap">1.80<br/>α 0.20</div></div>
+          </div>
+        </div>
+        <div class="cand-ft">
+          <div class="row"><span class="bar"><i style="width:47px"></i></span><span>峰值 <b>3.95:1</b> · 中段 <b>2.01:1</b></span></div>
+          <div><code>@color/ink_75</code> <code>#BF2C2C2A</code> · <span class="newtag">需新增令牌</span></div>
+          <div>峰值越过 3:1（非文本对比度参考线），中段仍偏柔</div>
+        </div>
+      </div>
+
+      <div class="cand">
+        <div class="cand-hd"><span class="cid">C</span><span>实心墨 100% · 2dp</span><span class="tid">ink</span></div>
+        <div class="stage">
+          <div class="frames">
+            <div class="frame"><div class="box"><span class="ring" style="width:100%;height:100%;border-width:2px;border-color:#2C2C2A;opacity:1"></span><span class="word">GO</span></div><div class="cap">1.00<br/>α 1.00</div></div>
+            <div class="frame"><div class="box"><span class="ring" style="width:145%;height:145%;border-width:2.9px;border-color:#2C2C2A;opacity:.55"></span><span class="word">GO</span></div><div class="cap">1.45<br/>α 0.55</div></div>
+            <div class="frame"><div class="box"><span class="ring" style="width:180%;height:180%;border-width:3.6px;border-color:#2C2C2A;opacity:.2"></span><span class="word">GO</span></div><div class="cap">1.80<br/>α 0.20</div></div>
+          </div>
+        </div>
+        <div class="cand-ft">
+          <div class="row"><span class="bar"><i style="width:76px"></i></span><span>峰值 <b>6.44:1</b> · 中段 <b>2.63:1</b></span></div>
+          <div><code>@color/ink</code> <code>#2C2C2A</code> · 令牌已有，<b>不新增</b></div>
+          <div>与 GO 墨盘同色 —— 环读起来像圆盘自己的回声</div>
+        </div>
+      </div>
+
+      <div class="cand">
+        <div class="cand-hd"><span class="cid">D</span><span>实心墨 100% · 2.5dp</span><span class="tid">ink</span></div>
+        <div class="stage">
+          <div class="frames">
+            <div class="frame"><div class="box"><span class="ring" style="width:100%;height:100%;border-width:2.5px;border-color:#2C2C2A;opacity:1"></span><span class="word">GO</span></div><div class="cap">1.00<br/>α 1.00</div></div>
+            <div class="frame"><div class="box"><span class="ring" style="width:145%;height:145%;border-width:3.625px;border-color:#2C2C2A;opacity:.55"></span><span class="word">GO</span></div><div class="cap">1.45<br/>α 0.55</div></div>
+            <div class="frame"><div class="box"><span class="ring" style="width:180%;height:180%;border-width:4.5px;border-color:#2C2C2A;opacity:.2"></span><span class="word">GO</span></div><div class="cap">1.80<br/>α 0.20</div></div>
+          </div>
+        </div>
+        <div class="cand-ft">
+          <div class="row"><span class="bar"><i style="width:76px"></i></span><span>峰值 <b>6.44:1</b> · 中段 <b>2.63:1</b></span></div>
+          <div><code>@color/ink</code> <code>#2C2C2A</code> · 令牌已有，<b>不新增</b></div>
+          <div>与 C 同色，只把描边加粗到 2.5dp（对比度不再提升，靠「线更实」加强）</div>
+        </div>
+      </div>
+
+      <div class="cand">
+        <div class="cand-hd"><span class="cid">E</span><span>深琥珀 100% · 2dp</span><span class="tid">accent_deep</span></div>
+        <div class="stage">
+          <div class="frames">
+            <div class="frame"><div class="box"><span class="ring" style="width:100%;height:100%;border-width:2px;border-color:#8A5A00;opacity:1"></span><span class="word">GO</span></div><div class="cap">1.00<br/>α 1.00</div></div>
+            <div class="frame"><div class="box"><span class="ring" style="width:145%;height:145%;border-width:2.9px;border-color:#8A5A00;opacity:.55"></span><span class="word">GO</span></div><div class="cap">1.45<br/>α 0.55</div></div>
+            <div class="frame"><div class="box"><span class="ring" style="width:180%;height:180%;border-width:3.6px;border-color:#8A5A00;opacity:.2"></span><span class="word">GO</span></div><div class="cap">1.80<br/>α 0.20</div></div>
+          </div>
+        </div>
+        <div class="cand-ft">
+          <div class="row"><span class="bar"><i style="width:32px"></i></span><span>峰值 <b>2.73:1</b> · 中段 <b>1.67:1</b></span></div>
+          <div><code>@color/accent_deep</code> <code>#8A5A00</code> · 令牌已有，<b>不新增</b></div>
+          <div>暖调同系、不破坏主题气质，但对比度低于墨 60% —— 可能仍偏淡</div>
+        </div>
+      </div>
+
+      <div class="cand">
+        <div class="cand-hd"><span class="cid">F</span><span>近白奶 90% · 2dp</span><span class="tid">white_90</span></div>
+        <div class="stage">
+          <div class="frames">
+            <div class="frame"><div class="box"><span class="ring" style="width:100%;height:100%;border-width:2px;border-color:rgba(250,248,241,.90);opacity:1"></span><span class="word">GO</span></div><div class="cap">1.00<br/>α 1.00</div></div>
+            <div class="frame"><div class="box"><span class="ring" style="width:145%;height:145%;border-width:2.9px;border-color:rgba(250,248,241,.90);opacity:.55"></span><span class="word">GO</span></div><div class="cap">1.45<br/>α 0.55</div></div>
+            <div class="frame"><div class="box"><span class="ring" style="width:180%;height:180%;border-width:3.6px;border-color:rgba(250,248,241,.90);opacity:.2"></span><span class="word">GO</span></div><div class="cap">1.80<br/>α 0.20</div></div>
+          </div>
+        </div>
+        <div class="cand-ft">
+          <div class="row"><span class="bar"><i style="width:23px"></i></span><span>峰值 <b>1.91:1</b> · 中段 <b>1.43:1</b></span></div>
+          <div><code>@color/white_90</code> <code>#E6FAF8F1</code> · 令牌已有，<b>不新增</b></div>
+          <div>亮环「发光」方向：数值最低，只作对照参考</div>
+        </div>
+      </div>
+
+    </div>
+
+    <h3>候选方案参数对照</h3>
+    <p class="sub-note">「实际值」一列是 <code>colors.xml</code> 里的 <b>Android ARGB 记法（#AARRGGBB，alpha 在最前）</b>；本页预览用 CSS <code>rgba()</code> 渲染同一颜色（CSS 8 位十六进制是 #RRGGBBAA，alpha 在最后，直接照抄会画错）。</p>
+    <table>
+      <thead><tr><th style="width:8%">方案</th><th style="width:20%">颜色令牌</th><th style="width:16%">实际值（ARGB）</th><th style="width:12%">描边</th><th style="width:14%">峰值对比度</th><th style="width:16%">中段对比度</th><th>是否新增令牌</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>改前</td><td><code>@color/ink_18</code></td><td><code>#2E2C2C2A</code></td><td>1dp</td>
+          <td class="num">1.12:1</td><td class="num">1.06:1</td><td>—</td>
+        </tr>
+        <tr>
+          <td>第 1 轮</td><td><code>@color/ink_40</code></td><td><code>#662C2C2A</code></td><td>1.5dp</td>
+          <td class="num">1.97:1</td><td class="num">1.43:1</td><td>—</td>
+        </tr>
+        <tr>
+          <td><b>A</b></td><td><code>@color/ink_60</code></td><td><code>#992C2C2A</code></td><td>1.5dp</td>
+          <td class="num">2.91:1</td><td class="num">1.73:1</td><td>否</td>
+        </tr>
+        <tr>
+          <td><b>B</b></td><td><code>@color/ink_75</code></td><td><code>#BF2C2C2A</code></td><td>2dp</td>
+          <td class="num">3.95:1</td><td class="num">2.01:1</td><td><b>是</b>（<code>colors.xml</code> 增一行）</td>
+        </tr>
+        <tr>
+          <td><b>C</b></td><td><code>@color/ink</code></td><td><code>#2C2C2A</code></td><td>2dp</td>
+          <td class="num"><b>6.44:1</b></td><td class="num"><b>2.63:1</b></td><td>否</td>
+        </tr>
+        <tr>
+          <td><b>D</b></td><td><code>@color/ink</code></td><td><code>#2C2C2A</code></td><td>2.5dp</td>
+          <td class="num"><b>6.44:1</b></td><td class="num"><b>2.63:1</b></td><td>否</td>
+        </tr>
+        <tr>
+          <td><b>E</b></td><td><code>@color/accent_deep</code></td><td><code>#8A5A00</code></td><td>2dp</td>
+          <td class="num">2.73:1</td><td class="num">1.67:1</td><td>否</td>
+        </tr>
+        <tr>
+          <td><b>F</b></td><td><code>@color/white_90</code></td><td><code>#E6FAF8F1</code></td><td>2dp</td>
+          <td class="num">1.91:1</td><td class="num">1.43:1</td><td>否</td>
+        </tr>
+        <tr style="background:rgba(44,44,42,.06)">
+          <td><b>★ 定稿</b></td><td><code>@color/ink_85</code></td><td><code>#D92C2C2A</code></td><td>1.5dp</td>
+          <td class="num"><b>4.87:1</b></td><td class="num"><b>2.24:1</b></td><td><b>是</b>（<code>colors.xml</code> 增一行）</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="rec">
+      <span class="t">怎么读这些数字 · 我的建议</span>
+      <b>对比度</b> = 环的实际颜色（颜色 alpha 叠在琥珀底上）与琥珀底 <code>#EF9F27</code> 的亮度比，WCAG 公式。
+      <b>峰值</b> 对应 scale 1.00（环刚离开墨盘、动画 alpha 仍是 1）；<b>中段</b> 对应 scale 1.45（动画 alpha 已降到 0.55）。
+      两者差得远，是因为<b>有效不透明度 = 颜色 alpha × 动画 alpha</b>：动画自己一直在把环淡掉，
+      颜色再深也会被乘一遍 —— 这就是「明明换了颜色还是偏淡」的原因，也是本轮<b>不把淡出节奏当变量</b>的原因。
+      <br/><br/>
+      <b>建议 C（实心墨 100% + 2dp）</b>：峰值 6.44:1，是唯一一眼能看清的档位，且不需要新增令牌；
+      环与 GO 墨盘同色，视觉上像圆盘自己的回声，不会显得脏。
+      <b>保守选 B（墨 75% + 2dp）</b>：峰值 3.95:1，越过 3:1 参考线但仍保留「淡墨」气质，代价是要在 <code>colors.xml</code> 增一个 <code>ink_75</code>。
+      <b>C 与 D 的差别只在描边粗细</b>（对比度相同），D 更粗更实、离「细描边」形制更远。
+      E 深琥珀最贴主题气质但数值低于 A，F 近白奶只留作对照。
+      <br/><br/>
+      <b>→ 最终拍板：取 C 的深墨方向，不透明度定 85%、描边保持 1.5dp</b>
+      （即上表「★ 定稿」行）。理由与落地清单见下方第三轮小节。
+    </div>
+
+    <div class="note">
+      <b>拍板结论（2026-10-28）。</b>
+      用户选 <b>C（实心墨 100% + 2dp）</b>，但把不透明度改成 <b>85%</b>、描边改回 <b>1.5dp</b>
+      —— 即「取 C 的深墨方向，不取 C 的粗描边」。定稿见下方第三轮小节。
+    </div>
+
+    <h3>第三轮 · 定稿：墨 85% + 1.5dp</h3>
+    <div class="final-bar">
+      <b>拍板</b>：用户选 C（实心墨 100% + 2dp），并指定改为
+      <b>85% 不透明度、1.5dp 描边</b> —— 取 C 的「深墨」方向，不取它的粗描边。
+      <div class="kv">
+        <div><span>最终令牌</span><b><code>ink_85</code> · #D92C2C2A</b></div>
+        <div><span>描边粗细</span><b>1.5dp（沿用第 1 轮）</b></div>
+        <div><span>峰值对比度</span><b>4.87:1 <span style="font-weight:600;color:var(--muted)">（第 1 轮 1.97:1）</span></b></div>
+        <div><span>中段对比度</span><b>2.24:1 <span style="font-weight:600;color:var(--muted)">（第 1 轮 1.43:1）</span></b></div>
+      </div>
+      <b>为什么 85% 而不是 100%</b>：85% 与 100% 肉眼几乎同深（差 15% 墨），
+      但 100% 实墨会与 GO 墨盘糊成一体、失去「一圈淡墨描边向外扩散」的心智；
+      85% 保留描边质感，同时把峰值对比度从第 1 轮的 1.97:1 提到 4.87:1 —— 已越过 3:1 非文本参考线。
+      <b>描边保持 1.5dp</b>：粗描边在 scale 2.0 时会变成一条实边，与历史上「甩不掉的黑边」问题同源。
+      <br/><br/>
+      <b>落地改动（已在 2026-10-28 提交）</b>：<code>colors.xml</code> 新增一行
+      <code>ink_85</code>（沿用 <code>ink_06…ink_60</code> 的 alpha 阶梯命名法）；
+      <code>bg_go_ping.xml</code> 的 <code>stroke</code> 颜色改 <code>@color/ink_85</code>、宽度保持 <code>1.5dp</code>；
+      <code>design/prototype/activity.html</code> 第 58 行改 <code>border-[#2C2C2A]/[0.85] border-[1.5px]</code>。
+      <br/><br/>
+      <b>落地后的实拍</b>：模拟器（local 变体）重装后连拍 8 帧，第 6 帧刚好抓到扩散中段的弧线
+      —— 弧线在琥珀底上清晰可辨，入库为 <code>docs/screenshots/132-go-ping-ink85.png</code>。
+      <b>仍不动的</b>：动画参数（2.4s / <code>cubic-bezier(0,0,.2,1)</code> / scale 1→2 / alpha 1→0）。
+    </div>
+
+    <div class="cand-grid one">
+      <div class="cand picked">
+        <div class="cand-hd"><span class="cid">★</span><span>墨 85% · 1.5dp</span><span class="picked-tag">已定稿</span><span class="tid">ink_85</span></div>
+        <div class="stage">
+          <div class="frames">
+            <div class="frame"><div class="box"><span class="ring" style="width:100%;height:100%;border-width:1.5px;border-color:rgba(44,44,42,.85);opacity:1"></span><span class="word">GO</span></div><div class="cap">1.00<br/>α 1.00</div></div>
+            <div class="frame"><div class="box"><span class="ring" style="width:145%;height:145%;border-width:2.175px;border-color:rgba(44,44,42,.85);opacity:.55"></span><span class="word">GO</span></div><div class="cap">1.45<br/>α 0.55</div></div>
+            <div class="frame"><div class="box"><span class="ring" style="width:180%;height:180%;border-width:2.7px;border-color:rgba(44,44,42,.85);opacity:.2"></span><span class="word">GO</span></div><div class="cap">1.80<br/>α 0.20</div></div>
+          </div>
+        </div>
+        <div class="cand-ft">
+          <div class="row"><span class="bar"><i style="width:58px"></i></span><span>峰值 <b>4.87:1</b> · 中段 <b>2.24:1</b></span></div>
+          <div><code>@color/ink_85</code> <code>#D92C2C2A</code> · <span class="newtag">新增一行令牌</span></div>
+          <div>深墨方向 + 细描边：深到能看清，细到还是一圈线</div>
+          <div class="hint">注：scale 1.00 时环与墨盘同径、被墨盘盖住 —— 环真正露脸是在向外扩散之后（对应模拟器实拍的第 6 帧）。</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= §02 周节奏卡 ================= -->
+  <section>
+    <div class="sec-no">SECTION 02</div>
+    <h2>周节奏卡 · 周一至周日均匀铺满 + 每日条柱紧密排列</h2>
+    <p class="sec-desc">
+      现状是柱宽固定 20dp、间隙 4dp，7 根共 164dp，在 393dp 宽的卡内只占 52%，左右各空约 74.5dp。
+      改法：<b>等分 7 列铺满卡片内容区</b>，柱宽 = 列宽 − 4dp，间隙恒定 4dp。
+    </p>
+
+    <div class="grid2">
+      <div>
+        <h3>改后效果 · 两种数据态</h3>
+        <div class="split">
+          <div>
+            <div class="week-card">
+              <div class="week-hd">
+                <div><div class="k">This Week</div><div class="t">本周节奏</div></div>
+                <div class="chip">动了 2 天</div>
+              </div>
+              <div class="wk">
+                <div class="wk-col">
+                  <div class="wk-chip-slot"></div>
+                  <div class="wk-bars"><div class="wk-bar" style="height:67px;background:var(--d1)"></div></div>
+                  <div class="wk-label">一</div><div class="wk-date">26</div>
+                </div>
+                <div class="wk-col today">
+                  <div class="wk-chip-slot"><span class="wk-chip">45 分</span></div>
+                  <div class="wk-bars"><div class="wk-bar" style="height:92px;background:var(--d2)"></div></div>
+                  <div class="wk-label">二</div><div class="wk-date">27</div>
+                </div>
+                <div class="wk-col future">
+                  <div class="wk-chip-slot"></div>
+                  <div class="wk-bars"></div>
+                  <div class="wk-label">三</div><div class="wk-date">28</div>
+                </div>
+                <div class="wk-col future">
+                  <div class="wk-chip-slot"></div>
+                  <div class="wk-bars"></div>
+                  <div class="wk-label">四</div><div class="wk-date">29</div>
+                </div>
+                <div class="wk-col future">
+                  <div class="wk-chip-slot"></div>
+                  <div class="wk-bars"></div>
+                  <div class="wk-label">五</div><div class="wk-date">30</div>
+                </div>
+                <div class="wk-col future">
+                  <div class="wk-chip-slot"></div>
+                  <div class="wk-bars"></div>
+                  <div class="wk-label">六</div><div class="wk-date">31</div>
+                </div>
+                <div class="wk-col future">
+                  <div class="wk-chip-slot"></div>
+                  <div class="wk-bars"></div>
+                  <div class="wk-label">日</div><div class="wk-date">1</div>
+                </div>
+              </div>
+              <div class="wk-track"><i style="width:29%"></i></div>
+              <div class="wk-foot"><span>本周动了 2 天，共 7 天</span><span>明天也出门走走？</span></div>
+            </div>
+            <p class="note">数据态 A：本周动 2 天，今日列强调，未来日留空。</p>
+          </div>
+
+          <div>
+            <div class="week-card">
+              <div class="week-hd">
+                <div><div class="k">This Week</div><div class="t">本周节奏</div></div>
+                <div class="chip">动了 7 天</div>
+              </div>
+              <div class="wk">
+                <div class="wk-col">
+                  <div class="wk-chip-slot"></div>
+                  <div class="wk-bars"><div class="wk-bar" style="height:52px;background:var(--d1)"></div></div>
+                  <div class="wk-label">一</div><div class="wk-date">26</div>
+                </div>
+                <div class="wk-col">
+                  <div class="wk-chip-slot"></div>
+                  <div class="wk-bars"><div class="wk-bar" style="height:74px;background:var(--d2)"></div></div>
+                  <div class="wk-label">二</div><div class="wk-date">27</div>
+                </div>
+                <div class="wk-col">
+                  <div class="wk-chip-slot"></div>
+                  <div class="wk-bars"><div class="wk-bar" style="height:88px;background:var(--d3)"></div></div>
+                  <div class="wk-label">三</div><div class="wk-date">28</div>
+                </div>
+                <div class="wk-col">
+                  <div class="wk-chip-slot"></div>
+                  <div class="wk-bars"><div class="wk-bar" style="height:66px;background:var(--d4)"></div></div>
+                  <div class="wk-label">四</div><div class="wk-date">29</div>
+                </div>
+                <div class="wk-col">
+                  <div class="wk-chip-slot"></div>
+                  <div class="wk-bars"><div class="wk-bar" style="height:92px;background:var(--d5)"></div></div>
+                  <div class="wk-label">五</div><div class="wk-date">30</div>
+                </div>
+                <div class="wk-col">
+                  <div class="wk-chip-slot"></div>
+                  <div class="wk-bars"><div class="wk-bar" style="height:44px;background:var(--d6)"></div></div>
+                  <div class="wk-label">六</div><div class="wk-date">31</div>
+                </div>
+                <div class="wk-col today">
+                  <div class="wk-chip-slot"><span class="wk-chip">38 分</span></div>
+                  <div class="wk-bars"><div class="wk-bar" style="height:60px;background:var(--d7)"></div></div>
+                  <div class="wk-label">日</div><div class="wk-date">1</div>
+                </div>
+              </div>
+              <div class="wk-track"><i style="width:100%"></i></div>
+              <div class="wk-foot"><span>本周动了 7 天，共 7 天</span><span>这七天都动过了，很好</span></div>
+            </div>
+            <p class="note">数据态 B：7 天全动，验证满排时柱高仍按本周最大值归一化。</p>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <h3>改动清单</h3>
+        <table>
+          <thead><tr><th style="width:38%">文件 / 位置</th><th>改动</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><code>ui/widget/WeekBarsView.kt:56</code></td>
+              <td>删除常量 <code>barWidth = 20f * density</code>；柱宽改由视图宽度算出</td>
+            </tr>
+            <tr>
+              <td><code>ui/widget/WeekBarsView.kt:57</code></td>
+              <td><code>barGap = 4f * density</code> 保留，含义变为「固定间隙」</td>
+            </tr>
+            <tr>
+              <td><code>ui/widget/WeekBarsView.kt:53</code></td>
+              <td>新增 <code>minBarWidth = 16f * density</code>（窄屏兜底）</td>
+            </tr>
+            <tr>
+              <td><code>ui/widget/WeekBarsView.kt:111-115</code></td>
+              <td>排布算法重写为等分 7 列（见下方代码）</td>
+            </tr>
+            <tr>
+              <td><code>ui/widget/WeekBarsView.kt:122</code></td>
+              <td>今日衬底半宽 <code>step / 2f</code> → <code>columnWidth / 2f - 1f * density</code></td>
+            </tr>
+            <tr class="keep">
+              <td><code>ui/widget/WeekBarsView.kt:139-145</code></td>
+              <td>不动：柱高归一化 <code>barMinHeight + ratio × (barMaxHeight − barMinHeight)</code></td>
+            </tr>
+            <tr class="keep">
+              <td><code>ui/widget/WeekBarsView.kt:92-96</code></td>
+              <td>不动：<code>week_day_1..7</code> 七色映射</td>
+            </tr>
+            <tr class="keep">
+              <td><code>ui/widget/WeekBarsView.kt:147-159</code></td>
+              <td>不动：今日柱顶「X 分」chip</td>
+            </tr>
+            <tr class="keep">
+              <td><code>layout/activity_home.xml:545-549</code></td>
+              <td>不动：控件 <code>match_parent</code> / 高 <code>168dp</code></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>排布算法（改后）</h3>
+        <div class="mini">
+<pre style="font-family:Consolas,Monaco,monospace;font-size:12px;line-height:1.7;overflow-x:auto"><span style="color:#6E6A61">// 七列等分铺满卡片内容区宽度：列宽 = 可用宽 ÷ 7</span>
+<span style="color:#6E6A61">// 柱子在列内居中，间隙恒定 4dp</span>
+<span style="color:#6E6A61">val</span> columnWidth = width / <span style="color:#B45309">7f</span>
+<span style="color:#6E6A61">val</span> barWidth = (columnWidth - barGap)
+        .coerceAtLeast(minBarWidth)
+<span style="color:#6E6A61">fun</span> centerX(i: Int) =
+        columnWidth * i + columnWidth / <span style="color:#B45309">2f</span></pre>
+        </div>
+
+        <h3>尺寸换算</h3>
+        <table>
+          <thead><tr><th>屏宽</th><th class="num">视图宽（屏宽−80dp）</th><th class="num">列宽 ÷7</th><th class="num">柱宽（列宽−4dp）</th></tr></thead>
+          <tbody>
+            <tr><td class="num">393dp</td><td class="num">313dp</td><td class="num">44.7dp</td><td class="num">≈ 40.7dp</td></tr>
+            <tr><td class="num">360dp</td><td class="num">280dp</td><td class="num">40.0dp</td><td class="num">≈ 36.0dp</td></tr>
+            <tr><td class="num">412dp</td><td class="num">332dp</td><td class="num">47.4dp</td><td class="num">≈ 43.4dp</td></tr>
+          </tbody>
+        </table>
+        <p class="note">
+          卡片左右各 20dp margin + 20dp padding = 80dp，故视图宽 = 屏宽 − 80dp。
+          现状 7×20 + 6×4 = 164dp，在 393dp 屏上<b>只占 52%</b>，左右各空 74.5dp；
+          改后柱子几乎贴到卡片描边内侧，视觉上连成一整条周色带。
+        </p>
+      </div>
+    </div>
+
+    <div class="note">
+      <b>保持不变的部分。</b>
+      柱高口径仍是「当日运动时长（分钟）」，按本周已发生值最大值归一化；
+      今日列仍是「衬底 + 琥珀实心日期圆 + 柱顶 X 分 chip」三件套；
+      未来日仍留空不画假柱；进度条与脚注仍是「动了 X 天」口径，不含任何欠账措辞。
+    </div>
+  </section>
+
+  <!-- ================= §03 落地清单 ================= -->
+  <section>
+    <div class="sec-no">SECTION 03</div>
+    <h2>落地清单</h2>
+    <table>
+      <thead><tr><th style="width:8%">序</th><th style="width:44%">文件</th><th>动作</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td><code>android/app/src/main/res/drawable/bg_go_ping.xml</code></td><td>描边 1dp → 1.5dp；<code>ink_18</code> → <code>ink_40</code> → <b><code>ink_85</code></b>（第 1、4 轮已落地）</td></tr>
+        <tr><td>2</td><td><code>android/app/src/main/java/com/runclub/android/ui/widget/WeekBarsView.kt</code></td><td>删除 <code>barWidth</code> 常量；新增 <code>minBarWidth</code>；排布改等分 7 列；今日衬底加宽</td></tr>
+        <tr><td>3</td><td><code>design/prototype/activity.html</code></td><td>GO 环改墨色 <b>85%</b> + 1.5px；周节奏 7 列改 flex 等分铺满</td></tr>
+        <tr><td>4</td><td><code>android/app/src/main/res/values/colors.xml</code></td><td>第 1 轮不新增令牌（<code>ink_40</code> 已有）；第 4 轮新增一行 <code>ink_85</code> <code>#D92C2C2A</code></td></tr>
+        <tr><td>5</td><td><code>docs/acceptance-reports/13-*.md</code> + 其 <code>README.md</code></td><td>原第 14 份报告已并入第 13 份（同分支一份报告），索引与完成度表同步</td></tr>
+        <tr><td>6</td><td><code>docs/NAMING.md</code> + <code>AGENTS.md</code></td><td>序号改「已用 1–13，下一份从 14 开始」；补「一个分支一份验收报告」规则</td></tr>
+        <tr><td>7</td><td><code>docs/screenshots/130-week-bars.png</code> / <code>131-go-ping.png</code></td><td>由原 140 / 141 改名（<code>git mv</code>），号段随报告 13 调整</td></tr>
+        <tr><td>8</td><td><code>docs/screenshots/132-go-ping-ink85.png</code></td><td>第 4 轮模拟器实拍：连拍 8 帧取到扩散中段的弧线</td></tr>
+      </tbody>
+    </table>
+    <p class="note">
+      <b>状态：第 1 轮 6 项 + 第 4 轮 3 项已全部落地</b>（2026-10-28），证据见验收报告
+      <code>docs/acceptance-reports/13-主题重设计方案三蜜琥珀浅色暖底.md</code>（§7–§13、§14–§16）与
+      <code>docs/screenshots/130-week-bars.png</code>、<code>131-go-ping.png</code>、<code>132-go-ping-ink85.png</code>。
+      提交信息按 <code>docs/开发计划.md</code> §9 约定，<code>类型: 中文一句话描述</code>，≤50 字，句末无句号：
+      <code>fix: GO 脉冲环提亮与周节奏卡铺满密排</code>、<code>fix: GO 脉冲环改墨 85% 描边 1.5dp</code>。
+      本轮不推送远端（推送需明确授权）。
+    </p>
+  </section>
+
+  <!-- ================= §04 验证与风险 ================= -->
+  <section>
+    <div class="sec-no">SECTION 04</div>
+    <h2>验证与风险</h2>
+    <h3>验证步骤</h3>
+    <ul class="tick">
+      <li><b>单元测试</b>：<code>.\gradlew.bat testLocalDebugUnitTest</code> —— ✅ <b>85 个用例全绿（11 个测试类，failures=0、errors=0）</b>，2026-10-28 12:05 实测</li>
+      <li><b>双变体构建</b>：<code>.\gradlew.bat assembleLocalDebug</code> 与 <code>.\gradlew.bat assembleAmapDebug</code> —— ✅ 均 BUILD SUCCESSFUL（资源改动，两个变体都过）</li>
+      <li><b>界面走查</b>：模拟器（local 变体，AVD <code>runclub36</code>）实测 —— ✅ GO 环在琥珀底上轮廓清楚；周节奏 7 列左右贴到卡片内容区两侧、间距均匀、今日列 chip 与日期圆位置正确、未来日无假柱。截图 <code>docs/screenshots/131-go-ping.png</code>、<code>130-week-bars.png</code></li>
+      <li><b>窄屏复核</b>：360dp 屏上柱宽 ≈36dp，不得被压成细条（<code>minBarWidth 16dp</code> 兜底）—— ⚠️ 本轮未在 360dp 真机上复核，真机（amap 变体）观感亦待验</li>
+      <li><b>第 4 轮（脉冲环定稿 · 墨 85% + 1.5dp）</b>：<code>.\gradlew.bat testLocalDebugUnitTest assembleLocalDebug assembleAmapDebug</code> —— ✅ BUILD SUCCESSFUL（<b>85 个用例全绿，failures=0、errors=0</b>），2026-10-28 15:10 实测</li>
+      <li><b>第 4 轮实拍</b>：模拟器（local 变体）重装 APK 后连拍 8 帧，第 6 帧抓到扩散中段的弧线 —— ✅ 弧线在琥珀底上清晰可辨，入库 <code>docs/screenshots/132-go-ping-ink85.png</code></li>
+      <li><b>对比度数值</b>：按 WCAG 公式对琥珀底 <code>#EF9F27</code> 离线计算（<b>非仪器实测</b>）：峰值 4.87:1、中段 2.24:1</li>
+    </ul>
+
+
+    <h3>风险与取舍</h3>
+    <table>
+      <thead><tr><th style="width:30%">项</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>柱宽随屏宽变化</td>
+          <td>同一份设计在不同屏宽下柱宽不同（36–44dp），属自适应预期；比例关系、色彩、今天强调均不变</td>
+        </tr>
+        <tr>
+          <td>柱区上方仍留白</td>
+          <td>柱区可用高 124dp 而 <code>barMaxHeight</code> 仍为 92dp，上方约 32dp 空白本次不动 —— 抬高会改变「柱高 = 当日运动时长」的视觉比例，超出本次诉求</td>
+        </tr>
+        <tr>
+          <td>今日衬底变宽</td>
+          <td>衬底从「柱宽 + 4dp」变成整列宽，与相邻列的分隔依赖恒定 4dp 间隙；间隙不变，视觉分隔稳定</td>
+        </tr>
+        <tr>
+          <td>模拟器可用性</td>
+          <td>验收报告 13 §6 记录的宿主机虚拟化故障本轮<b>不再复现</b>；模拟器（local 变体）已实测留档。真机（amap 变体，含高德底图）本轮未验证，脉冲环叠底色需真机复核</td>
+        </tr>
+        <tr>
+          <td>动画淡出会稀释颜色</td>
+          <td>环的<b>有效不透明度 = 颜色 alpha × 动画 alpha</b>；动画 2.4s 内 alpha 1→0，中段（scale 1.45）只剩 0.55，再乘颜色 alpha 后对比度普遍偏低。定稿的 85% 墨把峰值推到 4.87:1，但中段仍只有 2.24:1 —— 这是<b>动画节奏</b>的问题，不是颜色的问题；按约定不把淡出节奏列为变量</td>
+        </tr>
+        <tr>
+          <td>85% 与 100% 肉眼几乎一样</td>
+          <td>定稿取 85% 而非 100%，差别很小；真正的增益来自「第 1 轮 40% → 85%」这一跳（峰值 1.97:1 → 4.87:1）。若仍嫌淡，下一步该动的是<b>动画节奏</b>（拉长不透明度平台期），而不是继续加深的颜色</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="note">
+      <b>本次明确不做。</b>
+      不改柱区高度与控件总高；不改脉冲环动画参数；不改 <code>dailyMinutes</code> 数据口径与报告聚合；
+      不碰数据库、权限、地图；不新增依赖；不动主题令牌体系。
+      第 2 轮（候选对比）只出方案不动代码，<b>第 4 轮拍板后才动</b>
+      <code>colors.xml</code>、<code>bg_go_ping.xml</code> 与原型基线。
+    </div>
+  </section>
+
+  <footer>
+    逐日 · SUNWARD · 修改方案（探索稿，落地后同步 <code>design/prototype/</code> 基线，本稿留在 <code>design/explore/</code> 作方案记录）
+  </footer>
+</div>
+</body>
+</html>

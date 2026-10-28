@@ -28,7 +28,7 @@ class TrackThumbView @JvmOverloads constructor(
 
     private var points: List<StoredTrackPoint> = emptyList()
 
-    private val paperPaint = Paint().apply { color = Color.parseColor("#E7EDE3") }
+    private val paperPaint = Paint().apply { color = Color.parseColor("#F0EEE3") }
     private val roadWhite = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
         strokeCap = Paint.Cap.ROUND
@@ -37,25 +37,25 @@ class TrackThumbView @JvmOverloads constructor(
     private val roadGray = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
         strokeCap = Paint.Cap.ROUND
-        color = Color.parseColor("#D6DED2")
+        color = Color.parseColor("#DFDBCD")
     }
     private val routePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
         strokeCap = Paint.Cap.ROUND
         strokeJoin = Paint.Join.ROUND
-        color = Color.parseColor("#FF5C35")
+        color = Color.parseColor("#B45309")
         strokeWidth = 4f * density
     }
-    private val startPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.parseColor("#D9FF43") }
+    private val startPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.parseColor("#EF9F27") }
     private val startRing = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
-        color = Color.parseColor("#080B08")
+        color = Color.parseColor("#2C2C2A")
         strokeWidth = 2f * density
     }
-    private val endPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.parseColor("#080B08") }
+    private val endPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.parseColor("#2C2C2A") }
     private val endRing = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
-        color = Color.parseColor("#D9FF43")
+        color = Color.parseColor("#EF9F27")
         strokeWidth = 2f * density
     }
 

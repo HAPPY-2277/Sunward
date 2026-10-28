@@ -164,7 +164,7 @@ AGP 9 起 Kotlin 支持已内置，`build.gradle.kts` 里**不能**再声明 `or
 `sun` 对应日，`ward` 对应趋向，与中文的逐日近乎逐字对译。
 
 App 启动器上显示「逐日」，面向家里人的日常使用；SUNWARD 用在代码仓库、文档和对外场合。
-品牌色 `#D9FF43` 就是太阳的颜色，和这个名字是一套的。
+品牌色就是太阳的颜色——现为晨光蜜琥珀 `#EF9F27`（浅色暖底主题），和这个名字是一套的。
 
 包名 `com.runclub.android` 是早期名。改动会让已申请的高德地图 Key 失效
 （Key 绑定包名 + 签名 SHA-1），因此保持原样。
@@ -177,7 +177,7 @@ App 启动器上显示「逐日」，面向家里人的日常使用；SUNWARD �
 - 源文件 [design/icon/sunward-icon.svg](design/icon/sunward-icon.svg)（1024 viewBox），位图 [design/icon/sunward-icon.png](design/icon/sunward-icon.png)（1024px，商店大图可直接用）
 - 自适应图标前景用**位图**：`drawable-nodpi/ic_launcher_foreground.png`，由 1024 设计稿按 0.86 缩放栅格化，内容落在 66dp 安全区内；另带矢量 `monochrome` 主题图标层（纯色描边，不受下述问题影响）
 - ⚠️ **前景不要用矢量渐变描边**：实测 Android 16（API 36）上 `VectorDrawable` 的渐变 `strokeColor` 不渲染——轨迹圆环整个消失，只剩纯色填充的定位针。改用位图后正常
-- 图标用的暖金色是品牌色的演进方向：首页品牌 logo 已换成同一套朝阳金标记（位图 `ic_logo_sunward.png` + 底板 `bg_logo_sunward`），App 其余界面仍是荧光绿 `#D9FF43`，后续替换
+- 图标用的暖金色已扩展为全界面主题：2026-10 主题重设计落地「方案三·蜜琥珀」（浅色暖底 `#F1EFE8` + 蜜琥珀 `#EF9F27` + 深琥珀 `#854F0B`），首页品牌 logo 仍是同一套朝阳金标记（位图 `ic_logo_sunward.png` + 底板 `bg_logo_sunward`）；探索样稿存档在 `design/explore/`，视觉基线以 `design/prototype/` 为准
 
 ## 目录结构
 

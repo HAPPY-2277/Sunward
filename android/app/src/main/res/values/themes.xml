@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- 全局唯一深色主题：本项目只做深色，不随系统切换 -->
-    <style name="Theme.RunClub" parent="Theme.Material3.Dark.NoActionBar">
+    <!-- 全局唯一浅色主题：本项目只做浅色暖底（方案三·蜜琥珀），不随系统切换 -->
+    <style name="Theme.RunClub" parent="Theme.Material3.Light.NoActionBar">
         <item name="colorPrimary">@color/accent_lime</item>
-        <item name="colorOnPrimary">@color/bg_base</item>
+        <item name="colorOnPrimary">@color/ink</item>
         <item name="colorSecondary">@color/accent_orange</item>
-        <item name="colorOnSecondary">@color/bg_base</item>
+        <item name="colorOnSecondary">#FFFFFF</item>
         <item name="android:colorBackground">@color/bg_base</item>
         <item name="android:windowBackground">@color/bg_base</item>
         <item name="android:statusBarColor">@color/bg_outer</item>
         <item name="android:navigationBarColor">@color/bg_outer</item>
-        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightStatusBar">true</item>
     </style>
 
     <!--
@@ -24,7 +24,7 @@
 
     <!-- 文本样式 -->
     <style name="Text.Brand">
-        <item name="android:textColor">@color/accent_lime</item>
+        <item name="android:textColor">@color/accent_deep</item>
         <item name="android:textSize">13sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:letterSpacing">0.18</item>
@@ -55,10 +55,10 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <!-- 主按钮：荧光绿胶囊 -->
+    <!-- 主按钮：蜜琥珀胶囊（墨字） -->
     <style name="Widget.RunClub.PrimaryButton">
         <item name="android:background">@drawable/bg_pill_lime</item>
-        <item name="android:textColor">@color/bg_base</item>
+        <item name="android:textColor">@color/ink</item>
         <item name="android:textSize">15sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:gravity">center</item>
@@ -68,7 +68,7 @@
         <item name="android:focusable">true</item>
     </style>
 
-    <!-- 次按钮：深色描边胶囊 -->
+    <!-- 次按钮：暖灰描边胶囊（墨字） -->
     <style name="Widget.RunClub.SecondaryButton">
         <item name="android:background">@drawable/bg_pill_dark</item>
         <item name="android:textColor">@color/text_primary</item>
@@ -128,10 +128,10 @@
 
     <!--
         统一提示卡片（ui/widget/SunwardDialog.kt + layout/dialog_sunward.xml）。
-        系统 AlertDialog 是浅色 Material 风格，和本项目的深色荧光绿视觉不搭，
-        所以卡片外观全部画在自己的布局里，这里只负责「透明窗口 + 居中 + 遮罩 + 淡入淡出」。
+        不依赖系统 AlertDialog 的配色，卡片外观全部画在自己的布局里，
+        这里只负责「透明窗口 + 居中 + 遮罩 + 淡入淡出」。
     -->
-    <style name="Theme.RunClub.Dialog" parent="Theme.Material3.Dark.Dialog">
+    <style name="Theme.RunClub.Dialog" parent="Theme.Material3.Light.Dialog">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowIsFloating">true</item>

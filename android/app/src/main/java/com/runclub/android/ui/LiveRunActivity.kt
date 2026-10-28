@@ -420,7 +420,7 @@ class LiveRunActivity : AppCompatActivity() {
             if (simulated) R.string.debug_sim_on else R.string.debug_sim_off
         )
         tvSimToggle.setTextColor(
-            ContextCompat.getColor(this, if (simulated) R.color.accent_lime else R.color.text_muted)
+            ContextCompat.getColor(this, if (simulated) R.color.accent_deep else R.color.text_muted)
         )
     }
 

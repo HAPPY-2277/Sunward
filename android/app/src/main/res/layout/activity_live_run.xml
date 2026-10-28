@@ -172,7 +172,7 @@
                             android:layout_gravity="center"
                             android:contentDescription="@string/live_signal_strong"
                             android:src="@drawable/ic_satellite"
-                            android:tint="@color/bg_base" />
+                            android:tint="@color/ink" />
                     </FrameLayout>
 
                     <TextView
@@ -181,7 +181,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
                         android:text="@string/live_signal_none"
-                        android:textColor="@color/bg_base"
+                        android:textColor="@color/ink"
                         android:textSize="11sp"
                         android:textStyle="bold" />
 
@@ -216,7 +216,7 @@
                     android:paddingEnd="12dp"
                     android:paddingBottom="8dp"
                     android:text="@string/live_weather"
-                    android:textColor="@color/bg_base"
+                    android:textColor="@color/ink"
                     android:textSize="11sp"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -299,7 +299,7 @@
                         android:layout_gravity="center"
                         android:contentDescription="@string/live_locate"
                         android:src="@drawable/ic_locate"
-                        android:tint="@color/bg_base" />
+                        android:tint="@color/ink" />
                 </FrameLayout>
             </LinearLayout>
         </FrameLayout>
@@ -347,13 +347,13 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
-                            android:background="@drawable/bg_chip_orange"
+                            android:background="@drawable/bg_chip_lime_soft"
                             android:paddingStart="8dp"
                             android:paddingTop="2dp"
                             android:paddingEnd="8dp"
                             android:paddingBottom="2dp"
                             android:text="@string/live_realtime_chip"
-                            android:textColor="@color/orange_soft"
+                            android:textColor="@color/orange_light"
                             android:textSize="11sp"
                             android:textStyle="bold" />
                     </LinearLayout>
@@ -382,7 +382,7 @@
                             android:layout_marginBottom="8dp"
                             android:letterSpacing="0.12"
                             android:text="@string/live_unit_km"
-                            android:textColor="@color/accent_lime"
+                            android:textColor="@color/accent_deep"
                             android:textSize="11sp"
                             android:textStyle="bold" />
                     </LinearLayout>
@@ -637,14 +637,14 @@
                         android:layout_height="18dp"
                         android:contentDescription="@string/live_end"
                         android:src="@drawable/ic_flag"
-                        android:tint="@color/bg_base" />
+                        android:tint="@color/ink" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
                         android:text="@string/live_end"
-                        android:textColor="@color/bg_base"
+                        android:textColor="@color/ink"
                         android:textSize="13sp"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -697,7 +697,7 @@
             android:layout_marginTop="12dp"
             android:lineSpacingExtra="3dp"
             android:text="@string/perm_denied"
-            android:textColor="@color/orange_soft"
+            android:textColor="@color/orange_light"
             android:textSize="11sp"
             android:visibility="gone" />
 
@@ -711,7 +711,7 @@
             android:focusable="true"
             android:gravity="center"
             android:text="@string/perm_grant"
-            android:textColor="@color/bg_base"
+            android:textColor="@color/ink"
             android:textSize="14sp"
             android:textStyle="bold" />
 
@@ -754,7 +754,7 @@
                 android:letterSpacing="0.18"
                 android:text="@string/debug_title"
                 android:textAllCaps="true"
-                android:textColor="@color/accent_lime"
+                android:textColor="@color/accent_deep"
                 android:textSize="11sp"
                 android:textStyle="bold" />
 
@@ -1016,7 +1016,7 @@
                     android:focusable="true"
                     android:gravity="center"
                     android:text="@string/end_modal_confirm"
-                    android:textColor="@color/bg_base"
+                    android:textColor="@color/ink"
                     android:textSize="13sp"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -1030,7 +1030,7 @@
         android:id="@+id/countdownOverlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/scrim_dark"
+        android:background="@color/scrim_modal"
         android:clickable="true"
         android:focusable="true"
         android:gravity="center"

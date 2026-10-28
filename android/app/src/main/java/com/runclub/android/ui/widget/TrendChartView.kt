@@ -68,8 +68,8 @@ class TrendChartView @JvmOverloads constructor(
     private var plotTop = 0f
     private var plotBottom = 0f
 
-    private val barPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.parseColor("#D9FF43") }
-    private val barSelectedPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.parseColor("#EAFF8A") }
+    private val barPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.parseColor("#FFC260") }
+    private val barSelectedPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.parseColor("#EF9F27") }
     private val emptyBarPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.WHITE
         alpha = 0x14
@@ -79,13 +79,13 @@ class TrendChartView @JvmOverloads constructor(
         strokeWidth = 2f * density
         strokeCap = Paint.Cap.ROUND
         strokeJoin = Paint.Join.ROUND
-        color = Color.parseColor("#FF5C35")
+        color = Color.parseColor("#B45309")
     }
-    private val dotFill = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.parseColor("#FF5C35") }
+    private val dotFill = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.parseColor("#B45309") }
     private val dotRing = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
         strokeWidth = 2f * density
-        color = Color.parseColor("#111611")
+        color = Color.parseColor("#2C2C2A")
     }
     private val gridPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
@@ -95,39 +95,39 @@ class TrendChartView @JvmOverloads constructor(
         pathEffect = android.graphics.DashPathEffect(floatArrayOf(4f * density, 4f * density), 0f)
     }
     private val axisText = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.parseColor("#596459")
+        color = Color.parseColor("#E3DFD2")
         textSize = 8f * density
         textAlign = Paint.Align.RIGHT
     }
     private val xText = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.parseColor("#6F7A6F")
+        color = Color.parseColor("#8D897E")
         textSize = 9f * density
         textAlign = Paint.Align.CENTER
     }
     private val cursorPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
         strokeWidth = 1f * density
-        color = Color.parseColor("#D9FF43")
+        color = Color.parseColor("#FFC260")
         alpha = 0x40
     }
-    private val tipBg = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.parseColor("#0B0F0B") }
+    private val tipBg = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.parseColor("#2C2C2A") }
     private val tipBorder = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
         strokeWidth = 1f * density
-        color = Color.parseColor("#D9FF43")
+        color = Color.parseColor("#EF9F27")
         alpha = 0x40
     }
     private val tipTitle = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.parseColor("#8C978C")
+        color = Color.parseColor("#B9B4A8")
         textSize = 9f * density
     }
     private val tipValue = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.parseColor("#DFFF4F")
+        color = Color.parseColor("#FFC260")
         textSize = 10f * density
         typeface = android.graphics.Typeface.DEFAULT_BOLD
     }
     private val tipPace = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.parseColor("#FF8A6A")
+        color = Color.parseColor("#FFB65C")
         textSize = 10f * density
     }
 
@@ -305,7 +305,7 @@ class TrendChartView @JvmOverloads constructor(
 
     private fun drawEmptyHint(canvas: Canvas) {
         val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            color = Color.parseColor("#6F7A6F")
+            color = Color.parseColor("#8D897E")
             textSize = 11f * density
             textAlign = Paint.Align.CENTER
         }

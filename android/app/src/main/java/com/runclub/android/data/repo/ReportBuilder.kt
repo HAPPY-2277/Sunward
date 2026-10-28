@@ -291,9 +291,9 @@ object ReportBuilder {
     private fun composition(records: List<RunRecord>, totalKm: Double): List<CompositionSlice> {
         if (records.isEmpty() || totalKm <= 0.0) {
             return listOf(
-                CompositionSlice(COMPOSITION_SLOW, 0, 0.0, "#D9FF43"),
-                CompositionSlice(COMPOSITION_REGULAR, 0, 0.0, "#FF5C35"),
-                CompositionSlice(COMPOSITION_LONG, 0, 0.0, "#5B675B")
+                CompositionSlice(COMPOSITION_SLOW, 0, 0.0, "#FFC260"),
+                CompositionSlice(COMPOSITION_REGULAR, 0, 0.0, "#EF9F27"),
+                CompositionSlice(COMPOSITION_LONG, 0, 0.0, "#8A5A00")
             )
         }
         val avgDistance = totalKm / records.size
@@ -312,9 +312,9 @@ object ReportBuilder {
 
         val percents = roundToHundred(listOf(slow, regular, long), totalKm)
         return listOf(
-            CompositionSlice(COMPOSITION_SLOW, percents[0], slow, "#D9FF43"),
-            CompositionSlice(COMPOSITION_REGULAR, percents[1], regular, "#FF5C35"),
-            CompositionSlice(COMPOSITION_LONG, percents[2], long, "#5B675B")
+            CompositionSlice(COMPOSITION_SLOW, percents[0], slow, "#FFC260"),
+            CompositionSlice(COMPOSITION_REGULAR, percents[1], regular, "#EF9F27"),
+            CompositionSlice(COMPOSITION_LONG, percents[2], long, "#8A5A00")
         )
     }
 

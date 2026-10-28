@@ -8,20 +8,20 @@
 <script src="https://modao.cc/agent-py/static/source/js/tailwindcss.js"></script>
 <script src="https://modao.cc/agent-py/static/source/js/iconify-icon.min.js"></script>
 </head>
-<body class="w-full h-full m-0 overflow-hidden flex items-center justify-center bg-[#050705] text-white antialiased">
-<div class="relative flex h-full max-h-[852px] w-full max-w-[393px] flex-col overflow-hidden bg-[#080B08]">
+<body class="w-full h-full m-0 overflow-hidden flex items-center justify-center bg-[#E9E6DC] text-[#2C2C2A] antialiased">
+<div class="relative flex h-full max-h-[852px] w-full max-w-[393px] flex-col overflow-hidden bg-[#F1EFE8]">
 <header class="flex h-16 shrink-0 items-center justify-between px-5">
-<a aria-label="返回运动首页" class="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-white transition active:scale-95" href="activity.html">
+<a aria-label="返回运动首页" class="flex h-10 w-10 items-center justify-center rounded-full border border-[#E3DFD2] bg-[rgba(44,44,42,0.05)] text-[#2C2C2A] transition active:scale-95" href="activity.html">
 <iconify-icon icon="lucide:chevron-down" width="20"></iconify-icon>
 </a>
 <div class="text-center">
 <div class="flex items-center justify-center gap-2">
-<span class="h-2 w-2 animate-pulse rounded-full bg-[#D9FF43]" id="liveDot"></span>
+<span class="h-2 w-2 animate-pulse rounded-full bg-[#EF9F27]" id="liveDot"></span>
 <p class="text-[13px] font-bold tracking-[-0.01em]" id="liveStatus">实时记录中</p>
 </div>
-<p class="mt-0.5 text-[9px] font-bold uppercase tracking-[0.18em] text-[#6F7A6F]">Outdoor Running</p>
+<p class="mt-0.5 text-[9px] font-bold uppercase tracking-[0.18em] text-[#8D897E]">Outdoor Running</p>
 </div>
-<div class="flex h-10 w-10 items-center justify-center rounded-full border border-[#D9FF43]/20 bg-[#D9FF43]/10 text-[#D9FF43]">
+<div class="flex h-10 w-10 items-center justify-center rounded-full border border-[#EF9F27]/20 bg-[#EF9F27]/10 text-[#EF9F27]">
 <iconify-icon icon="lucide:satellite" width="18"></iconify-icon>
 </div>
 </header>
@@ -29,18 +29,18 @@
 <svg aria-label="实时跑步路线地图" class="absolute inset-0 h-full w-full" preserveaspectratio="xMidYMid slice" viewbox="0 0 393 660">
 <defs>
 <pattern height="22" id="cityDots" patternunits="userSpaceOnUse" width="22">
-<circle cx="1" cy="1" fill="#C7D0C3" r="0.8"></circle>
+<circle cx="1" cy="1" fill="#DFDBCD" r="0.8"></circle>
 </pattern>
 <filter height="140%" id="routeShadow" width="140%" x="-20%" y="-20%">
-<fedropshadow dx="0" dy="2" flood-color="#532015" flood-opacity="0.25" stddeviation="2.2"></fedropshadow>
+<fedropshadow dx="0" dy="2" flood-color="#3A2418" flood-opacity="0.25" stddeviation="2.2"></fedropshadow>
 </filter>
 </defs>
-<rect fill="#E9EEE4" height="660" width="393"></rect>
+<rect fill="#F0EEE3" height="660" width="393"></rect>
 <rect fill="url(#cityDots)" height="660" width="393"></rect>
-<path d="M-30 0 H428 V46 C350 84 308 33 245 55 C174 79 108 42 52 72 C24 87 -6 83 -30 70 Z" fill="#B9DAE3"></path>
-<path d="M-20 229 C63 211 103 244 158 226 C220 206 259 171 330 190 C365 199 393 188 414 172 V215 C359 243 308 222 260 245 C196 275 127 248 50 268 C19 276 -3 270 -20 261 Z" fill="#C9E4B4"></path>
-<path d="M281 352 C320 330 368 341 408 366 V431 C350 412 313 425 276 397 Z" fill="#C9E4B4"></path>
-<g fill="#F7F8F3" stroke="#D2DACD" stroke-width="1">
+<path d="M-30 0 H428 V46 C350 84 308 33 245 55 C174 79 108 42 52 72 C24 87 -6 83 -30 70 Z" fill="#BFD6DB"></path>
+<path d="M-20 229 C63 211 103 244 158 226 C220 206 259 171 330 190 C365 199 393 188 414 172 V215 C359 243 308 222 260 245 C196 275 127 248 50 268 C19 276 -3 270 -20 261 Z" fill="#D8E2BC"></path>
+<path d="M281 352 C320 330 368 341 408 366 V431 C350 412 313 425 276 397 Z" fill="#D8E2BC"></path>
+<g fill="#FAF8F1" stroke="#E0DACB" stroke-width="1">
 <rect height="50" rx="5" width="58" x="16" y="98"></rect>
 <rect height="65" rx="6" width="70" x="87" y="92"></rect>
 <rect height="43" rx="5" width="64" x="169" y="98"></rect>
@@ -62,7 +62,7 @@
 <rect height="48" rx="5" width="58" x="240" y="572"></rect>
 </g>
 <g fill="none" stroke-linecap="round" stroke-linejoin="round">
-<g stroke="#D0D8CB" stroke-width="18">
+<g stroke="#DCD5C4" stroke-width="18">
 <path d="M-20 178 C92 186 177 173 416 160"></path>
 <path d="M-15 376 C106 354 244 362 413 345"></path>
 <path d="M-10 538 C104 527 264 542 410 515"></path>
@@ -70,7 +70,7 @@
 <path d="M302 -10 C285 149 306 313 289 671"></path>
 <path d="M-15 630 C104 545 164 454 245 338 C301 257 353 213 411 184"></path>
 </g>
-<g stroke="#FCFCF8" stroke-width="12">
+<g stroke="#FDFCF6" stroke-width="12">
 <path d="M-20 178 C92 186 177 173 416 160"></path>
 <path d="M-15 376 C106 354 244 362 413 345"></path>
 <path d="M-10 538 C104 527 264 542 410 515"></path>
@@ -78,68 +78,68 @@
 <path d="M302 -10 C285 149 306 313 289 671"></path>
 <path d="M-15 630 C104 545 164 454 245 338 C301 257 353 213 411 184"></path>
 </g>
-<g stroke="#E4E9DF" stroke-width="4">
+<g stroke="#EDE9DC" stroke-width="4">
 <path d="M-10 248 C105 232 228 248 407 225"></path>
 <path d="M-10 470 C126 460 286 463 404 453"></path>
 <path d="M180 -8 C171 132 189 294 168 668"></path>
 <path d="M378 -5 C371 160 393 337 376 666"></path>
 </g>
 </g>
-<g fill="#7D897A" font-family="Arial, sans-serif" font-size="8" letter-spacing="1">
+<g fill="#8D897E" font-family="Arial, sans-serif" font-size="8" letter-spacing="1">
 <text transform="rotate(-1 174 172)" x="174" y="172">滨江大道</text>
 <text transform="rotate(-1 301 337)" x="301" y="337">公园路</text>
 <text transform="rotate(-2 34 527)" x="34" y="527">西岸绿道</text>
-<text fill="#9CA79A" transform="rotate(84 69 98)" x="69" y="98">RUN ST.</text>
-<text fill="#668259" x="246" y="255">河畔公园</text>
-<text fill="#668259" transform="rotate(74 333 235)" x="333" y="235">城市体育场</text>
-<text fill="#7193A1" x="135" y="32">城 市 河</text>
+<text fill="#A5A093" transform="rotate(84 69 98)" x="69" y="98">RUN ST.</text>
+<text fill="#7E8A5A" x="246" y="255">河畔公园</text>
+<text fill="#7E8A5A" transform="rotate(74 333 235)" x="333" y="235">城市体育场</text>
+<text fill="#7E97A0" x="135" y="32">城 市 河</text>
 </g>
 <g opacity="0.85">
-<circle cx="220" cy="213" fill="#E5EFDA" r="11" stroke="#C6DABC" stroke-width="2"></circle>
-<path d="M220 207 L223 213 L220 219 L217 213 Z" fill="#86A976"></path>
-<circle cx="115" cy="460" fill="#E5EFDA" r="10" stroke="#C6DABC" stroke-width="2"></circle>
-<path d="M115 455 L118 460 L115 465 L112 460 Z" fill="#86A976"></path>
+<circle cx="220" cy="213" fill="#D8E2BC" r="11" stroke="#BFD6DB" stroke-width="2"></circle>
+<path d="M220 207 L223 213 L220 219 L217 213 Z" fill="#7E8A5A"></path>
+<circle cx="115" cy="460" fill="#D8E2BC" r="10" stroke="#BFD6DB" stroke-width="2"></circle>
+<path d="M115 455 L118 460 L115 465 L112 460 Z" fill="#7E8A5A"></path>
 </g>
-<path d="M48 610 C54 568 92 552 103 518 C115 481 84 449 111 417 C139 384 190 402 212 366 C234 331 206 294 241 269 C276 243 320 251 333 214 C345 181 320 156 285 144" fill="none" id="routeBase" stroke="#849183" stroke-dasharray="1 11" stroke-linecap="round" stroke-width="5"></path>
+<path d="M48 610 C54 568 92 552 103 518 C115 481 84 449 111 417 C139 384 190 402 212 366 C234 331 206 294 241 269 C276 243 320 251 333 214 C345 181 320 156 285 144" fill="none" id="routeBase" stroke="#B9B4A8" stroke-dasharray="1 11" stroke-linecap="round" stroke-width="5"></path>
 <g filter="url(#routeShadow)">
-<path d="M48 610 C54 568 92 552 103 518 C115 481 84 449 111 417 C139 384 190 402 212 366 C234 331 206 294 241 269 C276 243 320 251 333 214 C345 181 320 156 285 144" fill="none" id="progressCase" stroke="#FFFDF6" stroke-linecap="round" stroke-width="13"></path>
-<path d="M48 610 C54 568 92 552 103 518 C115 481 84 449 111 417 C139 384 190 402 212 366 C234 331 206 294 241 269 C276 243 320 251 333 214 C345 181 320 156 285 144" fill="none" id="progressRoute" stroke="#FF5C35" stroke-linecap="round" stroke-width="8"></path>
+<path d="M48 610 C54 568 92 552 103 518 C115 481 84 449 111 417 C139 384 190 402 212 366 C234 331 206 294 241 269 C276 243 320 251 333 214 C345 181 320 156 285 144" fill="none" id="progressCase" stroke="#FDFCF6" stroke-linecap="round" stroke-width="13"></path>
+<path d="M48 610 C54 568 92 552 103 518 C115 481 84 449 111 417 C139 384 190 402 212 366 C234 331 206 294 241 269 C276 243 320 251 333 214 C345 181 320 156 285 144" fill="none" id="progressRoute" stroke="#854F0B" stroke-linecap="round" stroke-width="8"></path>
 </g>
 <g id="startMarker" transform="translate(48 610)">
 <circle fill="#FFFFFF" r="9"></circle>
-<circle fill="#D9FF43" r="6" stroke="#080B08" stroke-width="2"></circle>
+<circle fill="#EF9F27" r="6" stroke="#2C2C2A" stroke-width="2"></circle>
 </g>
 <g id="runnerMarker" transform="translate(111 417)">
-<circle fill="#D9FF43" opacity="0.24" r="20">
+<circle fill="#EF9F27" opacity="0.24" r="20">
 <animate attributename="r" dur="2.2s" repeatcount="indefinite" values="13;24;13"></animate>
 <animate attributename="opacity" dur="2.2s" repeatcount="indefinite" values="0.35;0.05;0.35"></animate>
 </circle>
 <circle fill="#FFFFFF" r="12"></circle>
-<circle fill="#080B08" r="9" stroke="#D9FF43" stroke-width="3"></circle>
-<circle fill="#D9FF43" r="2.5"></circle>
+<circle fill="#2C2C2A" r="9" stroke="#EF9F27" stroke-width="3"></circle>
+<circle fill="#EF9F27" r="2.5"></circle>
 </g>
 <g transform="translate(285 144)">
-<circle fill="#FFFFFF" r="7" stroke="#080B08" stroke-width="2"></circle>
-<path d="M0 -2 L4 6 H-4 Z" fill="#080B08"></path>
+<circle fill="#FFFFFF" r="7" stroke="#2C2C2A" stroke-width="2"></circle>
+<path d="M0 -2 L4 6 H-4 Z" fill="#2C2C2A"></path>
 </g>
 </svg>
-<div class="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#080B08]/45 to-transparent"></div>
-<div class="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#080B08]/45 to-transparent"></div>
+<div class="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#F1EFE8]/45 to-transparent"></div>
+<div class="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#F1EFE8]/45 to-transparent"></div>
 <div class="absolute left-4 right-4 top-4 flex items-start justify-between">
-<div class="flex items-center gap-2 rounded-full bg-white/95 px-3.5 py-2 text-[#101510] shadow-lg shadow-black/10 backdrop-blur">
-<span class="flex h-5 w-5 items-center justify-center rounded-full bg-[#D9FF43]">
+<div class="flex items-center gap-2 rounded-full bg-[#FAF8F1] px-3.5 py-2 text-[#2C2C2A] shadow-lg shadow-black/10 backdrop-blur">
+<span class="flex h-5 w-5 items-center justify-center rounded-full bg-[#EF9F27]">
 <iconify-icon icon="lucide:satellite-dish" width="12"></iconify-icon>
 </span>
 <span class="text-[10px] font-black">GPS 信号强</span>
-<span class="h-3 w-px bg-black/10"></span>
-<span class="text-[9px] font-semibold text-[#657065]">滨江绿道</span>
+<span class="h-3 w-px bg-[rgba(44,44,42,0.12)]"></span>
+<span class="text-[9px] font-semibold text-[#8D897E]">滨江绿道</span>
 </div>
-<div class="rounded-full bg-white/95 px-3 py-2 text-[10px] font-bold text-[#101510] shadow-lg shadow-black/10 backdrop-blur">
+<div class="rounded-full bg-[#FAF8F1] px-3 py-2 text-[10px] font-bold text-[#2C2C2A] shadow-lg shadow-black/10 backdrop-blur">
           18°C · 微风
         </div>
 </div>
-<div class="absolute bottom-5 left-4 flex items-center gap-2 rounded-full bg-[#0B0F0B]/90 p-1.5 pr-3.5 text-white shadow-lg shadow-black/20 backdrop-blur">
-<span class="flex h-7 w-7 items-center justify-center rounded-full bg-[#FF5C35]">
+<div class="absolute bottom-5 left-4 flex items-center gap-2 rounded-full bg-[#2C2C2A]/90 p-1.5 pr-3.5 text-white shadow-lg shadow-black/20 backdrop-blur">
+<span class="flex h-7 w-7 items-center justify-center rounded-full bg-[#854F0B]">
 <iconify-icon icon="lucide:route" width="14"></iconify-icon>
 </span>
 <div>
@@ -147,87 +147,87 @@
 <p class="text-[10px] font-bold">实时轨迹</p>
 </div>
 </div>
-<div class="absolute bottom-5 right-4 flex h-11 w-11 items-center justify-center rounded-full bg-white text-[#080B08] shadow-lg shadow-black/20">
+<div class="absolute bottom-5 right-4 flex h-11 w-11 items-center justify-center rounded-full bg-white text-[#2C2C2A] shadow-lg shadow-black/20">
 <iconify-icon icon="lucide:locate-fixed" width="20"></iconify-icon>
 </div>
 </section>
-<section class="relative z-10 shrink-0 bg-[#080B08] px-5 pb-2 pt-4">
+<section class="relative z-10 shrink-0 bg-[#F1EFE8] px-5 pb-2 pt-4">
 <div class="flex items-end justify-between">
 <div>
 <div class="flex items-center gap-2">
-<p class="text-[9px] font-bold uppercase tracking-[0.2em] text-[#6F7A6F]">Distance</p>
-<span class="rounded-full bg-[#FF5C35]/15 px-2 py-0.5 text-[8px] font-bold text-[#FF7E5C]">实时</span>
+<p class="text-[9px] font-bold uppercase tracking-[0.2em] text-[#8D897E]">Distance</p>
+<span class="rounded-full bg-[rgba(239,159,39,0.14)] px-2 py-0.5 text-[8px] font-bold text-[#B45309]">实时</span>
 </div>
 <p class="mt-1 flex items-baseline gap-1.5">
-<span class="text-[48px] font-black leading-none tracking-[-0.07em] text-white" id="distanceValue">2.41</span>
-<span class="text-[11px] font-black tracking-[0.12em] text-[#D9FF43]">KM</span>
+<span class="text-[48px] font-black leading-none tracking-[-0.07em] text-[#2C2C2A]" id="distanceValue">2.41</span>
+<span class="text-[11px] font-black tracking-[0.12em] text-[#8A5A00]">KM</span>
 </p>
 </div>
 <div class="pb-1 text-right">
-<p class="text-[9px] font-bold uppercase tracking-[0.14em] text-[#6F7A6F]">今日目标</p>
-<p class="mt-1 text-[13px] font-bold text-white">5.00 KM</p>
-<div class="mt-2 h-1.5 w-24 overflow-hidden rounded-full bg-white/10">
-<div class="h-full w-[48%] rounded-full bg-[#D9FF43]" id="goalBar"></div>
+<p class="text-[9px] font-bold uppercase tracking-[0.14em] text-[#8D897E]">今日目标</p>
+<p class="mt-1 text-[13px] font-bold text-[#2C2C2A]">5.00 KM</p>
+<div class="mt-2 h-1.5 w-24 overflow-hidden rounded-full bg-[rgba(44,44,42,0.10)]">
+<div class="h-full w-[48%] rounded-full bg-[#EF9F27]" id="goalBar"></div>
 </div>
 </div>
 </div>
-<div class="mt-4 grid grid-cols-3 divide-x divide-white/[0.08] border-y border-white/[0.08] py-3">
+<div class="mt-4 grid grid-cols-3 divide-x divide-[#E9E5D9] border-y border-[#E3DFD2] py-3">
 <div class="pr-3">
-<p class="text-[9px] font-bold uppercase tracking-[0.12em] text-[#6F7A6F]">用时</p>
+<p class="text-[9px] font-bold uppercase tracking-[0.12em] text-[#8D897E]">用时</p>
 <p class="mt-1.5 text-[18px] font-black tracking-[-0.03em]" id="timeValue">00:13:43</p>
 </div>
 <div class="px-3">
-<p class="text-[9px] font-bold uppercase tracking-[0.12em] text-[#6F7A6F]">当前配速</p>
-<p class="mt-1.5 text-[18px] font-black tracking-[-0.03em]"><span id="paceValue">5'42"</span><span class="ml-1 text-[8px] text-[#7B867B]">/KM</span></p>
+<p class="text-[9px] font-bold uppercase tracking-[0.12em] text-[#8D897E]">当前配速</p>
+<p class="mt-1.5 text-[18px] font-black tracking-[-0.03em]"><span id="paceValue">5'42"</span><span class="ml-1 text-[8px] text-[#6E6A61]">/KM</span></p>
 </div>
 <div class="pl-3">
-<p class="text-[9px] font-bold uppercase tracking-[0.12em] text-[#6F7A6F]">消耗</p>
-<p class="mt-1.5 text-[18px] font-black tracking-[-0.03em]"><span id="calorieValue">173</span><span class="ml-1 text-[8px] text-[#7B867B]">KCAL</span></p>
+<p class="text-[9px] font-bold uppercase tracking-[0.12em] text-[#8D897E]">消耗</p>
+<p class="mt-1.5 text-[18px] font-black tracking-[-0.03em]"><span id="calorieValue">173</span><span class="ml-1 text-[8px] text-[#6E6A61]">KCAL</span></p>
 </div>
 </div>
 </section>
-<div class="shrink-0 bg-[#080B08] px-5 pb-5 pt-3">
+<div class="shrink-0 bg-[#F1EFE8] px-5 pb-5 pt-3">
 <div class="flex items-center gap-3">
-<button aria-label="暂停跑步" class="flex h-[58px] w-[58px] shrink-0 flex-col items-center justify-center rounded-full border border-white/15 bg-white/[0.06] text-white transition active:scale-95" id="pauseButton" type="button">
+<button aria-label="暂停跑步" class="flex h-[58px] w-[58px] shrink-0 flex-col items-center justify-center rounded-full border border-[#E3DFD2] bg-[rgba(44,44,42,0.05)] text-[#2C2C2A] transition active:scale-95" id="pauseButton" type="button">
 <span id="pauseIcon">
 <iconify-icon icon="lucide:pause" width="20"></iconify-icon>
 </span>
 <span class="hidden" id="playIcon">
 <iconify-icon icon="lucide:play" width="20"></iconify-icon>
 </span>
-<span class="mt-0.5 text-[8px] font-bold text-[#9AA59A]" id="pauseLabel">暂停</span>
+<span class="mt-0.5 text-[8px] font-bold text-[#6E6A61]" id="pauseLabel">暂停</span>
 </button>
-<button class="flex h-[58px] flex-1 items-center justify-center gap-2 rounded-full bg-[#D9FF43] text-[#080B08] shadow-[0_10px_30px_rgba(217,255,67,0.12)] transition active:scale-[0.98]" id="endButton" type="button">
+<button class="flex h-[58px] flex-1 items-center justify-center gap-2 rounded-full bg-[#EF9F27] text-[#2C2C2A] shadow-[0_10px_30px_rgba(239,159,39,0.12)] transition active:scale-[0.98]" id="endButton" type="button">
 <iconify-icon icon="lucide:flag" width="18"></iconify-icon>
 <span class="text-[13px] font-black">结束跑步</span>
 </button>
 </div>
-<p class="mt-2.5 text-center text-[9px] font-medium text-[#596359]">结束后将自动生成本次跑步的完整路线图</p>
+<p class="mt-2.5 text-center text-[9px] font-medium text-[#949084]">结束后将自动生成本次跑步的完整路线图</p>
 </div>
-<div class="hidden absolute inset-0 z-50 items-center justify-center bg-black/75 px-6 backdrop-blur-[3px]" id="endModal">
-<div class="w-full rounded-[30px] border border-white/10 bg-[#151B15] p-5 shadow-2xl">
-<div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#FF5C35] text-[#190A06]">
+<div class="hidden absolute inset-0 z-50 items-center justify-center bg-[rgba(44,44,42,0.75)] px-6 backdrop-blur-[3px]" id="endModal">
+<div class="w-full rounded-[30px] border border-[#E3DFD2] bg-[#EAE6DA] p-5 shadow-2xl">
+<div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#854F0B] text-[#2C2C2A]">
 <iconify-icon icon="lucide:flag" width="22"></iconify-icon>
 </div>
 <h2 class="mt-4 text-[24px] font-black tracking-[-0.04em]">结束本次跑步？</h2>
-<p class="mt-1.5 text-[11px] leading-5 text-[#8D998D]">本次运动数据将保存到跑步记录，结束后会自动生成完整路线图。</p>
-<div class="mt-5 grid grid-cols-3 gap-2 rounded-2xl bg-white/[0.04] p-3 text-center">
+<p class="mt-1.5 text-[11px] leading-5 text-[#6E6A61]">本次运动数据将保存到跑步记录，结束后会自动生成完整路线图。</p>
+<div class="mt-5 grid grid-cols-3 gap-2 rounded-2xl bg-[rgba(44,44,42,0.05)] p-3 text-center">
 <div>
-<p class="text-[9px] text-[#6F7A6F]">距离</p>
+<p class="text-[9px] text-[#8D897E]">距离</p>
 <p class="mt-1 text-[14px] font-black"><span id="modalDistance">2.41</span> km</p>
 </div>
-<div class="border-x border-white/[0.08]">
-<p class="text-[9px] text-[#6F7A6F]">用时</p>
+<div class="border-x border-[#E3DFD2]">
+<p class="text-[9px] text-[#8D897E]">用时</p>
 <p class="mt-1 text-[14px] font-black" id="modalTime">13:43</p>
 </div>
 <div>
-<p class="text-[9px] text-[#6F7A6F]">配速</p>
+<p class="text-[9px] text-[#8D897E]">配速</p>
 <p class="mt-1 text-[14px] font-black"><span id="modalPace">5'42"</span></p>
 </div>
 </div>
 <div class="mt-5 flex gap-3">
-<button class="h-12 flex-1 rounded-full border border-white/15 text-[12px] font-bold text-white transition active:scale-[0.98]" id="cancelEnd" type="button">继续跑</button>
-<button class="h-12 flex-1 rounded-full bg-[#D9FF43] text-[12px] font-black text-[#080B08] transition active:scale-[0.98]" id="confirmEnd" type="button">结束并保存</button>
+<button class="h-12 flex-1 rounded-full border border-[#E3DFD2] text-[12px] font-bold text-[#2C2C2A] transition active:scale-[0.98]" id="cancelEnd" type="button">继续跑</button>
+<button class="h-12 flex-1 rounded-full bg-[#EF9F27] text-[12px] font-black text-[#2C2C2A] transition active:scale-[0.98]" id="confirmEnd" type="button">结束并保存</button>
 </div>
 </div>
 </div>
@@ -313,16 +313,16 @@
         playIcon.classList.add('hidden');
         pauseLabel.textContent = '暂停';
         pauseButton.setAttribute('aria-label', '暂停跑步');
-        liveDot.classList.remove('bg-[#FF5C35]');
-        liveDot.classList.add('bg-[#D9FF43]');
+        liveDot.classList.remove('bg-[#854F0B]');
+        liveDot.classList.add('bg-[#EF9F27]');
         liveStatus.textContent = '实时记录中';
       } else {
         pauseIcon.classList.add('hidden');
         playIcon.classList.remove('hidden');
         pauseLabel.textContent = '继续';
         pauseButton.setAttribute('aria-label', '继续跑步');
-        liveDot.classList.remove('bg-[#D9FF43]');
-        liveDot.classList.add('bg-[#FF5C35]');
+        liveDot.classList.remove('bg-[#EF9F27]');
+        liveDot.classList.add('bg-[#854F0B]');
         liveStatus.textContent = '已暂停';
       }
     });

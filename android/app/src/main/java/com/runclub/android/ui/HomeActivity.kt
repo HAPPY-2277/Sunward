@@ -20,7 +20,10 @@ import com.runclub.android.ui.widget.WeekBarsView
 import com.runclub.android.util.Format
 import java.text.SimpleDateFormat
 import java.time.Instant
+import java.time.LocalDate
+import java.time.DayOfWeek
 import java.time.ZoneId
+import java.time.temporal.TemporalAdjusters
 import java.util.Date
 import java.util.Locale
 import kotlin.math.roundToInt
@@ -106,7 +109,13 @@ class HomeActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.tvWeekCalories).text =
             String.format(Locale.US, "%,d", weekly.totalCalories)
 
-        findViewById<WeekBarsView>(R.id.weekBars).dailyKm = weekly.dailyKm
+        val todayDate = LocalDate.now()
+        val monday = todayDate.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
+        findViewById<WeekBarsView>(R.id.weekBars).apply {
+            dailyMinutes = weekly.dailyMinutes
+            todayIndex = todayDate.dayOfWeek.value - 1
+            weekStart = monday
+        }
 
         // 顶部 chip：说「动了几天」，不是「还差多少公里」
         findViewById<TextView>(R.id.tvWeekProgressChip).text =

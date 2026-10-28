@@ -72,6 +72,7 @@ class WeeklyStatsTest {
             totalCalories = 200,
             runCount = 4,
             dailyKm = listOf(0.8, 0.0, 0.9, 1.0, 0.5, 0.0, 0.0),
+            dailyMinutes = listOf(10, 0, 12, 15, 8, 0, 0),
             activeDays = 4,
             targetDays = 7
         )
@@ -83,7 +84,7 @@ class WeeklyStatsTest {
     fun `七天都动过时进度为 100`() {
         val stats = com.runclub.android.data.model.WeeklyStats(
             totalKm = 2.1, totalDurationMs = 0, totalCalories = 0, runCount = 9,
-            dailyKm = List(7) { 0.3 }, activeDays = 7, targetDays = 7
+            dailyKm = List(7) { 0.3 }, dailyMinutes = List(7) { 3 }, activeDays = 7, targetDays = 7
         )
         assertEquals(100, stats.progressPercent)
     }
@@ -92,7 +93,7 @@ class WeeklyStatsTest {
     fun `一天都没动时进度为 0 且不产生负进度`() {
         val stats = com.runclub.android.data.model.WeeklyStats(
             totalKm = 0.0, totalDurationMs = 0, totalCalories = 0, runCount = 0,
-            dailyKm = List(7) { 0.0 }, activeDays = 0, targetDays = 7
+            dailyKm = List(7) { 0.0 }, dailyMinutes = List(7) { 0 }, activeDays = 0, targetDays = 7
         )
         assertEquals(0, stats.progressPercent)
     }

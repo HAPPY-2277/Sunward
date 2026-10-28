@@ -28,7 +28,7 @@
     <string name="home_avatar">K</string>
     <string name="home_hero_mark">Morning Run</string>
     <string name="home_ready">Ready to move</string>
-    <string name="home_title">今天，跑出\n你的节奏<span style="color:#FF5C35">。</span></string>
+    <string name="home_title">今天，跑出\n你的节奏<span style="color:#854F0B">。</span></string>
     <string name="home_suggestion_label">今日建议</string>
     <string name="home_suggestion_value">出门走走 · 3.0 KM</string>
     <string name="home_estimate">大概 20 分钟</string>
@@ -42,6 +42,7 @@
     <string name="home_this_week">This Week</string>
     <string name="home_week_rhythm">本周节奏</string>
     <string name="home_week_active_days_chip">动了 %1$d 天</string>
+    <string name="home_week_minutes">%1$d 分</string>
     <string name="home_week_active_days_value">本周动了 %1$d 天，共 %2$d 天</string>
     <string name="home_week_encourage_more">明天也出门走走？</string>
     

@@ -2,11 +2,15 @@
 <!-- GO 按钮的涟漪环：只有描边、内部透明，对应原型 animate-ping 的
      `border border-[#080B08]/40`。
      这里曾经写成「实心深色圆盘 + 描边」，被放大后就是一圈明显的黑边，
-     与原型（一圈细线向外扩散并淡出）完全不符，所以改回纯描边。 -->
+     与原型（一圈细线向外扩散并淡出）完全不符，所以改回纯描边。
+
+     描边 1.5dp + 85% 墨色（ink_85）：这个环落在饱和琥珀 hero 卡上，
+     原来的 1dp + ink_18（18% 墨）几乎分辨不出轮廓；第二轮提到 ink_40（40% 墨）
+     仍偏淡，第三轮按用户拍板提到 85% 墨（与实心墨几乎无差），描边粗细保持 1.5dp。 -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="oval">
     <solid android:color="@android:color/transparent" />
     <stroke
-        android:width="1dp"
-        android:color="@color/ink_40" />
+        android:width="1.5dp"
+        android:color="@color/ink_85" />
 </shape>
